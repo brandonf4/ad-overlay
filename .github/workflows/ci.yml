@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: ['*']
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+
+  build:
+    needs: quality
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      # NOTE: no separate `npm run prebuild` step. `prebuild` is an npm lifecycle
+      # script, so `npm run build` runs it automatically — and a prebuild step
+      # without this env block used to regenerate app-config.json with EMPTY
+      # values right after the configured one wrote it, silently shipping a
+      # build with no credentials. Keep the env on the step that builds.
+      - run: npm run build
+        env:
+          API_ENDPOINT_URL: ${{ secrets.API_ENDPOINT_URL }}
+          CLIENT_API_KEY: ${{ secrets.CLIENT_API_KEY }}
+          CLIENT_SHARED_SECRET: ${{ secrets.CLIENT_SHARED_SECRET }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          CLIENT_TAG: ${{ secrets.CLIENT_TAG }}
+      # E2E smoke test runs against the built output (out/main/index.js)
+      - run: npm run test:e2e
+      - run: npx electron-builder --win --publish=never
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: |
+            dist/*.exe
+            dist/*.blockmap
+          retention-days: 7

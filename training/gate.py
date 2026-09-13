@@ -1,0 +1,208 @@
+"""INT8 regression gate + report — runs ISOLATED from the training environment.
+
+Why separate: tf2onnx pins an old `onnx`, which caps onnxruntime at a version
+whose CPU provider cannot execute signed-int8 ConvInteger ("Could not find an
+implementation for ConvInteger"). The gate therefore runs in its own minimal
+environment (requirements-gate.txt: modern onnxruntime + numpy) and consumes
+artifacts produced by train.py in --output-dir:
+
+    ability_classifier_fp16.onnx   the artifact being judged
+    class_names.json               class order
+    test_data.npz                  exact test tensors (raw 0-255 float32) + labels
+    train_summary.json             training context (keras accuracy, dataset, ...)
+
+Outputs metrics.json + report.md and exits 1 when the gate fails:
+FP16 accuracy < --min-accuracy, or conversion drop > --max-quant-drop.
+"""
+
+import argparse
+import json
+import os
+import sys
+from collections import Counter
+
+import numpy as np
+import onnxruntime as ort
+
+BATCH = 64
+
+
+def parse_args():
+    p = argparse.ArgumentParser(description="INT8 regression gate")
+    p.add_argument("--output-dir", default="training_output",
+                   help="Directory holding train.py's artifacts; reports go here too")
+    p.add_argument("--min-accuracy", type=float, default=0.97,
+                   help="Gate: minimum converted-model test accuracy")
+    p.add_argument("--max-quant-drop", type=float, default=0.01,
+                   help="Gate: maximum accuracy drop from Keras to the converted model")
+    p.add_argument("--no-gate", action="store_true",
+                   help="Report metrics but never fail (experiments)")
+    return p.parse_args()
+
+
+def main():
+    args = parse_args()
+    out = args.output_dir
+
+    print(f"onnxruntime {ort.__version__}")
+    with open(os.path.join(out, "class_names.json"), encoding="utf-8") as f:
+        class_names = json.load(f)
+    with open(os.path.join(out, "train_summary.json"), encoding="utf-8") as f:
+        summary = json.load(f)
+
+    data = np.load(os.path.join(out, "test_data.npz"))
+    images, labels = data["images"], data["labels"]
+    print(f"Test tensors: {images.shape[0]} images, {len(class_names)} classes")
+
+    session = ort.InferenceSession(
+        os.path.join(out, "ability_classifier_fp16.onnx"),
+        providers=["CPUExecutionProvider"],
+    )
+    input_name = session.get_inputs()[0].name
+    output_name = session.get_outputs()[0].name
+
+    all_probs = []
+    for i in range(0, len(images), BATCH):
+        all_probs.append(
+            session.run([output_name], {input_name: images[i:i + BATCH]})[0])
+    all_probs = np.concatenate(all_probs)
+    y_pred = np.argmax(all_probs, axis=1)
+    y_true = labels
+
+    model_acc = float((y_true == y_pred).mean())
+    keras_acc = summary["kerasTestAccuracy"]
+    quant_drop = keras_acc - model_acc
+    print(f"FP16 test accuracy: {model_acc:.4f} (drop vs Keras: {quant_drop:+.4f})")
+
+    per_class_recall = {}
+    confusions = Counter()
+    for cls_idx, name in enumerate(class_names):
+        mask = y_true == cls_idx
+        if mask.sum() == 0:
+            continue
+        per_class_recall[name] = float((y_pred[mask] == cls_idx).mean())
+    for t, p in zip(y_true, y_pred):
+        if t != p:
+            confusions[(class_names[t], class_names[p])] += 1
+
+    gate_passed = model_acc >= args.min_accuracy and quant_drop <= args.max_quant_drop
+    worst_classes = sorted(per_class_recall.items(), key=lambda kv: kv[1])[:15]
+    top_confusions = confusions.most_common(10)
+
+    # Twin detector: a class whose probability mass is dominated by ONE other
+    # class usually means near-identical icons — the signature of a renamed
+    # ability whose legacy class is still in the dataset (Windrun keeps serving
+    # legacy entries, so the staleness detector cannot catch renames). Twins
+    # split softmax mass and push in-app confidence below the 0.9 threshold,
+    # or worse, confidently mislabel one as the other.
+    twin_warnings = []
+    for cls_idx, name in enumerate(class_names):
+        mask = y_true == cls_idx
+        if mask.sum() == 0:
+            continue
+        mean_vec = all_probs[mask].mean(axis=0)
+        own = float(mean_vec[cls_idx])
+        comp_idx = int(np.argsort(mean_vec)[-1])
+        if comp_idx == cls_idx:
+            comp_idx = int(np.argsort(mean_vec)[-2])
+        comp_share = float(mean_vec[comp_idx])
+        if own < 0.8 and comp_share > 0.15:
+            twin_warnings.append({
+                "class": name,
+                "ownConfidence": round(own, 3),
+                "competitor": class_names[comp_idx],
+                "competitorShare": round(comp_share, 3),
+            })
+    twin_warnings.sort(key=lambda w: w["ownConfidence"])
+
+    # Low-margin detector: a class can have 100% recall (argmax right) while its
+    # confidence sits just above app threshold on pristine test tensors — real
+    # captures then push it under 0.9 and it renders as Unknown (crystal_nova
+    # shipped this way: 100% recall, diffuse softmax, unrecognized in-game).
+    low_margin = []
+    for cls_idx, name in enumerate(class_names):
+        mask = y_true == cls_idx
+        if mask.sum() == 0:
+            continue
+        own_mean = float(all_probs[mask, cls_idx].mean())
+        if own_mean < 0.95:
+            low_margin.append({"class": name, "meanOwnConfidence": round(own_mean, 3)})
+    low_margin.sort(key=lambda w: w["meanOwnConfidence"])
+
+    metrics = {
+        **summary,
+        "fp16TestAccuracy": round(model_acc, 5),
+        "conversionDrop": round(float(quant_drop), 5),
+        "gate": {
+            "minAccuracy": args.min_accuracy,
+            "maxQuantDrop": args.max_quant_drop,
+            "passed": gate_passed,
+        },
+        "worstClassRecall": {name: round(r, 4) for name, r in worst_classes},
+        "topConfusions": [
+            {"true": t, "predicted": p, "count": c}
+            for (t, p), c in top_confusions
+        ],
+        "twinWarnings": twin_warnings,
+        "lowMarginClasses": low_margin,
+    }
+    with open(os.path.join(out, "metrics.json"), "w", encoding="utf-8") as f:
+        json.dump(metrics, f, indent=2)
+
+    added = summary.get("classesAdded", [])
+    removed = summary.get("classesRemoved", [])
+    lines = [
+        "## Model retrain report",
+        "",
+        f"- Dataset: v{summary.get('datasetVersion', '?')} ({summary.get('datasetCreatedAt', 'unknown date')})",
+        f"- Classes: **{summary['numClasses']}** ({summary['trainImages']} training images, seed {summary['seed']})",
+        f"- Keras test accuracy: **{keras_acc:.2%}**",
+        f"- FP16 ONNX test accuracy: **{model_acc:.2%}** (conversion drop {quant_drop:+.2%})",
+        f"- Gate (≥{args.min_accuracy:.0%}, drop ≤{args.max_quant_drop:.0%}): "
+        + ("**PASSED** ✅" if gate_passed else "**FAILED** ❌"),
+        f"- Fine-tuned top block: {'yes' if summary.get('fineTuned') else 'no'}",
+        f"- FP16 size: {summary.get('modelSizeMb', '?')} MB",
+    ]
+    if added:
+        lines += ["", f"### New classes ({len(added)})", ""]
+        lines += [f"- `{name}`" for name in added]
+    if removed:
+        lines += ["", f"### Removed classes ({len(removed)})", ""]
+        lines += [f"- `{name}`" for name in removed]
+    if twin_warnings:
+        lines += ["", f"### ⚠️ Possible renamed/duplicate classes ({len(twin_warnings)})", "",
+                  "These classes share probability mass with a single competitor — "
+                  "usually a renamed ability whose legacy class is still in the "
+                  "dataset. Verify in-game and purge the legacy class folders.", ""]
+        lines += [
+            f"- `{w['class']}` (own {w['ownConfidence']:.0%}) ↔ "
+            f"`{w['competitor']}` ({w['competitorShare']:.0%})"
+            for w in twin_warnings
+        ]
+    if low_margin:
+        lines += ["", f"### ⚠️ Low-margin classes ({len(low_margin)})", "",
+                  "Recall may be perfect, but mean confidence below ~0.95 on pristine "
+                  "test tensors means real captures can dip under the app's 0.9 "
+                  "threshold and render as Unknown. Consider pruning odd-framing "
+                  "training images and topping up with fresh crops (see "
+                  "docs/ML_PIPELINE.md).", ""]
+        lines += [f"- `{w['class']}`: mean own-confidence {w['meanOwnConfidence']:.2f}"
+                  for w in low_margin]
+    lines += ["", "### Worst per-class recall (test split)", ""]
+    lines += [f"- `{name}`: {r:.0%}" for name, r in worst_classes]
+    if top_confusions:
+        lines += ["", "### Top confusions", ""]
+        lines += [f"- `{t}` → `{p}` ({c}×)" for (t, p), c in top_confusions]
+
+    with open(os.path.join(out, "report.md"), "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+
+    print("\n" + "\n".join(lines))
+
+    if not gate_passed and not args.no_gate:
+        print("\nGATE FAILED — model artifacts were produced but must not ship.")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

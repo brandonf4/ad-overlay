@@ -1,0 +1,126 @@
+{
+  "initialScan": "Initial Scan",
+  "controlsAria": "Overlay controls",
+  "rescan": "Rescan",
+  "reset": "Reset",
+  "close": "Close",
+  "reportFailed": "Report Failed Recognition",
+  "scanConfirm": {
+    "message": "This will scan the current screen for ability icons. Make sure the Dota 2 draft screen is fully visible. Tip: Ctrl+Shift+S scans instantly without this dialog.",
+    "proceed": "Proceed",
+    "cancel": "Cancel",
+    "dontShow": "Don't Show Again"
+  },
+  "reportConfirm": {
+    "message": "This will take a snapshot of the current ability icons for model improvement. Submit?",
+    "submit": "Submit",
+    "cancel": "Cancel"
+  },
+  "status": {
+    "scanning": "Scanning...",
+    "error": "Scan failed: {{message}}",
+    "timeoutMessage": "Scan timed out — please try again"
+  },
+  "snapshot": {
+    "saved": "Snapshot saved ({{count}} stored) — send it via Settings → Feedback",
+    "noScan": "No scan data to report — run a scan first",
+    "error": "Failed to save snapshot: {{error}}"
+  },
+  "opCombinations": {
+    "title": "OP Combinations",
+    "show": "Show OP",
+    "hide": "Hide",
+    "tripletTooltip": "Often drafted as a triplet ({{winrate}} WR together)"
+  },
+  "trapCombinations": {
+    "title": "It's a Trap!",
+    "show": "Show Traps",
+    "hide": "Hide",
+    "tripletTooltip": "Often drafted as a triplet ({{winrate}} WR together)"
+  },
+  "scanSummary": "{{recognized}}/{{total}} recognized",
+  "resolution": {
+    "autoScaledWarning": "Coordinates are mathematically scaled for this resolution and may be slightly off. Use the Mapper in the Control Panel to calibrate.",
+    "source": {
+      "preset": "preset",
+      "custom": "calibrated",
+      "auto-scaled": "auto-scaled",
+      "none": "unsupported"
+    }
+  },
+  "mySpot": "My Spot",
+  "changeMySpot": "Change",
+  "myModel": "My Model",
+  "changeMyModel": "Change",
+  "tooltip": {
+    "winrate": "Winrate: {{value}}",
+    "pickRate": "Pick Rate: {{value}}",
+    "personalStats": "You: {{value}} WR in {{games}} games",
+    "strongSynergies": "Strong Synergies",
+    "heroSynergies": "Hero Synergies",
+    "weakSynergies": "Weak Synergies",
+    "weakHeroSynergies": "Weak Hero Synergies",
+    "topPick": "Top Pick",
+    "synergyPick": "Synergy Pick",
+    "topModel": "Top Model",
+    "personalPick": "Personal Pick — recommended from your stats",
+    "yourModelPick": "Your Model Pick",
+    "strongAbilities": "Strong Abilities for This Hero",
+    "weakAbilities": "Weak Abilities for This Hero",
+    "unknownAbility": "Unknown Ability",
+    "unknownHint": "The model could not identify this icon — consider using 'Report Failed Recognition'",
+    "roleFit": "Role fit: pos {{position}}",
+    "pairingFit": "Model pairing",
+    "roleNeeds": {
+      "steroid": "attack steroid",
+      "farm": "farming tool",
+      "survival": "survivability",
+      "nuke": "nuke",
+      "mobility": "mobility",
+      "kill_ult": "kill ultimate",
+      "initiation": "initiation",
+      "aoe_cc": "AoE control",
+      "durability": "durability",
+      "hard_cc": "hard disable",
+      "waveclear": "waveclear",
+      "save": "ally save",
+      "mana_budget": "mana budget",
+      "farm_tool": "farming tool",
+      "sustain_self": "self sustain",
+      "teamfight_ult": "teamfight ult",
+      "passive_value": "value passive",
+      "save_ally": "ally save"
+    },
+    "roleCovers": "Covers your missing {{need}}",
+    "rolePartial": "Partially covers your missing {{need}}",
+    "roleDuplicate": "Already covered: {{need}}",
+    "roleCurated": "Curated pick for this role",
+    "curatedPick": "Role Pick — curated as a must-have for your role",
+    "inertOnModel": "Does not work on your model (melee/ranged mismatch)",
+    "requiresAbility": "Only works with {{name}} — not suggested until you draft it",
+    "requiresModel": "Only works on the {{name}} model — not suggested",
+    "requiresTag": "Needs a {{name}} ability — none drafted or left in the pool",
+    "roleAvoided": "Curated skip for this spot — not suggested",
+    "overrated": "Picked early but wins only {{value}} — likely overrated",
+    "contestedSoon": "Usually drafted by now — may not survive another round",
+    "shardStack": "Strong Shard upgrade — one Shard also powers {{names}}",
+    "scepterStack": "Strong Scepter upgrade — one Scepter also powers {{names}}",
+    "goodShard": "Strong Aghanim's Shard upgrade",
+    "goodScepter": "Strong Aghanim's Scepter upgrade",
+    "pointSinkConflict": "Competes for skill points with {{names}} — one of them stays under-levelled"
+  },
+  "role": {
+    "aria": "Role suggestions",
+    "label": "Role",
+    "off": "Off",
+    "auto": "Auto",
+    "offStatus": "Role suggestions off",
+    "scoringFor": "Scoring for pos {{positions}}",
+    "watching": "Watching team trend…",
+    "teamNeeds": "Team needs pos {{positions}}",
+    "needSpot": "Select My Spot to enable",
+    "appliesNextScan": "Applies on the next scan",
+    "needData": "Run a data update to enable",
+    "waitingSpot": "Waiting for automatic spot detection…"
+  }
+}

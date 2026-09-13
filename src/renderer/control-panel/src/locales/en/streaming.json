@@ -1,0 +1,60 @@
+{
+  "title": "Streaming",
+  "server": {
+    "title": "Stream board server",
+    "description": "Serves a clean, high-contrast draft board over local HTTP for use as an OBS browser source.",
+    "status": {
+      "stopped": "Stopped",
+      "running": "Running",
+      "error": "Error"
+    },
+    "start": "Start server",
+    "stop": "Stop server",
+    "port": "Port",
+    "portHint": "1024–65535. Changing the port requires restarting the server and updating your OBS scene.",
+    "url": "Board URL",
+    "picksUrl": "Picks View URL",
+    "picksHint": "The Picks View shows each player's hero and drafted abilities as two compact team strips for your in-game scene. Open the URL in a browser to tune them and generate the per-team OBS source links. It keeps showing the finished draft for the whole game, even after the overlay is closed.",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "clients": "Connected clients: {{count}}",
+    "autostart": "Start the server when the app launches",
+    "errorPortInUse": "That port is already in use — pick another port and start again.",
+    "errorGeneric": "The server failed to start. Check the logs for details.",
+    "errorInvalidPort": "Invalid port. Use a number between 1024 and 65535."
+  },
+  "gsi": {
+    "title": "Dota 2 Game State Integration",
+    "description": "Lets Dota send player names, game phase, and clock to the stream board. Requires a one-time config file in your Dota folder and a Dota restart.",
+    "connected": "Connected",
+    "disconnected": "Not connected",
+    "detectedPath": "Dota installation",
+    "notDetected": "Dota installation not found — pick the \"dota 2 beta\" folder manually.",
+    "cfgPresent": "Config file installed",
+    "cfgMissing": "Config file not installed yet",
+    "writeCfg": "Install config file",
+    "browse": "Browse…",
+    "pickFolderTitle": "Select the \"dota 2 beta\" folder",
+    "writeSuccess": "Config written to {{path}}. Restart Dota 2 for it to take effect.",
+    "errorDotaNotFound": "Could not locate the Dota 2 installation. Use Browse to pick the \"dota 2 beta\" folder.",
+    "errorWriteFailed": "Failed to write the config file. Check the logs for details.",
+    "portMismatch": "The installed config points at port {{cfgPort}}, but the stream server uses port {{streamPort}} — Dota can't reach the app. Reinstall the config file and restart Dota 2.",
+    "portNote": "The config pins the current server port — reinstall it after changing the port.",
+    "spectatorNote": "All 10 player names are only available while spectating/casting. When playing, Dota reports only your own name."
+  },
+  "icons": {
+    "title": "Ability icons",
+    "description": "The board uses official ability icons, downloaded once and cached locally. Prefetch them now so the first draft renders instantly even without internet access.",
+    "prefetch": "Prefetch all icons",
+    "prefetching": "Downloading…",
+    "result": "Done: {{fetched}} downloaded, {{alreadyCached}} already cached, {{failed}} failed.",
+    "error": "Prefetch failed. Check the logs for details."
+  },
+  "obs": {
+    "title": "OBS setup",
+    "step1": "Start the server and copy the board URL.",
+    "step2": "In OBS: Sources → Add → Browser, paste the URL, set the size to 1920×1080.",
+    "step3": "The background is transparent by default. Append ?bg=dark for a solid background or ?bg=chroma for a green screen.",
+    "note": "The board follows your overlay scans: the pool appears after a scan (Ctrl+Shift+S) and picks update after each rescan (Ctrl+Shift+R)."
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "title": "Settings",
+  "opThreshold": {
+    "title": "OP Combinations Threshold",
+    "label": "Synergy threshold percentage:",
+    "helpText": "Combinations with synergy increase above this threshold will be marked as OP.",
+    "saveButton": "Save Threshold",
+    "savedMessage": "Threshold saved!"
+  },
+  "trapThreshold": {
+    "title": "Trap Threshold",
+    "label": "Winrate decrease threshold percentage:",
+    "helpText": "Combinations whose winrate drops by more than this threshold are marked as traps.",
+    "saveButton": "Save Threshold",
+    "savedMessage": "Trap threshold saved!"
+  },
+  "thresholdCommon": {
+    "defaultLabel": "Default: {{value}}%",
+    "resetButton": "Reset to default"
+  },
+  "appearance": {
+    "title": "Appearance",
+    "themeLabel": "Theme",
+    "languageLabel": "Language",
+    "overlayOpacityLabel": "Overlay panels opacity",
+    "overlayAnchorLabel": "Overlay panels position",
+    "anchorLeft": "Left",
+    "anchorRight": "Right",
+    "aghsMarkersLabel": "Always mark strong Aghanim's Shard / Scepter abilities",
+    "aghsMarkersHint": "Corner markers on every unpicked ability with a strong Shard or Scepter upgrade (blue diamond = Shard, violet dot = Scepter). Applies on the next scan."
+  },
+  "backup": {
+    "title": "Database Backup",
+    "createButton": "Create Backup",
+    "restoreButton": "Restore",
+    "noBackups": "No backups found.",
+    "columns": {
+      "name": "Name",
+      "date": "Date",
+      "size": "Size"
+    },
+    "stats": "{{count}} backups, {{size}} total",
+    "createSuccess": "Backup created successfully.",
+    "createError": "Failed to create backup: {{error}}",
+    "restoreConfirm": "Are you sure you want to restore from this backup? Current data will be overwritten.",
+    "restoreSuccess": "Backup restored successfully.",
+    "restoreError": "Failed to restore backup: {{error}}"
+  },
+  "feedback": {
+    "title": "Feedback & Diagnostics",
+    "description": "If the ML model misidentifies abilities, use 'Report Failed Recognition' in the overlay. You can then send snapshots to the developer for model improvement.",
+    "exportButton": "Export Failed Samples",
+    "uploadButton": "Send Failed Samples",
+    "exportNone": "No snapshots to export yet — use 'Report Failed Recognition' in the overlay first.",
+    "exportSuccess": "Exported {{count}} snapshot(s) to {{path}}",
+    "exportError": "Export failed: {{error}}",
+    "uploadNone": "No new snapshots to upload.",
+    "uploadSuccess": "Uploaded {{count}} snapshot(s). Thank you!",
+    "uploadPartial": "Uploaded {{count}} of {{total}} snapshot(s); {{failed}} failed. Will retry the rest next time.",
+    "uploadError": "Upload failed: {{error}}",
+    "apiNotConfigured": "The upload service is not configured in this build — use Export and attach the file to a GitHub issue."
+  },
+  "personalStats": {
+    "title": "Personalized suggestions",
+    "description": "Link your Windrun.io profile to blend your personal ability and hero winrates into the overlay's suggestions. Abilities you historically win with rank higher; your stats also show in ability tooltips.",
+    "inputPlaceholder": "Windrun profile URL or Steam ID",
+    "inputHint": "Paste your Windrun profile link (windrun.io/players/…), your Steam ID64, or your Friend ID.",
+    "linkButton": "Link profile",
+    "linking": "Linking…",
+    "refreshButton": "Refresh stats",
+    "unlinkButton": "Unlink",
+    "lastUpdated": "updated {{date}}",
+    "refreshSuccess": "Refreshed: {{abilities}} abilities, {{heroes}} heroes with personal stats.",
+    "blendNote": "Personal winrates are blended with global stats in proportion to how many games you have on each ability — small samples only nudge the score. Stats refresh automatically when the overlay is activated (at most once per hour).",
+    "scrapeHint": "Your local Windrun data predates ability matching — run 'Update Windrun Data' on the Data page once to activate ability personalization.",
+    "errorInvalidInput": "Could not read a player ID from that input. Paste a windrun.io profile link or a Steam ID.",
+    "errorProfileNotFound": "Windrun.io returned no profile for that ID. Check the link and your connection.",
+    "errorNotLinked": "No profile is linked.",
+    "errorFetchFailed": "Fetching stats from Windrun.io failed. Your previous stats are kept — try again later."
+  },
+  "autoTracking": {
+    "title": "Automatic draft tracking",
+    "description": "Automates the whole draft flow: the initial pool scan, your spot and hero model selection, and targeted rescans after every pick with per-player pick tracking.",
+    "toggle": "Enable automatic draft tracking",
+    "gsiNote": "This feature relies on Dota 2's built-in Game State Integration (GSI). With the config file installed, your game sends draft information (game phase, draft clock, your slot and picked hero) to this app. The connection is local-only and strictly one-way — the app never sends anything to the game and nothing leaves your PC. GSI is an official Valve feature used by broadcast tools and carries no ban risk.",
+    "delayLabel": "Auto initial scan delay (seconds)",
+    "delayHint": "How long to wait after the draft is detected before scanning the pool automatically ({{min}}–{{max}}s). Fast PCs are fine with 5s; slower machines may need up to 30s for the draft screen to fully render.",
+    "buttonsNote": "While enabled, the manual My Spot and My Model overlay buttons are hidden — both selections happen automatically from game data.",
+    "setupTitle": "GSI setup",
+    "setupHint": "One-time: install the config file below into your Dota folder, then restart Dota 2.",
+    "autoCloseToggle": "Close overlay when the draft ends",
+    "autoCloseHint": "The overlay closes itself when the game starts, then reopens automatically when the match ends or a new draft begins — no manual close between matches."
+  },
+  "roleSuggestions": {
+    "title": "Role-Aware Suggestions",
+    "description": "Adjust suggestions for the position you intend to play, based on how each ability shifts its drafters toward farming or supporting (windrun.io stat shifts).",
+    "mode": {
+      "off": "Off",
+      "fixed": "My positions",
+      "dynamic": "Fill for team"
+    },
+    "hint": {
+      "off": "Suggestions stay exactly as they are today.",
+      "fixed": "Score suggestions for the position(s) you pick below — for role loyalists and party stacks that agree lanes up front. Teammates still get approximate role estimates for display only.",
+      "dynamic": "The app watches what your teammates draft and suggests picks for the position nobody is building toward (for example: three greedy builds on your team → support picks). It stays neutral until enough teammate picks are on the board."
+    },
+    "noPositionsWarning": "Select at least one position — with none selected, suggestions stay unadjusted.",
+    "positionsHint": "Suggestions are boosted when they fit any selected position."
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "appTitle": "Dota 2 Ability Draft Plus",
+  "nav": {
+    "dashboard": "Dashboard",
+    "abilities": "Abilities",
+    "heroes": "Heroes",
+    "scraping": "Data",
+    "streaming": "Streaming",
+    "settings": "Settings",
+    "mapper": "Mapper",
+    "devMapper": "Dev Mapper",
+    "sidebar": "Main navigation"
+  },
+  "theme": {
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "ru": "Русский",
+    "zhCN": "简体中文"
+  },
+  "status": {
+    "ready": "Ready",
+    "idle": "Idle",
+    "active": "Active",
+    "error": "Error",
+    "connected": "Connected",
+    "initializing": "Initializing",
+    "scanning": "Scanning",
+    "running": "Running"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "retry": "Retry"
+  },
+  "support": {
+    "label": "Support me",
+    "tooltip": "Support the developer on Ko-fi",
+    "datdota": "Support datdota",
+    "datdotaTooltip": "Support datdota (Windrun data) on Ko-fi"
+  }
+}

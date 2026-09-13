@@ -1,0 +1,376 @@
+// ML Configuration
+export const ML_CONFIDENCE_THRESHOLD = 0.9
+
+// Per-class confidence overrides for known hard classes: the class is accepted
+// when it wins the argmax at or above ITS threshold, even below the global one.
+// Crystal Nova consistently scores 0.55-0.9 on live boards while every other
+// class sits at 0.95+, so a nova argmax above 0.5 is virtually always correct.
+// Gorgon Grasp and Shadowraze regressed to 0.58/0.63 on live boards with the
+// dataset-v8 model (correct argmax, runner-up at ~0.25) — override until the
+// classes get more training data and a retrain wins them back above 0.9.
+export const ML_CLASS_THRESHOLD_OVERRIDES: Readonly<Record<string, number>> = {
+  crystal_maiden_crystal_nova: 0.5,
+  medusa_gorgon_grasp: 0.5,
+  nevermore_shadowraze2: 0.5,
+}
+// Picked-slot recognition via template matching against official CDN icons
+// (core/ml/template-matcher.ts). Pick boxes render the icon FLAT (unlike the
+// skewed pool slots), so a normalized-cross-correlation match against the
+// stream-icons cache beats the classifier there: on a real 40-slot board the
+// classifier missed 3 picks and confidently misread a 4th; template matching
+// went 40/40 (2026-08-14, sample-2026-08-13T23-08-21-287Z).
+export const PICK_TEMPLATE_COMPARE_SIZE = 48
+// Pick boxes have a border ring + rounded corners the model/icons never saw;
+// insetting the crop by ~8% of the slot width (7px at 1440p's 87px) removes
+// them. Measured: shadowraze2 NCC 0.773 inset vs argmax LOST without inset.
+export const PICK_TEMPLATE_CROP_INSET_RATIO = 0.08
+// Acceptance: best NCC at or above MIN_NCC and ahead of the runner-up by
+// MIN_MARGIN, else the slot renders Unknown. With CORRECT box geometry
+// (87px at 1440p — see the 2026-08-14 layout fix; the original 73px
+// under-crop degraded every match to 0.42-0.87 and caused chronic rejects),
+// correct matches measure 0.90-0.996 NCC with 0.19+ margins against all 539
+// icons, so these gates carry comfortable headroom. If scores regress into
+// the gates again, suspect crop geometry FIRST (debug/rejected-picks dumps),
+// not the thresholds.
+export const PICK_TEMPLATE_MIN_NCC = 0.45
+export const PICK_TEMPLATE_MIN_MARGIN = 0.02
+// Scoping a pick box to the pool's candidates is what keeps margins wide, but it
+// turns a POOL miss into a permanent pick miss: an ability the initial scan failed
+// to read never enters the candidate set, so its pick box can never match and the
+// matcher just returns the least-bad pool candidate forever. Measured 2026-08-19:
+// 3 of 528 pool slots read Unknown (classifier below its 0.9 gate) and each one
+// that got drafted produced an unresolvable pick box scoring ~0.32 — while an
+// UNRESTRICTED match against the full icon library scored the true ability at
+// 0.974 and 0.994. So a rejected scoped match retries unrestricted and is accepted
+// only above this much stricter floor, which sits far above any wrong match
+// observed in the runs (max 0.782) and below every correct one.
+export const PICK_TEMPLATE_FALLBACK_MIN_NCC = 0.85
+// An empty pick box is near-uniform dark pixels: measured std 0.8 vs 54+ for
+// any real icon. Detected before matching — empties never reach the matcher
+// (the classifier used to argmax tusk_snowball 0.33-0.52 on them).
+export const PICK_TEMPLATE_EMPTY_STD = 5
+// Cached CDN icons go stale when Valve reworks art in place (2026-08: all four
+// Pugna icons — old art broke pick-slot template matching AND the streamer
+// view). During prefetch, a cached icon older than this TTL is refetched with a
+// cache-busting query — required because Valve's Cloudflare edge itself served
+// the pre-rework bytes under the bare URL while origin had the new art.
+export const ICON_CACHE_REFRESH_TTL_MS = 7 * 24 * 60 * 60 * 1000
+
+// Pool slots that read Unknown are re-classified on later scans (pool art is
+// static until drafted). Bounded so a genuinely unreadable slot cannot re-crop
+// forever; ~10 rescans covers several draft rounds, far more than a transient
+// artifact (hover tooltip, animation frame) survives.
+export const POOL_RETRY_MAX_ATTEMPTS = 10
+
+export const ML_MODEL_INIT_TIMEOUT = 30_000
+export const ML_PREDICTION_TIMEOUT = 10_000
+export const ML_WORKER_MAX_RESTART_ATTEMPTS = 3
+export const ML_WORKER_RESTART_COOLDOWN = 5_000
+export const ML_WORKER_RESTART_RESET_TIME = 60_000
+
+// Scoring
+export const WEIGHT_WINRATE = 0.4
+export const WEIGHT_PICK_ORDER = 0.6
+export const MIN_PICK_ORDER_FOR_NORMALIZATION = 1.0
+export const MAX_PICK_ORDER_FOR_NORMALIZATION = 50.0
+export const NUM_TOP_TIER_SUGGESTIONS = 10
+
+// Default thresholds
+export const DEFAULT_OP_THRESHOLD = 0.13
+export const DEFAULT_TRAP_THRESHOLD = 0.05
+
+// Personalization (Windrun player stats). Personal per-ability samples are small
+// (Windrun's /players/{id}/stats caps spellStats at the top 200 abilities by games;
+// entries can carry 1-40+ games), so raw personal winrates are far too noisy to rank
+// with. Blended value = (n * personal + K * global) / (n + K): at 15 games personal
+// data shifts the input ~43%, at 100+ games it dominates, at 0 games it's a no-op.
+// The blend runs in INPUT space (winrate, avg pick position) — the 0.4/0.6
+// consolidated-score formula itself is untouched, and with no linked profile the
+// scores are bit-identical to the global-only path.
+export const PERSONAL_PRIOR_STRENGTH = 20
+// A personalized score that moved less than this from the global score renders no
+// up/down marker in the overlay (avoids arrow noise on negligible shifts).
+export const PERSONAL_SCORE_DELTA_EPSILON = 0.005
+
+// Role-aware suggestions: shift-derived axes (core/domain/shift-axes.ts).
+// The greed axis combines gpm_shift + SHIFT_GREED_XPM_WEIGHT * xpm_shift before
+// percentile-ranking across the pool; shifts are ordering-only (units are
+// undocumented), so weights here only trade off the two orderings.
+export const SHIFT_GREED_XPM_WEIGHT = 0.5
+
+// Role scoring (core/domain/role-scoring.ts — see the Position Templates spec).
+// Starting values, eyeball-calibrated: the pos-5 spread between a low-greed stun
+// and a high-greed farming tool lands around 0.10 of score — enough to reorder
+// within a tier without burying a globally OP pick. The summed role adjustment
+// is hard-capped so role influence can never exceed roughly one score tier.
+// Live-feedback tuning (2026-08-29): the base score's pick-order term (0.6
+// weight, ~0.4 typical spread) prices CORE-contested value and buries role
+// signals; the role layer is sized so greed+tags clearly outweigh winrate
+// differences (~0.08 spread) and meaningfully dent pick-order gaps. If core
+// pollution persists, the next lever is discounting pick order itself while
+// a role is active — not raising these further.
+export const ROLE_GREED_WEIGHT = 0.16
+// Corpus finding (2,981 expert drafts, 2026-08-29): greed is drafted FIRST —
+// cores' picks average +0.52 → −0.04 greed across their four slots, supports
+// descend too. The greed term tapers with the user's own pick index so late
+// picks are scored by needs/coverage instead; index past the table clamps.
+export const ROLE_GREED_TAPER: readonly number[] = [1.0, 0.85, 0.6, 0.4]
+export const ROLE_SHIFT_ACCENT_WEIGHT = 0.03
+// Corpus finding: within-team greed SPREAD is the strongest win separator
+// measured (won-lost gap grows with skill: +0.044 league → +0.057 top slice).
+export const ROLE_TEAM_BALANCE_WEIGHT = 0.05
+export const ROLE_ADJUSTMENT_CAP = 0.25
+// Hero MODELS' shift-greed term is DISABLED (2026-09-01, Drow-for-pos-1 case):
+// the model greed axis is poisoned by selection effects — supports pick
+// Drow/Luna for the aura, driving their model greed to the 1st-2nd
+// percentile, which then wrongly tanks their pos-1 fit. Attribute fit,
+// chassis percentiles, hero tags and verdicts carry the model-role signal on
+// cleaner data. Set back to 0.5 to revert to the shift-greed blend.
+export const ROLE_MODEL_WEIGHT_SCALE = 0
+// Below this |delta| the overlay renders no role badge (anti-noise, mirrors
+// PERSONAL_SCORE_DELTA_EPSILON).
+export const ROLE_SCORE_DELTA_EPSILON = 0.005
+// Dynamic mode evidence gate: no vacancy inference until this many teammates
+// have this many named picks each — below that, trajectories are noise and
+// scoring stays neutral (off-equivalent).
+export const DYNAMIC_ROLE_MIN_TEAMMATES = 2
+export const DYNAMIC_ROLE_MIN_PICKS = 2
+// The pos-5 "enabling" accent only counts in the top band of the healing axis —
+// the raw healing shift is zero-inflated, so mid-axis values carry no signal.
+export const ROLE_ENABLING_ACCENT_FLOOR = 0.7
+// Build-needs engine (tags): an unmet role need the candidate covers is worth
+// more than a mild greed mismatch; a candidate that ONLY duplicates an already
+// twice-covered capability (the third single-target stun) drops several ranks.
+export const ROLE_NEED_WEIGHT = 0.08
+export const ROLE_DUPLICATE_WEIGHT = 0.06
+// Pool scarcity: a need's boost scales with its supply among UNPICKED pool
+// abilities — multiplier = clamp(REF / supply, MIN, MAX). Two stuns left in
+// the pool nearly doubles the hard_cc boost; twelve steroids dilute it.
+export const NEED_SCARCITY_REF = 6
+export const NEED_SCARCITY_MIN = 0.6
+export const NEED_SCARCITY_MAX = 1.8
+// Model urgency (core roles 1-3): cores should have their model locked by
+// ~round 3 — a flat boost on ALL model suggestions ramps with the user's own
+// pick count (step per pick, capped at 3 steps), scaled by how scarce good
+// core models are among the remaining pool. Supports (4-5) stay neutral.
+export const MODEL_URGENCY_STEP = 0.03
+export const MODEL_URGENCY_MAX_STEPS = 3
+export const MODEL_SCARCITY_REF = 4
+// Attribute-based model fit weight: per-position stat profiles (agi gain for
+// pos 1 right-click scaling, STR for pos 3, INT/mana for pos 4-5) percentiled
+// among the REMAINING models. This is the primary model role signal; the
+// shift-based greed fit stays as the small secondary (ROLE_MODEL_WEIGHT_SCALE).
+export const MODEL_ATTR_FIT_WEIGHT = 0.08
+// Ult security (sim finding, 2,000 solo-queue expert picks): 67% of expert ult
+// picks happen BEFORE being forced. When the remaining ult supply gets tight
+// relative to drafters still without one, ult candidates get this mild boost
+// (role mode active + user ult-less only). Applied outside the role cap.
+export const ULT_SECURITY_WEIGHT = 0.04
+export const ULT_SUPPLY_SLACK = 2
+// Mana budget: two mana-hungry actives fill the budget on ANY model (user
+// ruling) — further mana-hungry candidates are damped by this much.
+export const MANA_HUNGRY_LIMIT = 2
+export const MANA_BUDGET_WEIGHT = 0.05
+// "Now-or-never" marker: in the sim, our top suggestion was drafted by someone
+// before the user's next turn in 60% of disagreement cases. A pool ability
+// whose global avg pick position is due within this window of the current
+// board pick count gets flagged as unlikely to survive another round.
+export const CONTESTED_SOON_WINDOW = 10
+// Static per-position tag accents (Position Templates matrix). Raised from the
+// initial 0.02 after live feedback: for MID greed targets (pos 3/4) the greed
+// penalty on a core-shifted ability is inherently small, so the accents are
+// the main lever separating e.g. a pure steroid from a playmaker for pos 4.
+export const ROLE_TAG_ACCENT_WEIGHT = 0.05
+// Curated must-picks (roleMust in ability_tags.json): hand-picked abilities
+// whose value the stats systematically miss for a role (e.g. Glimpse for
+// supports). Presence in suggestions is GUARANTEED by top-tier.ts when the
+// role matches — this weight only lifts their rank among the suggestions, so
+// it sits well above the needs/accent weights but inside the role cap.
+export const ROLE_CURATED_WEIGHT = 0.15
+// Hero-MODEL tag accents (Layer B): small per-position bonuses from the
+// model's talent-profile/innate tags — same anti-double-counting philosophy
+// as ability tag accents (the attr/chassis percentiles stay primary).
+export const MODEL_TAG_ACCENT_WEIGHT = 0.03
+// Ability x model pairing (Layer C): each matching term contributes
+// weight * (2*percentile - 1), summed and clamped to its OWN cap so the
+// pairing layer stays auditable next to the role cap. Active only while a
+// role mode is on (preserves the role-off bit-identity invariant).
+export const PAIRING_WEIGHT = 0.04
+export const PAIRING_ADJUSTMENT_CAP = 0.1
+// Overrated marker (Rearm case, 2026-08-31): winrate 45.7% yet picked ~9th —
+// the 0.6 pick-order weight rewards popularity, not quality. An ability BOTH
+// below the winrate bar AND above the early-pick bar gets a flat damp + an
+// explanatory tooltip marker. Calibrated on live data: wr<0.48 & pick<=15
+// catches 21/513 abilities, all textbook traps (Finger of Death, Sleight of
+// Fist, Walrus Punch, Coup de Grace, Rearm); role-independent by design.
+// Future lever if pollution persists (documented, not built): discount
+// WEIGHT_PICK_ORDER itself while a role mode is active.
+export const OVERRATED_WINRATE_MAX = 0.48
+export const OVERRATED_PICK_ORDER_MAX = 15
+export const OVERRATED_DAMP = 0.12
+// Aghanim's stacking (tag round 4, 2026-09): once the drafter OWNS a good_shard
+// (or good_aghanims) ability, every pool ability with the same tag gets a flat
+// boost — one Shard / one Scepter purchase now upgrades two abilities. A real
+// but mid-game economic edge, not a draft-defining need: sized at
+// ROLE_DUPLICATE_WEIGHT (0.06), below ROLE_NEED_WEIGHT (0.08) and at half of
+// OVERRATED_DAMP so a trap with a good shard stays net-damped. Applied once per
+// family (shard + scepter can both fire), own picks only (a teammate's Shard
+// does nothing for you), role-independent — rides outside the role cap.
+export const AGHS_STACK_BOOST = 0.06
+// Skill-point-sink conflict (tag round 4): a skill_point_sink ability must be
+// maxed early. Owning one already means a second sink leaves one of the two
+// under-levelled for most of the game — the mechanical cousin of a dead slot,
+// so the damp is bigger than OVERRATED_DAMP (a statistical suspicion) and than
+// ROLE_CURATED_WEIGHT (0.15, so a curated boost cannot cancel it), yet finite:
+// a 0.9 sink still edges a 0.65 non-sink. Own picks only, role-independent.
+// Future counterpart (roadmap): a `value_point` tag for level-1-value abilities
+// that can wait — a natural partner for a sink, not a conflict.
+export const POINT_SINK_DAMP = 0.2
+// Model reservation (Drow-for-pos-5 case, 2026-08-31): while core teammates
+// still need models, a body whose attr fit for positions 1-3 beats its 4-5
+// fit by more than the gap is damped for a support drafter — don't steal the
+// premier core chassis. The curated hero roleAvoid handles the flagship
+// cases; this is the curation-free generalization. Both LIFT once every
+// teammate has a model (then taking it only denies the enemy team).
+export const MODEL_RESERVATION_FIT_GAP = 0.15
+export const MODEL_RESERVATION_DAMP = 0.08
+
+// Model
+// The class count is NOT a constant — it is defined by resources/model/class_names.json
+// and validated against the model's output width at classifier init.
+export const MODEL_INPUT_SIZE = 96
+
+// Streamer view
+// v2: StreamPlayerRow.picks became a fixed-length-4 positional array (nulls for
+// empty boxes, index 3 = ultimate box) instead of a compact list.
+export const STREAM_PROTOCOL_VERSION = 2
+export const DEFAULT_STREAM_PORT = 58873
+export const STREAM_TOP_WINRATE_COUNT = 8
+export const STREAM_MAX_COMBO_PANEL_ENTRIES = 8
+export const STREAM_PICK_FEED_LENGTH = 20
+
+// Model-tile IDENTIFICATION via NCC against the gathered reference-tile library
+// (core/ml/model-tile-matcher.ts; references from ad_data_gather_script's
+// models mode land in userData/model-tiles/<hero>/*.png).
+// CALIBRATED on the 2026-08-19 diagnostic run (11 bot drafts, 5737 accepted
+// tile matches vs known lineups): correct matches score 0.995+ (p05, median
+// 0.998) because a reference exists for that hero AT THAT BOARD POSITION,
+// while every WRONG match topped out at 0.782 (median 0.564 — mostly picked/
+// dimmed tiles latching onto dark templates: tiny/pangolier/tusk). The
+// distribution is bimodal with a wide empty gap, so a 0.85 floor drops 100%
+// of the wrong matches and keeps 99.1% of the correct ones. At the old 0.5
+// floor those 36 wrong IDs made model recognition 72.7% accurate; a tile that
+// scores below the floor now reads Unknown, which beats a confident misread.
+export const MODEL_TILE_MATCH_MIN_NCC = 0.85
+export const MODEL_TILE_MATCH_MIN_MARGIN = 0.03
+
+// OCR of hero names on the 10 player cards (main/services/ocr-service.ts).
+// Names are always English spaced capitals; the strip is the card's UPPER HALF
+// (the highlighted/active card expands, shifting the name down). A strip is
+// re-OCR'd only when its downscaled pixels change (cheap diff), and a match
+// below this similarity (1 - levenshtein/len) is discarded as a misread.
+export const OCR_NAME_STRIP_HEIGHT_RATIO = 0.5
+export const OCR_MIN_SIMILARITY = 0.6
+export const OCR_STRIP_DIFF_SIZE = 32
+export const OCR_STRIP_DIFF_THRESHOLD = 4
+// Strips are upscaled to this width before OCR so letter height is consistent
+// across game resolutions (tesseract reads upscaled small text far better).
+export const OCR_STRIP_TARGET_WIDTH = 600
+
+// "YOU WILL DRAFT IN: N" countdown digits (playing mode; countdown-based
+// own-row detection — countdownTargetRow in core/gsi/draft-clock.ts). The HUD
+// line is center-anchored and scales with screen HEIGHT; the label text ends at
+// a fixed offset right of center and the digits render left-anchored after it.
+// Ratios are of screen HEIGHT, measured on 2560x1440 screenshots (2026-08-26);
+// the x offset is added to width/2.
+export const COUNTDOWN_REGION_X_OFFSET_RATIO = 0.07
+export const COUNTDOWN_REGION_WIDTH_RATIO = 0.12
+export const COUNTDOWN_REGION_Y_RATIO = 0.088
+export const COUNTDOWN_REGION_HEIGHT_RATIO = 0.05
+export const COUNTDOWN_STRIP_TARGET_WIDTH = 300
+
+// Picked-model detection via model-tile diffing. The 12 model portrait tiles on
+// the draft stage are pixel-STATIC while unpicked (measured mean abs diff 0.0
+// across scans) and change drastically when picked (measured 35-120). Tiles are
+// normalized to a small square for comparison; the threshold sits in the huge
+// gap between "identical" and "changed".
+export const MODEL_TILE_COMPARE_SIZE = 48
+export const MODEL_PICK_DIFF_THRESHOLD = 10
+// A model tile that just read changed gets a dedicated CONFIRMATION capture this
+// soon (zero ability slots — model tiles only), so the two-scan persistence rule
+// resolves in ~1.5s instead of waiting a full turn for the next scheduled scan.
+export const MODEL_PICK_CONFIRM_DELAY_MS = 1_500
+
+// GSI slot <-> scan row correlation via player-card diffing (spectate/replay).
+// The 10 player cards on the draft screen show pixel-static "NO HERO" art until
+// that row's player drafts a model, then switch to ANIMATED hero art — a change
+// that persists against the baseline on every later scan. Cards are normalized
+// to a small square for comparison (same rationale as model tiles; the downscale
+// also absorbs the spectator layout's slight coordinate nudges).
+export const PLAYER_CARD_COMPARE_SIZE = 48
+export const PLAYER_CARD_DIFF_THRESHOLD = 10
+// Matching window between a GSI "slot S gained hero H" event and a card row's
+// first-read-changed time. BEFORE covers GSI lagging the screen (throttle /
+// 10s heartbeat); AFTER covers the scan cadence reaching the changed card
+// (5s replay interval or ~7s turn spacing, plus processing).
+export const SLOT_MAP_EVENT_SLACK_BEFORE_MS = 10_000
+export const SLOT_MAP_EVENT_SLACK_AFTER_MS = 20_000
+
+// Experimental auto-rescan (GSI-driven draft tracking).
+// Fallback auto INITIAL scan: fires this long after the draft clock is first
+// identified (hero selection + clock_time present) when the user hasn't run
+// the initial scan themselves — deep in the preview, pool fully rendered.
+export const AUTO_INITIAL_SCAN_DELAY_S = 15
+// The tick only CHECKS the turn clock; scans fire when a turn ends (~7s apart),
+// so a 1s tick costs nothing between turns but keeps boundary latency low.
+export const AUTO_RESCAN_TICK_MS = 1_000
+// Wait after a turn ends before scanning — the game UI needs a moment to render
+// the picked ability icon into the player's row. Measured 2026-08-26: at 1s the
+// reveal races the capture (misses under CPU load); 2s clears it with 5s of the
+// next turn to spare. A row whose targeted scan still comes up empty gets one
+// retry a tick later (see runRescan).
+export const AUTO_RESCAN_PICK_VISIBLE_DELAY_S = 2
+// A targeted rescan blocked by the contamination guard (hover tooltip over the
+// rows) retries every tick; after this many attempts the pending rows are
+// dropped — the next round-break full reconciliation scan will catch the pick.
+export const AUTO_RESCAN_MAX_TARGET_RETRIES = 10
+// REPLAYS: seeking rewinds the draft clock and playback is chunked, so the turn
+// schedule cannot be trusted — replay sessions fall back to plain periodic FULL
+// rescans at this interval. Live spectating stays turn-driven.
+export const AUTO_RESCAN_REPLAY_INTERVAL_MS = 5_000
+// A spectated draft whose clock jumps BACKWARD by more than this is a replay
+// being seeked (the per-turn -7..0 countdown legitimately rewinds by exactly 7s,
+// so the threshold must sit above that).
+export const REPLAY_CLOCK_REWIND_THRESHOLD_S = 10
+// Contamination guard: after this many CONSECUTIVE rejected rescans, accept the
+// next one and re-baseline — a poisoned baseline (confident misread of an empty
+// slot) or a long-lived in-game overlay must not stall updates indefinitely.
+export const RESCAN_GUARD_MAX_CONSECUTIVE_REJECTIONS = 3
+
+// Cached-source game window capture (cached-window-capture-service.ts + the
+// overlay renderer's capture-agent.ts). desktopCapturer.getSources() thumbnails
+// EVERY open window to deliver one frame (measured 730-1075ms/scan, ~85% of
+// scan latency), so scans instead grab frames from a persistent getUserMedia
+// stream of the game window; getSources runs once per session (thumbnail-free)
+// only to resolve the window's source id.
+// Stream frame-rate cap: scans run at most every ~1.5s, so a frame up to
+// 1/10s stale is irrelevant while the capture stays cheap between scans.
+export const CAPTURE_STREAM_MAX_FPS = 10
+// Main-side wait for the renderer's frame response. Covers a cold stream start
+// (getUserMedia + the known ~300ms WGC first-attempt failure) with room to
+// spare; on expiry the scan falls back to the getSources path (~1s).
+export const CAPTURE_FRAME_TIMEOUT_MS = 4_000
+// Renderer-side wait for the FIRST frame after a stream starts. Must stay
+// below CAPTURE_FRAME_TIMEOUT_MS so the error response beats the main-side
+// timeout (a timed-out request ignores late responses).
+export const CAPTURE_FIRST_FRAME_TIMEOUT_MS = 3_000
+// No frame requested for this long -> the draft is over; stop the renderer
+// stream so the WGC capture session doesn't run for the whole match. The
+// cached source id survives (restarting the stream is cheap).
+export const CAPTURE_IDLE_STOP_MS = 30_000
+
+// Per-player draft score: score = clamp01(meanWinrate + weight * Σ clamped pair lifts).
+// MAX_PAIR_DELTA caps a single pair's contribution so one outlier synergy row
+// cannot dominate the whole score.
+export const PLAYER_SCORE_SYNERGY_WEIGHT = 0.5
+export const PLAYER_SCORE_MAX_PAIR_DELTA = 0.08

@@ -1,0 +1,219 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { createWindrunApiClient } from '@core/scraper/windrun-api-client'
+import type {
+  WindrunAbilitiesResponse,
+  WindrunStaticAbilitiesResponse,
+  WindrunPairsResponse,
+  WindrunTripletsResponse,
+} from '@core/scraper/types'
+
+describe('WindrunApiClient', () => {
+  const originalFetch = globalThis.fetch
+
+  beforeEach(() => {
+    globalThis.fetch = vi.fn()
+  })
+
+  afterEach(() => {
+    globalThis.fetch = originalFetch
+  })
+
+  function mockFetchJson(data: unknown) {
+    ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve(data),
+    })
+  }
+
+  function mockFetchError(status: number, statusText: string) {
+    ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      ok: false,
+      status,
+      statusText,
+    })
+  }
+
+  describe('client tag', () => {
+    // Dummy value — the real one lives only in .env / app-config.json
+    const TOKEN = 'test-token-123'
+
+    it('appends the tag param to every request when provided', async () => {
+      mockFetchJson({ data: [] })
+      const client = createWindrunApiClient('https://api.windrun.io/api/v2', TOKEN)
+      await client.fetchStaticAbilities()
+
+      const url = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0][0] as string
+      expect(url).toContain('idf=test-token-123')
+    })
+
+    it('keeps the patch param alongside the tag', async () => {
+      mockFetchJson({ data: [] })
+      const client = createWindrunApiClient('https://api.windrun.io/api/v2', TOKEN)
+      await client.fetchAbilities('7.39')
+
+      const url = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0][0] as string
+      expect(url).toContain('patch=7.39')
+      expect(url).toContain('idf=test-token-123')
+    })
+
+    it('omits the param entirely when none is configured', async () => {
+      mockFetchJson({ data: [] })
+      const client = createWindrunApiClient('https://api.windrun.io/api/v2')
+      await client.fetchStaticAbilities()
+
+      const url = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0][0] as string
+      expect(url).not.toContain('idf=')
+    })
+
+    it('never leaks the tag into error messages', async () => {
+      mockFetchError(429, 'Too Many Requests')
+      const client = createWindrunApiClient('https://api.windrun.io/api/v2', TOKEN)
+
+      const err = await client.fetchStaticAbilities().catch((e: unknown) => e as Error)
+      expect(err.message).toContain('429')
+      expect(err.message).not.toContain(TOKEN)
+    })
+  })
+
+  it('fetchStaticAbilities calls correct URL', async () => {
+    const response: WindrunStaticAbilitiesResponse = {
+      data: [
+        {
+          valveId: 5359, englishName: 'Fury Swipes', shortName: 'ursa_fury_swipes',
+          ownerHeroId: 70, hasScepter: false, hasShard: true,
+        },
+      ],
+    }
+    mockFetchJson(response)
+
+    const client = createWindrunApiClient('https://api.windrun.io/api/v2')
+    const result = await client.fetchStaticAbilities()
+
+    expect(result.data[0].shortName).toBe('ursa_fury_swipes')
+    expect(globalThis.fetch).toHaveBeenCalledWith(
+      'https://api.windrun.io/api/v2/static/abilities',
+      expect.objectContaining({
+        headers: { Accept: 'application/json' },
+      }),
+    )
+  })
+
+  it('fetchAbilities appends patch parameter when provided', async () => {
+    const response: WindrunAbilitiesResponse = {
+      data: {
+        patches: { overall: ['7.40c'] },
+        abilityStats: [],
+      },
+    }
+    mockFetchJson(response)
+
+    const client = createWindrunApiClient('https://api.windrun.io/api/v2')
+    await client.fetchAbilities('7.40c')
+
+    const calledUrl = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0][0] as string
+    expect(calledUrl).toContain('patch=7.40c')
+  })
+
+  it('fetchAbilities omits patch parameter when not provided', async () => {
+    const response: WindrunAbilitiesResponse = {
+      data: {
+        patches: { overall: ['7.40c'] },
+        abilityStats: [],
+      },
+    }
+    mockFetchJson(response)
+
+    const client = createWindrunApiClient('https://api.windrun.io/api/v2')
+    await client.fetchAbilities()
+
+    const calledUrl = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0][0] as string
+    expect(calledUrl).not.toContain('patch=')
+  })
+
+  it('fetchAbilityPairs returns both pairs and abilityStats', async () => {
+    const response: WindrunPairsResponse = {
+      data: {
+        abilityPairs: [
+          { abilityIdOne: 5359, abilityIdTwo: 5100, numPicks: 500, winrate: 0.60 },
+        ],
+        abilityStats: [
+          { abilityId: 5359, numPicks: 800, avgPickPosition: 2.6, wins: 440, ownerHero: 70, winrate: 0.55, pickRate: 0.99 },
+        ],
+      },
+    }
+    mockFetchJson(response)
+
+    const client = createWindrunApiClient('https://api.windrun.io/api/v2')
+    const result = await client.fetchAbilityPairs()
+
+    expect(result.data.abilityPairs).toHaveLength(1)
+    expect(result.data.abilityStats).toHaveLength(1)
+  })
+
+  it('fetchAbilityTriplets returns triplets', async () => {
+    const response: WindrunTripletsResponse = {
+      data: {
+        abilityTriplets: [
+          { abilityIdOne: -70, abilityIdTwo: 5359, abilityIdThree: 5100, numPicks: 200, winrate: 0.65 },
+        ],
+      },
+    }
+    mockFetchJson(response)
+
+    const client = createWindrunApiClient('https://api.windrun.io/api/v2')
+    const result = await client.fetchAbilityTriplets()
+
+    expect(result.data.abilityTriplets).toHaveLength(1)
+    expect(result.data.abilityTriplets[0].abilityIdOne).toBe(-70)
+  })
+
+  it('fetchAbilityShifts calls ability-shifts with the patch param', async () => {
+    mockFetchJson({
+      data: {
+        patches: { overall: ['7.41d'] },
+        abilityShifts: [
+          {
+            abilityId: 5606, killsShift: 0.05, deathsShift: -0.1, killAssistShift: 0.02,
+            gpmShift: 0.56, xpmShift: 0.4, dmgShift: 0.08, healingShift: -0.05,
+          },
+        ],
+      },
+    })
+
+    const client = createWindrunApiClient('https://api.windrun.io/api/v2')
+    const result = await client.fetchAbilityShifts('7.41d')
+
+    const url = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0][0] as string
+    expect(url).toBe('https://api.windrun.io/api/v2/ability-shifts?patch=7.41d')
+    expect(result.data.abilityShifts[0].gpmShift).toBe(0.56)
+  })
+
+  it('throws on HTTP error response', async () => {
+    mockFetchError(500, 'Internal Server Error')
+
+    const client = createWindrunApiClient('https://api.windrun.io/api/v2')
+    await expect(client.fetchStaticAbilities()).rejects.toThrow(
+      'Windrun API error: 500 Internal Server Error for static/abilities',
+    )
+  })
+
+  it('handles custom base URL', async () => {
+    mockFetchJson({ data: {} })
+
+    const client = createWindrunApiClient('http://localhost:3000/api/v2')
+    await client.fetchStaticHeroes()
+
+    const calledUrl = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0][0] as string
+    expect(calledUrl).toBe('http://localhost:3000/api/v2/static/heroes')
+  })
+
+  it('handles base URL with trailing slash', async () => {
+    mockFetchJson({ data: {} })
+
+    const client = createWindrunApiClient('https://api.windrun.io/api/v2/')
+    await client.fetchPatches()
+
+    const calledUrl = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0][0] as string
+    expect(calledUrl).toBe('https://api.windrun.io/api/v2/static/patches')
+  })
+})

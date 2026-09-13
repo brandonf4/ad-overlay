@@ -1,0 +1,241 @@
+import { describe, it, expect } from 'vitest'
+import { determineTopTierEntities } from '@core/domain/top-tier'
+import type { ScoredEntity } from '@core/domain/types'
+
+function makeAbility(
+  name: string,
+  score: number,
+  opts: { isUltCoord?: boolean; isUltDb?: boolean; roleCurated?: boolean } = {},
+): ScoredEntity {
+  return {
+    entityType: 'ability',
+    internalName: name,
+    displayName: name,
+    winrate: null,
+    pickRate: null,
+    consolidatedScore: score,
+    isUltimateFromCoordSource: opts.isUltCoord ?? false,
+    isUltimateFromDb: opts.isUltDb ?? false,
+    roleCurated: opts.roleCurated,
+  }
+}
+
+function makeHero(
+  name: string,
+  score: number,
+  dbHeroId: number,
+  opts: { roleCurated?: boolean } = {},
+): ScoredEntity {
+  return {
+    entityType: 'hero',
+    internalName: name,
+    displayName: name,
+    winrate: null,
+    pickRate: null,
+    consolidatedScore: score,
+    dbHeroId,
+    heroOrder: 0,
+    roleCurated: opts.roleCurated,
+  }
+}
+
+describe('determineTopTierEntities', () => {
+  it('returns max 10 entities', () => {
+    const entities = Array.from({ length: 20 }, (_, i) =>
+      makeAbility(`ability_${i}`, 0.9 - i * 0.01),
+    )
+    const result = determineTopTierEntities(entities, null, false, new Set())
+    expect(result).toHaveLength(10)
+  })
+
+  it('synergy suggestions come first, sorted by score', () => {
+    const entities = [
+      makeAbility('a', 0.9),
+      makeAbility('b', 0.8),
+      makeAbility('synergy1', 0.7),
+      makeAbility('synergy2', 0.85),
+    ]
+    const synergyPartners = new Set(['synergy1', 'synergy2'])
+    const result = determineTopTierEntities(entities, null, false, synergyPartners)
+
+    // synergy2 (0.85) before synergy1 (0.7), then a (0.9) before b (0.8)
+    expect(result[0].internalName).toBe('synergy2')
+    expect(result[0].isSynergySuggestionForMySpot).toBe(true)
+    expect(result[1].internalName).toBe('synergy1')
+    expect(result[1].isSynergySuggestionForMySpot).toBe(true)
+    expect(result[2].internalName).toBe('a')
+    expect(result[2].isGeneralTopTier).toBe(true)
+    expect(result[3].internalName).toBe('b')
+  })
+
+  it('general top picks fill remaining slots after synergy', () => {
+    const entities = [
+      makeAbility('a', 0.9),
+      makeAbility('b', 0.8),
+      makeAbility('c', 0.7),
+      makeAbility('synergy1', 0.6),
+    ]
+    const result = determineTopTierEntities(
+      entities,
+      null,
+      false,
+      new Set(['synergy1']),
+    )
+    expect(result).toHaveLength(4)
+    // 1 synergy + 3 general
+    expect(result.filter((e) => e.isSynergySuggestionForMySpot)).toHaveLength(1)
+    expect(result.filter((e) => e.isGeneralTopTier)).toHaveLength(3)
+  })
+
+  it('when mySpotHasUlt: excludes ultimates from candidates', () => {
+    const entities = [
+      makeAbility('ult1', 0.95, { isUltCoord: true }),
+      makeAbility('ult2', 0.93, { isUltDb: true }),
+      makeAbility('normal1', 0.9),
+      makeAbility('normal2', 0.8),
+    ]
+    const result = determineTopTierEntities(entities, null, true, new Set())
+    expect(result.map((e) => e.internalName)).toEqual(['normal1', 'normal2'])
+  })
+
+  it('when mySpotHasUlt: excludes ultimate synergy partners', () => {
+    const entities = [
+      makeAbility('ult_synergy', 0.95, { isUltCoord: true }),
+      makeAbility('normal_synergy', 0.85),
+      makeAbility('general', 0.7),
+    ]
+    const result = determineTopTierEntities(
+      entities,
+      null,
+      true,
+      new Set(['ult_synergy', 'normal_synergy']),
+    )
+    // ult_synergy excluded, normal_synergy included as synergy
+    expect(result[0].internalName).toBe('normal_synergy')
+    expect(result[0].isSynergySuggestionForMySpot).toBe(true)
+    expect(result[1].internalName).toBe('general')
+    expect(result[1].isGeneralTopTier).toBe(true)
+  })
+
+  it('when selectedModelId set: general candidates are abilities-only', () => {
+    const entities = [
+      makeHero('hero1', 0.95, 1),
+      makeAbility('ability1', 0.9),
+      makeAbility('ability2', 0.85),
+    ]
+    const result = determineTopTierEntities(entities, 1, false, new Set())
+    expect(result.map((e) => e.internalName)).toEqual(['ability1', 'ability2'])
+  })
+
+  it('when selectedModelId is null: hero entities included in general picks', () => {
+    const entities = [
+      makeHero('hero1', 0.95, 1),
+      makeAbility('ability1', 0.9),
+    ]
+    const result = determineTopTierEntities(entities, null, false, new Set())
+    expect(result).toHaveLength(2)
+    expect(result[0].internalName).toBe('hero1')
+  })
+
+  it('no synergy partners: all 10 are general picks', () => {
+    const entities = Array.from({ length: 12 }, (_, i) =>
+      makeAbility(`ability_${i}`, 0.9 - i * 0.01),
+    )
+    const result = determineTopTierEntities(entities, null, false, new Set())
+    expect(result).toHaveLength(10)
+    expect(result.every((e) => e.isGeneralTopTier)).toBe(true)
+  })
+
+  it('handles more than 10 synergy partners (takes top 10 by score)', () => {
+    const entities = Array.from({ length: 15 }, (_, i) =>
+      makeAbility(`syn_${i}`, 0.9 - i * 0.01),
+    )
+    const synergyPartners = new Set(entities.map((e) => e.internalName))
+    const result = determineTopTierEntities(entities, null, false, synergyPartners)
+    expect(result).toHaveLength(10)
+    expect(result.every((e) => e.isSynergySuggestionForMySpot)).toBe(true)
+    // Verify they're the top 10 by score
+    expect(result[0].consolidatedScore).toBe(0.9)
+  })
+
+  it('returns empty for empty entities', () => {
+    const result = determineTopTierEntities([], null, false, new Set())
+    expect(result).toHaveLength(0)
+  })
+
+  it('curated role must-picks get a guaranteed slot even when stats rank them out', () => {
+    // 12 strong general picks would fill all 10 slots — the curated ability's
+    // 0.01 score must not matter, that is the entire point of the curation.
+    const entities = [
+      ...Array.from({ length: 12 }, (_, i) => makeAbility(`strong_${i}`, 0.9 - i * 0.01)),
+      makeAbility('glimpse', 0.01, { roleCurated: true }),
+    ]
+    const result = determineTopTierEntities(entities, null, false, new Set())
+    expect(result).toHaveLength(10)
+    const glimpse = result.find((e) => e.internalName === 'glimpse')!
+    expect(glimpse.isCuratedForRole).toBe(true)
+    expect(glimpse.isGeneralTopTier).toBe(true)
+    expect(glimpse.isSynergySuggestionForMySpot).toBe(false)
+  })
+
+  it('curated picks rank after synergy suggestions and never duplicate in general', () => {
+    const entities = [
+      makeAbility('syn', 0.5),
+      makeAbility('curated', 0.4, { roleCurated: true }),
+      makeAbility('general', 0.9),
+    ]
+    const result = determineTopTierEntities(entities, null, false, new Set(['syn']))
+    expect(result.map((e) => e.internalName)).toEqual(['syn', 'curated', 'general'])
+    expect(result.filter((e) => e.isCuratedForRole)).toHaveLength(1)
+  })
+
+  it('curated ultimates stay excluded when My Spot already has an ult', () => {
+    const entities = [
+      makeAbility('curated_ult', 0.9, { isUltDb: true, roleCurated: true }),
+      makeAbility('normal', 0.5),
+    ]
+    const result = determineTopTierEntities(entities, null, true, new Set())
+    expect(result.map((e) => e.internalName)).toEqual(['normal'])
+  })
+
+  it('a curated hero MODEL gets a guaranteed slot — unless a model is already picked', () => {
+    const entities = [
+      ...Array.from({ length: 12 }, (_, i) => makeAbility(`strong_${i}`, 0.9 - i * 0.01)),
+      makeHero('curated_model', 0.01, 7, { roleCurated: true }),
+    ]
+    const withoutModel = determineTopTierEntities(entities, null, false, new Set())
+    expect(
+      withoutModel.find((e) => e.internalName === 'curated_model')?.isCuratedForRole,
+    ).toBe(true)
+
+    // Model already picked: suggesting models is pointless, curated included
+    const withModel = determineTopTierEntities(entities, 3, false, new Set())
+    expect(withModel.find((e) => e.internalName === 'curated_model')).toBeUndefined()
+  })
+
+  it('without roleCurated flags behavior is unchanged (role mode off)', () => {
+    const entities = [makeAbility('a', 0.9), makeAbility('b', 0.8)]
+    const result = determineTopTierEntities(entities, null, false, new Set())
+    expect(result.every((e) => e.isCuratedForRole === undefined || e.isCuratedForRole === false)).toBe(true)
+    expect(result.map((e) => e.internalName)).toEqual(['a', 'b'])
+  })
+
+  it('synergy suggestions are not duplicated in general picks', () => {
+    const entities = [
+      makeAbility('synergy_ability', 0.95),
+      makeAbility('general_ability', 0.8),
+    ]
+    const result = determineTopTierEntities(
+      entities,
+      null,
+      false,
+      new Set(['synergy_ability']),
+    )
+    const names = result.map((e) => e.internalName)
+    expect(names).toEqual(['synergy_ability', 'general_ability'])
+    // synergy_ability should NOT appear as general
+    const synAbility = result.find((e) => e.internalName === 'synergy_ability')
+    expect(synAbility?.isSynergySuggestionForMySpot).toBe(true)
+    expect(synAbility?.isGeneralTopTier).toBe(false)
+  })
+})

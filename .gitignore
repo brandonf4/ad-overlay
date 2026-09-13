@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+
+# Build output
+out/
+dist/
+# build/* (not build/) so negations below can re-include files — git cannot
+# re-include anything under an excluded directory
+build/*
+!build/.gitkeep
+# The app icon must ship with the repo — CI release builds have no other source
+# (losing this to the build ignore is how v2 releases shipped the default icon)
+!build/icon.ico
+!build/icon.svg
+
+# TypeScript build cache
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Test coverage
+coverage/
+test-results/
+
+# Electron
+*.asar
+
+# Generated config
+**/app-config.js
+**/app-config.json
+
+# Claude Code (keep CLAUDE.md committed, ignore local files)
+.claude/settings.local.json
+.claude/instructions.md
+.claude/plans/
+
+# Colab
+colab/**
+
+# Python bytecode (training pipeline)
+__pycache__/

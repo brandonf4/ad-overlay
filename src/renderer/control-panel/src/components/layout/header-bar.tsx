@@ -1,0 +1,86 @@
+import { useTranslation } from 'react-i18next'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
+import { Languages, Heart } from 'lucide-react'
+import { useAppStore } from '@/hooks/use-app-store'
+import { useAppDispatch } from '@/hooks/use-dispatch'
+import { APP_ACTIONS } from '@shared/types/app-store'
+import { LANGUAGE_META, SUPPORT_URL, SUPPORTED_LANGUAGES } from '@shared/constants/defaults'
+import type { SupportedLanguage } from '@shared/constants/defaults'
+import type { PageId } from '@/hooks/use-navigation'
+
+const pageTitleKeys: Record<PageId, { ns: string; key: string }> = {
+  dashboard: { ns: 'dashboard', key: 'title' },
+  abilities: { ns: 'data', key: 'abilities.title' },
+  heroes: { ns: 'data', key: 'heroes.title' },
+  scraping: { ns: 'data', key: 'scraping.title' },
+  streaming: { ns: 'streaming', key: 'title' },
+  settings: { ns: 'settings', key: 'title' },
+  mapper: { ns: 'data', key: 'mapper.title' },
+  'dev-mapper': { ns: 'data', key: 'mapper.devTitle' },
+}
+
+interface HeaderBarProps {
+  activePage: PageId
+}
+
+export function HeaderBar({ activePage }: HeaderBarProps) {
+  const { t, i18n } = useTranslation()
+  const language = useAppStore((s) => s.language)
+  const dispatch = useAppDispatch()
+
+  const titleEntry = pageTitleKeys[activePage]
+  const pageTitle = t(`${titleEntry.key}`, { ns: titleEntry.ns })
+
+  const handleLanguageChange = (lang: SupportedLanguage) => {
+    dispatch(APP_ACTIONS.LANGUAGE_SET, lang)
+    i18n.changeLanguage(lang)
+    window.electronApi.invoke('settings:set', { language: lang })
+  }
+
+  return (
+    <header className="flex items-center justify-between border-b border-border px-6 py-3">
+      <h1 className="text-lg font-semibold">{pageTitle}</h1>
+
+      <div className="flex items-center gap-1">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="gap-2 text-[#ff5e5b] hover:bg-[#ff5e5b]/10 hover:text-[#ff5e5b]"
+          onClick={() => window.electronApi.send('app:openExternal', { url: SUPPORT_URL })}
+          title={t('support.tooltip')}
+        >
+          <Heart className="h-4 w-4" fill="currentColor" aria-hidden="true" />
+          <span className="text-sm">{t('support.label')}</span>
+        </Button>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" className="gap-2" aria-label={t('language.label')}>
+              <Languages className="h-4 w-4" aria-hidden="true" />
+              <span className="text-sm">
+                {LANGUAGE_META[language as SupportedLanguage]?.short ?? 'EN'}
+              </span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {SUPPORTED_LANGUAGES.map((lang) => (
+              <DropdownMenuItem
+                key={lang}
+                onClick={() => handleLanguageChange(lang)}
+                className={language === lang ? 'bg-accent' : ''}
+              >
+                {LANGUAGE_META[lang].autonym} ({LANGUAGE_META[lang].short})
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </header>
+  )
+}
