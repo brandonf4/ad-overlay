@@ -163,6 +163,23 @@ export interface DisplayScanSlot extends ScanResult {
   winrateHigh: number | null
 }
 
+/**
+ * A hero identified for one of the 12 draft-board model slots — via its
+ * hero-defining ability (ability_order === 2), not image recognition. Every
+ * hero's abilities are already being classified as part of the normal pool
+ * scan, and ability internal names encode their owning hero (e.g.
+ * "night_stalker_void" -> hero "night_stalker"), so a plain data lookup is
+ * enough. See scan-processing-service.ts.
+ */
+export interface IdentifiedHeroModel {
+  heroOrder: number
+  name: string | null
+  displayName: string
+  winrateHigh: number | null
+  confidence: number
+  coord: SlotCoordinate
+}
+
 export interface OverlayDataPayload {
   scanData: {
     ultimates: DisplayScanSlot[]
@@ -171,6 +188,8 @@ export interface OverlayDataPayload {
   /** Recognized pool slots (ultimates + standard combined), highest win rate
    * first, capped to a fixed list length — see scan-processing-service.ts. */
   topWinratePicks: DisplayScanSlot[]
+  /** The 12 draft-board hero models, identified via their defining ability. */
+  identifiedHeroModels: IdentifiedHeroModel[]
   targetResolution: string
   scaleFactor: number
 }

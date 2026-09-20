@@ -145,6 +145,7 @@ export function createScanTriggerService(
           result.results as InitialScanResults,
           resolution,
           scaleFactor,
+          layout.models_coords ?? [],
         )
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error)

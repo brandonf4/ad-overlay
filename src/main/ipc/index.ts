@@ -108,6 +108,7 @@ export function registerIpcHandlers(
     pendingOverlayData = {
       scanData: null,
       topWinratePicks: [],
+      identifiedHeroModels: [],
       targetResolution: resolution,
       scaleFactor,
     }

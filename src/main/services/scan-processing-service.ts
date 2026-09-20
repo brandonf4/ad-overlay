@@ -1,7 +1,13 @@
 import log from 'electron-log/main'
 import type { WindowManager } from './window-manager'
 import type { AbilityDataService } from './ability-data-service'
-import type { ScanResult, DisplayScanSlot, OverlayDataPayload } from '@shared/types'
+import type {
+  ScanResult,
+  SlotCoordinate,
+  DisplayScanSlot,
+  IdentifiedHeroModel,
+  OverlayDataPayload,
+} from '@shared/types'
 import type { InitialScanResults } from '@shared/types/ml'
 
 // @DEV-GUIDE: Phase-1 placeholder — bridges raw ML scan results to the overlay UI
@@ -43,11 +49,39 @@ function topWinratePicks(slots: DisplayScanSlot[]): DisplayScanSlot[] {
     .slice(0, TOP_WINRATE_PICKS_COUNT)
 }
 
+// Each hero's ability at ability_order === 2 is already classified as part of the normal
+// pool scan; its internal name encodes the owning hero, so identifying the hero model in
+// the same column (hero_order) is a plain lookup — no image recognition of the model tile.
+function identifyHeroModels(
+  heroDefiningAbilities: ScanResult[],
+  modelCoords: SlotCoordinate[],
+  abilityData: AbilityDataService,
+): IdentifiedHeroModel[] {
+  const byHeroOrder = new Map<number, ScanResult>()
+  for (const ability of heroDefiningAbilities) {
+    if (ability.name) byHeroOrder.set(ability.hero_order, ability)
+  }
+
+  return modelCoords.map((coord) => {
+    const ability = byHeroOrder.get(coord.hero_order)
+    const hero = ability?.name ? abilityData.getHeroByAbility(ability.name) : undefined
+    return {
+      heroOrder: coord.hero_order,
+      name: hero?.name ?? null,
+      displayName: hero?.displayName ?? 'Unknown Hero',
+      winrateHigh: hero?.winrateHigh ?? null,
+      confidence: hero && ability ? ability.confidence : 0,
+      coord,
+    }
+  })
+}
+
 export interface ScanProcessingService {
   handleScanResults(
     results: InitialScanResults,
     resolution: string,
     scaleFactor: number,
+    modelCoords: SlotCoordinate[],
   ): void
 }
 
@@ -68,7 +102,7 @@ export function createScanProcessingService(
   }
 
   return {
-    handleScanResults(results, resolution, scaleFactor) {
+    handleScanResults(results, resolution, scaleFactor, modelCoords) {
       const start = performance.now()
       try {
         const ultimates = results.ultimates.map((r) => toDisplaySlot(r, abilityData))
@@ -77,6 +111,11 @@ export function createScanProcessingService(
         const payload: OverlayDataPayload = {
           scanData: { ultimates, standard },
           topWinratePicks: topWinratePicks([...ultimates, ...standard]),
+          identifiedHeroModels: identifyHeroModels(
+            results.heroDefiningAbilities,
+            modelCoords,
+            abilityData,
+          ),
           targetResolution: resolution,
           scaleFactor,
         }

@@ -41,6 +41,11 @@ export interface HeroModelDataEntry {
 export interface AbilityDataService {
   getAbility(name: string): AbilityDataEntry | undefined
   getHeroModel(name: string): HeroModelDataEntry | undefined
+  /** Owning hero of an ability, by the ability's internal name (e.g.
+   * "night_stalker_void" -> hero "night_stalker"). Used to identify a
+   * draft-board hero model from its already-classified defining ability,
+   * with no image recognition needed. */
+  getHeroByAbility(abilityName: string): HeroModelDataEntry | undefined
 }
 
 function getDataPath(): string {
@@ -51,15 +56,17 @@ function getDataPath(): string {
 export function createAbilityDataService(): AbilityDataService {
   const abilities = new Map<string, AbilityDataEntry>()
   const heroModels = new Map<string, HeroModelDataEntry>()
+  const abilityToHero = new Map<string, HeroModelDataEntry>()
 
   try {
     const raw: RawHero[] = JSON.parse(readFileSync(getDataPath(), 'utf-8'))
     for (const hero of raw) {
-      heroModels.set(hero.name, {
+      const heroEntry: HeroModelDataEntry = {
         name: hero.name,
         displayName: hero.display_name,
         winrateHigh: hero.model_winrate_high,
-      })
+      }
+      heroModels.set(hero.name, heroEntry)
       for (const ability of hero.abilities) {
         abilities.set(ability.name, {
           name: ability.name,
@@ -67,6 +74,7 @@ export function createAbilityDataService(): AbilityDataService {
           isUltimate: ability.is_ultimate,
           winrateHigh: ability.winrate_high,
         })
+        abilityToHero.set(ability.name, heroEntry)
       }
     }
     logger.info('Ability data loaded', {
@@ -81,5 +89,6 @@ export function createAbilityDataService(): AbilityDataService {
   return {
     getAbility: (name) => abilities.get(name),
     getHeroModel: (name) => heroModels.get(name),
+    getHeroByAbility: (abilityName) => abilityToHero.get(abilityName),
   }
 }

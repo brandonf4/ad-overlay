@@ -4,6 +4,7 @@ import { useOverlayData } from './hooks/use-overlay-data'
 import { ControlsPanel } from './components/ControlsPanel'
 import { AbilityHotspot } from './components/AbilityHotspot'
 import { TopPicksPanel } from './components/TopPicksPanel'
+import { HeroModelLabel } from './components/HeroModelLabel'
 
 // @DEV-GUIDE: Root component for the overlay renderer, Phase 1 (see the fork's plan
 // doc). Renders on a transparent, click-through window on top of the Dota 2 game.
@@ -43,6 +44,10 @@ function App(): JSX.Element {
           slot={slot}
           scaleFactor={scaleFactor}
         />
+      ))}
+
+      {overlayData?.identifiedHeroModels.map((model) => (
+        <HeroModelLabel key={model.heroOrder} model={model} scaleFactor={scaleFactor} />
       ))}
 
       {overlayData && (
