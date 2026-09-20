@@ -1,16 +1,47 @@
 import log from 'electron-log/main'
 import type { WindowManager } from './window-manager'
+import type { AbilityDataService } from './ability-data-service'
 import type { ScanResult, DisplayScanSlot, OverlayDataPayload } from '@shared/types'
 import type { InitialScanResults } from '@shared/types/ml'
 
 // @DEV-GUIDE: Phase-1 placeholder — bridges raw ML scan results to the overlay UI
-// with NO scoring applied yet (see the fork's plan doc). The upstream version this
-// replaces read DraftStore + DB repositories and delegated to a pure domain
-// scoring function; this one just prettifies names and passes coordinates through,
-// so the kept scanning/overlay pipeline can be proven end-to-end before the new
-// scoring module (Phase 2) and real UI (Phase 3) exist.
+// (see the fork's plan doc). The upstream version this replaces read DraftStore + DB
+// repositories and delegated to a pure domain scoring function; this one attaches a
+// real winrate per slot via AbilityDataService (ad-simulator's own Windrun-sourced
+// data — see ability-data-service.ts) and ranks by it, but does none of the
+// synergy/role/personalization scoring the old system did. That's still Phase 2+.
 
 const logger = log.scope('scan-processing')
+
+// How many recognized slots to surface in the "highest winrate" list.
+const TOP_WINRATE_PICKS_COUNT = 8
+
+// "night_stalker_void" -> "Night Stalker Void". Fallback for anything the data
+// file doesn't have an entry for (recognized by the classifier but not in
+// ad-simulator's dataset yet — e.g. a very new patch).
+function prettifyName(name: string | null): string {
+  if (!name) return 'Unknown'
+  return name
+    .split('_')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+}
+
+function toDisplaySlot(result: ScanResult, abilityData: AbilityDataService): DisplayScanSlot {
+  const entry = result.name ? abilityData.getAbility(result.name) : undefined
+  return {
+    ...result,
+    displayName: entry?.displayName ?? prettifyName(result.name),
+    winrateHigh: entry?.winrateHigh ?? null,
+  }
+}
+
+function topWinratePicks(slots: DisplayScanSlot[]): DisplayScanSlot[] {
+  return slots
+    .filter((s) => s.name !== null && s.winrateHigh !== null)
+    .sort((a, b) => (b.winrateHigh as number) - (a.winrateHigh as number))
+    .slice(0, TOP_WINRATE_PICKS_COUNT)
+}
 
 export interface ScanProcessingService {
   handleScanResults(
@@ -20,22 +51,9 @@ export interface ScanProcessingService {
   ): void
 }
 
-// "night_stalker_void" -> "Night Stalker Void". Good enough for a placeholder
-// label; a real ability/hero name lookup arrives with the Phase 2 data layer.
-function prettifyName(name: string | null): string {
-  if (!name) return 'Unknown'
-  return name
-    .split('_')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
-}
-
-function toDisplaySlot(result: ScanResult): DisplayScanSlot {
-  return { ...result, displayName: prettifyName(result.name) }
-}
-
 export function createScanProcessingService(
   windowManager: WindowManager,
+  abilityData: AbilityDataService,
 ): ScanProcessingService {
   function broadcastError(message: string): void {
     const payload = { error: message }
@@ -53,11 +71,12 @@ export function createScanProcessingService(
     handleScanResults(results, resolution, scaleFactor) {
       const start = performance.now()
       try {
+        const ultimates = results.ultimates.map((r) => toDisplaySlot(r, abilityData))
+        const standard = results.standard.map((r) => toDisplaySlot(r, abilityData))
+
         const payload: OverlayDataPayload = {
-          scanData: {
-            ultimates: results.ultimates.map(toDisplaySlot),
-            standard: results.standard.map(toDisplaySlot),
-          },
+          scanData: { ultimates, standard },
+          topWinratePicks: topWinratePicks([...ultimates, ...standard]),
           targetResolution: resolution,
           scaleFactor,
         }

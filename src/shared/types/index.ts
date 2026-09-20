@@ -158,6 +158,9 @@ export interface ScanResult {
 
 export interface DisplayScanSlot extends ScanResult {
   displayName: string
+  /** High-skill win rate [0, 1] from ad-simulator's Windrun-sourced data, or
+   * null when the slot is unrecognized or missing from that dataset. */
+  winrateHigh: number | null
 }
 
 export interface OverlayDataPayload {
@@ -165,6 +168,9 @@ export interface OverlayDataPayload {
     ultimates: DisplayScanSlot[]
     standard: DisplayScanSlot[]
   } | null
+  /** Recognized pool slots (ultimates + standard combined), highest win rate
+   * first, capped to a fixed list length — see scan-processing-service.ts. */
+  topWinratePicks: DisplayScanSlot[]
   targetResolution: string
   scaleFactor: number
 }

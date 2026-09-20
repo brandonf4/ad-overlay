@@ -7,6 +7,7 @@ import { createLayoutService } from './services/layout-service'
 import { createScreenshotService } from './services/screenshot-service'
 import { createCachedWindowCaptureService } from './services/cached-window-capture-service'
 import { createScanProcessingService } from './services/scan-processing-service'
+import { createAbilityDataService } from './services/ability-data-service'
 import { createScanTriggerService } from './services/scan-trigger-service'
 import { createWindowTrackerService } from './services/window-tracker-service'
 import { createAppStore, createAppStoreHandlers } from './store/app-store'
@@ -85,7 +86,8 @@ app.whenReady().then(async () => {
   const appHandlers = createAppStoreHandlers(appStore)
   const bridge = createZustandBridge(appStore, { handlers: appHandlers })
 
-  const scanProcessingService = createScanProcessingService(windowManager)
+  const abilityData = createAbilityDataService()
+  const scanProcessingService = createScanProcessingService(windowManager, abilityData)
   const scanTrigger = createScanTriggerService(
     mlService,
     layoutService,

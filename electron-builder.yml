@@ -8,8 +8,6 @@ files:
   - "out/**/*"
   - "!out/**/*.map"
 extraResources:
-  - from: "resources/dota_ad_data.db"
-    to: "dota_ad_data.db"
   - from: "resources/data"
     to: "data"
     filter:

@@ -11,7 +11,8 @@ import { registerMlHandlers } from './ml-handlers'
 import { registerResolutionHandlers } from './resolution-handlers'
 import { loadApiConfig } from '../services/api-config'
 import type { ScanTriggerService } from '../services/scan-trigger-service'
-import type { OverlayDataPayload, LayoutSource } from '@shared/types'
+import type { OverlayDataPayload } from '@shared/types'
+import type { LayoutSource } from '@shared/ipc/api'
 
 // @DEV-GUIDE: Central IPC handler registration, Phase 1. The upstream version this
 // replaces also wired in database/player/scraper/stream/feedback/dev-control/draft
@@ -106,6 +107,7 @@ export function registerIpcHandlers(
     const scaleFactor = layoutService.getScaleFactor()
     pendingOverlayData = {
       scanData: null,
+      topWinratePicks: [],
       targetResolution: resolution,
       scaleFactor,
     }

@@ -3,6 +3,7 @@ import type { JSX } from 'react'
 import { useOverlayData } from './hooks/use-overlay-data'
 import { ControlsPanel } from './components/ControlsPanel'
 import { AbilityHotspot } from './components/AbilityHotspot'
+import { TopPicksPanel } from './components/TopPicksPanel'
 
 // @DEV-GUIDE: Root component for the overlay renderer, Phase 1 (see the fork's plan
 // doc). Renders on a transparent, click-through window on top of the Dota 2 game.
@@ -43,6 +44,14 @@ function App(): JSX.Element {
           scaleFactor={scaleFactor}
         />
       ))}
+
+      {overlayData && (
+        <TopPicksPanel
+          picks={overlayData.topWinratePicks}
+          ultimateSlots={overlayData.scanData?.ultimates ?? []}
+          scaleFactor={scaleFactor}
+        />
+      )}
 
       <ControlsPanel scanState={scanState} scanError={scanError} onScan={triggerScan} />
     </div>
