@@ -11,6 +11,7 @@ import { registerMlHandlers } from './ml-handlers'
 import { registerResolutionHandlers } from './resolution-handlers'
 import { loadApiConfig } from '../services/api-config'
 import type { ScanTriggerService } from '../services/scan-trigger-service'
+import type { IconDataService } from '../services/icon-data-service'
 import type { OverlayDataPayload } from '@shared/types'
 import type { LayoutSource } from '@shared/ipc/api'
 
@@ -32,8 +33,16 @@ export function registerIpcHandlers(
   bridge: ZustandBridge,
   windowTracker: WindowTrackerService,
   scanTrigger: ScanTriggerService,
+  iconData: IconDataService,
 ): void {
   logger.info('Registering IPC handlers...')
+
+  // Mini icons for the suggestion menus. Names are validated again inside the icon cache
+  // (isSafeIconName) before they can reach a file path or URL.
+  ipcMain.handle('icon:get', (_event, req: { kind?: unknown; name?: unknown }) => {
+    if ((req?.kind !== 'ability' && req?.kind !== 'model') || typeof req.name !== 'string') return null
+    return iconData.getDataUrl(req.kind, req.name)
+  })
 
   // App domain
   ipcMain.handle('app:getVersion', () => app.getVersion())

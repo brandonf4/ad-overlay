@@ -1,4 +1,4 @@
-// @DEV-GUIDE: Where Valve publishes official ability art. The pick-row scan
+// @DEV-GUIDE: Where Valve publishes official ability icons and hero portraits. The pick-row scan
 // template-matches against these icons (see ml-worker.ts / core/ml/template-matcher.ts),
 // so the icon cache (main/services/icon-cache-service.ts) downloads one per ability.
 // Ability internal names map 1:1 onto the CDN's file names, except Ability Draft
@@ -23,4 +23,12 @@ export function abilityCdnUrl(abilityName: string): string {
 /** True when the name is safe to use as a URL path segment / file name. */
 export function isSafeIconName(name: string): boolean {
   return /^[a-z0-9_]+$/.test(name)
+}
+
+/**
+ * Hero portrait (the hero MODEL's icon). Hero names in heroes_abilities.json are already
+ * Valve's short names ("antimage", "abyssal_underlord"), which is what the CDN uses.
+ */
+export function heroCdnUrl(heroName: string): string {
+  return `${VALVE_CDN_BASE}/heroes/${heroName}.png`
 }

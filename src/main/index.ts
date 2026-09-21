@@ -9,6 +9,7 @@ import { createCachedWindowCaptureService } from './services/cached-window-captu
 import { createScanProcessingService } from './services/scan-processing-service'
 import { createAbilityDataService } from './services/ability-data-service'
 import { createIconCacheService, loadAbilityClassNames } from './services/icon-cache-service'
+import { createIconDataService } from './services/icon-data-service'
 import { createScanTriggerService } from './services/scan-trigger-service'
 import { createWindowTrackerService } from './services/window-tracker-service'
 import { createAppStore, createAppStoreHandlers } from './store/app-store'
@@ -121,6 +122,7 @@ app.whenReady().then(async () => {
     bridge,
     windowTracker,
     scanTrigger,
+    createIconDataService(iconCache),
   )
 
   app.on('before-quit', async () => {

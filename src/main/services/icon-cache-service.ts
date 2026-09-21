@@ -2,14 +2,15 @@ import { join } from 'path'
 import { promises as fs, mkdirSync } from 'fs'
 import { app } from 'electron'
 import log from 'electron-log/main'
-import { abilityCdnUrl, isSafeIconName } from '@core/icons/ability-icon-url'
+import { abilityCdnUrl, heroCdnUrl, isSafeIconName } from '@core/icons/icon-urls'
 import { ICON_CACHE_REFRESH_TTL_MS } from '@shared/constants/thresholds'
 
 // @DEV-GUIDE: Download-through cache of Valve's official ability icons at
 // userData/stream-icons/abilities/<name>.png. The ml-worker template-matches the
 // player-row pick boxes against these files (ml-service.ts passes this directory as
 // pickIconsDir) — far more accurate than the classifier on those flat icon crops.
-// Adapted from the upstream icon-cache-service, trimmed to abilities only.
+// Adapted from the upstream icon-cache-service, trimmed to abilities plus on-demand hero
+// portraits (userData/stream-icons/heroes/<name>.png) for the menus' mini icons.
 // Cached files are not immutable: Valve reworks icon art in place, which silently breaks
 // matching, so prefetch revalidates any icon older than ICON_CACHE_REFRESH_TTL_MS with a
 // cache-busting fetch (an edge cache is known to serve pre-rework bytes for the bare URL).
@@ -30,9 +31,17 @@ export interface PrefetchSummary {
   failed: number
 }
 
+export type IconKind = 'abilities' | 'heroes'
+
 export interface IconCacheService {
   /** Warm the cache for ability internal names (downloads missing, refreshes stale). */
   prefetchAbilities(names: string[]): Promise<PrefetchSummary>
+  /**
+   * Raw PNG bytes of one ability icon or hero portrait: from the cache, else downloaded
+   * (and cached). Null on any failure — a failed name isn't retried for a couple of
+   * minutes so a bad name can't hammer the CDN once per menu refresh.
+   */
+  getIcon(kind: IconKind, name: string): Promise<Buffer | null>
 }
 
 export interface IconCacheOptions {
@@ -47,8 +56,17 @@ export function createIconCacheService(options: IconCacheOptions = {}): IconCach
 
   mkdirSync(abilitiesDir, { recursive: true })
 
-  async function fetchFromCdn(name: string, bustCache = false): Promise<Buffer | null> {
-    let url = abilityCdnUrl(name)
+  mkdirSync(join(cacheRoot, 'heroes'), { recursive: true })
+
+  const negativeCache = new Map<string, number>() // "kind/name" -> retry-not-before
+  const NEGATIVE_CACHE_TTL_MS = 2 * 60 * 1000
+
+  async function fetchFromCdn(
+    name: string,
+    bustCache = false,
+    kind: IconKind = 'abilities',
+  ): Promise<Buffer | null> {
+    let url = kind === 'abilities' ? abilityCdnUrl(name) : heroCdnUrl(name)
     if (bustCache) url += `?_=${Date.now()}`
     try {
       const response = await fetchImpl(url, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) })
@@ -71,6 +89,35 @@ export function createIconCacheService(options: IconCacheOptions = {}): IconCach
   }
 
   return {
+    async getIcon(kind, name) {
+      if (!isSafeIconName(name)) return null
+      const filePath = join(cacheRoot, kind, `${name}.png`)
+      try {
+        return await fs.readFile(filePath)
+      } catch {
+        // cache miss — fall through to the CDN
+      }
+
+      const negativeKey = `${kind}/${name}`
+      const retryAfter = negativeCache.get(negativeKey)
+      if (retryAfter !== undefined && Date.now() < retryAfter) return null
+
+      const data = await fetchFromCdn(name, false, kind)
+      if (data === null) {
+        negativeCache.set(negativeKey, Date.now() + NEGATIVE_CACHE_TTL_MS)
+        return null
+      }
+      try {
+        await fs.writeFile(filePath, data)
+      } catch (error) {
+        logger.warn('Failed to persist icon to cache', {
+          filePath,
+          error: error instanceof Error ? error.message : String(error),
+        })
+      }
+      return data
+    },
+
     async prefetchAbilities(names) {
       const summary: PrefetchSummary = {
         total: names.length,

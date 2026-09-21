@@ -91,6 +91,11 @@ export interface IpcInvokeMap {
     response: { count: number; totalSize: number; oldestBackup?: string; newestBackup?: string }
   }
   'ml:init': { request: void; response: { success: boolean; error?: string } }
+  /** Mini icon for an ability or a hero model (by hero name), as a data: URL; null if unavailable. */
+  'icon:get': {
+    request: { kind: 'ability' | 'model'; name: string }
+    response: string | null
+  }
   'ml:getModelGaps': { request: void; response: MlModelGaps | null }
   'ml:exportModelGaps': {
     request: void

@@ -1,16 +1,54 @@
 import type { CSSProperties, JSX } from 'react'
-import type { SeatMenu } from '@shared/types'
+import type { SeatMenu, SeatSuggestion } from '@shared/types'
+import { useIcon } from '../hooks/use-icon'
 
 // @DEV-GUIDE: Phase-1 placeholder menu — one per player on the chosen team, listing that
-// player's best remaining picks (abilities and hero models together, models tagged HERO)
-// by the simulator's pick score (lower = better). Sits
-// in the strip between the screen edge and the player's outer pick box (positioned by
+// player's best remaining picks (abilities and hero models together, models tagged HERO,
+// each with a mini icon) by the simulator's pick score (lower = better). Sits in the
+// strip between the screen edge and the player's outer pick box (positioned by
 // core/resolution/seat-menu-box.ts). Same coordinate-driven positioning as the rest of
 // the overlay: layout pixels divided by scaleFactor. Replace the chrome in Phase 3.
 
 interface SeatMenuBoxProps {
   menu: SeatMenu
   scaleFactor: number
+}
+
+interface SuggestionRowProps {
+  suggestion: SeatSuggestion
+  rank: number
+  fontSize: number
+}
+
+function SuggestionRow({ suggestion, rank, fontSize }: SuggestionRowProps): JSX.Element {
+  const iconUrl = useIcon(suggestion.kind, suggestion.name)
+  // Sized to the text line so the six lines still fit the player card's height. The
+  // slot is reserved while the icon loads so names don't shift when it arrives.
+  const iconPx = Math.round(fontSize * 1.2)
+  return (
+    <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+      <span style={{ width: iconPx, height: iconPx, flexShrink: 0, display: 'inline-block' }}>
+        {iconUrl && (
+          <img
+            src={iconUrl}
+            alt=""
+            width={iconPx}
+            height={iconPx}
+            style={{ display: 'block', borderRadius: 2 }}
+          />
+        )}
+      </span>
+      <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        {rank}. {suggestion.displayName}
+      </span>
+      {suggestion.kind === 'model' && (
+        <span style={{ color: '#f0b429', fontSize: Math.max(7, fontSize - 3) }}>HERO</span>
+      )}
+      <span style={{ color: '#3ddc84', fontVariantNumeric: 'tabular-nums' }}>
+        {suggestion.score.toFixed(1)}
+      </span>
+    </div>
+  )
 }
 
 export function SeatMenuBox({ menu, scaleFactor }: SeatMenuBoxProps): JSX.Element {
@@ -41,15 +79,7 @@ export function SeatMenuBox({ menu, scaleFactor }: SeatMenuBoxProps): JSX.Elemen
         <div style={{ opacity: 0.6 }}>–</div>
       ) : (
         menu.suggestions.map((s, i) => (
-          <div key={s.name} style={{ display: 'flex', gap: 4 }}>
-            <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {i + 1}. {s.displayName}
-            </span>
-            {s.kind === 'model' && (
-              <span style={{ color: '#f0b429', fontSize: Math.max(7, fontSize - 3), alignSelf: 'center' }}>HERO</span>
-            )}
-            <span style={{ color: '#3ddc84', fontVariantNumeric: 'tabular-nums' }}>{s.score.toFixed(1)}</span>
-          </div>
+          <SuggestionRow key={`${s.kind}-${s.name}`} suggestion={s} rank={i + 1} fontSize={fontSize} />
         ))
       )}
     </div>
