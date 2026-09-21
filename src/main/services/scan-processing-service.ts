@@ -1,6 +1,11 @@
 import log from 'electron-log/main'
 import type { WindowManager } from './window-manager'
 import type { AbilityDataService } from './ability-data-service'
+import {
+  createPoolTracker,
+  poolSlotKey,
+  type TrackedPoolSlot,
+} from '@core/draft-tracking/pool-tracker'
 import type {
   ScanResult,
   SlotCoordinate,
@@ -33,18 +38,27 @@ function prettifyName(name: string | null): string {
     .join(' ')
 }
 
-function toDisplaySlot(result: ScanResult, abilityData: AbilityDataService): DisplayScanSlot {
-  const entry = result.name ? abilityData.getAbility(result.name) : undefined
+// The slot's identity comes from the tracker (its baseline read), not this scan's read:
+// once an ability is picked its pool box is empty and would otherwise read Unknown.
+function toDisplaySlot(
+  result: ScanResult,
+  tracked: TrackedPoolSlot | undefined,
+  abilityData: AbilityDataService,
+): DisplayScanSlot {
+  const name = tracked ? tracked.name : result.name
+  const entry = name ? abilityData.getAbility(name) : undefined
   return {
     ...result,
-    displayName: entry?.displayName ?? prettifyName(result.name),
+    name,
+    displayName: entry?.displayName ?? prettifyName(name),
     winrateHigh: entry?.winrateHigh ?? null,
+    picked: tracked?.picked ?? false,
   }
 }
 
 function topWinratePicks(slots: DisplayScanSlot[]): DisplayScanSlot[] {
   return slots
-    .filter((s) => s.name !== null && s.winrateHigh !== null)
+    .filter((s) => !s.picked && s.name !== null && s.winrateHigh !== null)
     .sort((a, b) => (b.winrateHigh as number) - (a.winrateHigh as number))
     .slice(0, TOP_WINRATE_PICKS_COUNT)
 }
@@ -83,6 +97,8 @@ export interface ScanProcessingService {
     scaleFactor: number,
     modelCoords: SlotCoordinate[],
   ): void
+  /** Forget which abilities were seen/picked — call when a new live scan begins. */
+  reset(): void
 }
 
 export function createScanProcessingService(
@@ -101,21 +117,38 @@ export function createScanProcessingService(
     }
   }
 
+  const poolTracker = createPoolTracker()
+
   return {
+    reset() {
+      poolTracker.reset()
+    },
     handleScanResults(results, resolution, scaleFactor, modelCoords) {
       const start = performance.now()
       try {
-        const ultimates = results.ultimates.map((r) => toDisplaySlot(r, abilityData))
-        const standard = results.standard.map((r) => toDisplaySlot(r, abilityData))
+        const tracked = poolTracker.update(
+          [...results.ultimates, ...results.standard].map((r) => ({
+            key: poolSlotKey(r),
+            name: r.name,
+          })),
+        )
+        const ultimates = results.ultimates.map((r) =>
+          toDisplaySlot(r, tracked.get(poolSlotKey(r)), abilityData),
+        )
+        const standard = results.standard.map((r) =>
+          toDisplaySlot(r, tracked.get(poolSlotKey(r)), abilityData),
+        )
+        // Hero identity must survive the defining ability being picked, so it is
+        // read from the tracked baseline rather than this scan's (possibly empty) box.
+        const heroDefiningAbilities = results.heroDefiningAbilities.map((r) => ({
+          ...r,
+          name: tracked.has(poolSlotKey(r)) ? (tracked.get(poolSlotKey(r))?.name ?? null) : r.name,
+        }))
 
         const payload: OverlayDataPayload = {
           scanData: { ultimates, standard },
           topWinratePicks: topWinratePicks([...ultimates, ...standard]),
-          identifiedHeroModels: identifyHeroModels(
-            results.heroDefiningAbilities,
-            modelCoords,
-            abilityData,
-          ),
+          identifiedHeroModels: identifyHeroModels(heroDefiningAbilities, modelCoords, abilityData),
           targetResolution: resolution,
           scaleFactor,
         }

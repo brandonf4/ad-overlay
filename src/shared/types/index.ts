@@ -161,6 +161,9 @@ export interface DisplayScanSlot extends ScanResult {
   /** High-skill win rate [0, 1] from ad-simulator's Windrun-sourced data, or
    * null when the slot is unrecognized or missing from that dataset. */
   winrateHigh: number | null
+  /** True once the ability has been drafted (its pool box no longer holds it).
+   * `name` stays the ability's baseline identity even when picked. */
+  picked: boolean
 }
 
 /**

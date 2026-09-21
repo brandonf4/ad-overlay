@@ -126,6 +126,7 @@ export function registerIpcHandlers(
     })
 
     overlayWin.on('closed', () => {
+      scanTrigger.stopLive()
       windowTracker.stopTracking()
       appStore.setState({
         overlayActive: false,
@@ -148,6 +149,7 @@ export function registerIpcHandlers(
   ipcMain.handle('overlay:activate', () => activateOverlay())
 
   ipcMain.on('overlay:close', () => {
+    scanTrigger.stopLive()
     windowTracker.stopTracking()
     windowManager.closeOverlay()
     appStore.setState({ overlayActive: false, activeResolution: null, activeResolutionSource: null })

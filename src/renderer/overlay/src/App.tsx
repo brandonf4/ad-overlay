@@ -2,21 +2,21 @@ import { useEffect } from 'react'
 import type { JSX } from 'react'
 import { useOverlayData } from './hooks/use-overlay-data'
 import { ControlsPanel } from './components/ControlsPanel'
-import { AbilityHotspot } from './components/AbilityHotspot'
 import { TopPicksPanel } from './components/TopPicksPanel'
-import { HeroModelLabel } from './components/HeroModelLabel'
 
 // @DEV-GUIDE: Root component for the overlay renderer, Phase 1 (see the fork's plan
 // doc). Renders on a transparent, click-through window on top of the Dota 2 game.
 // Body has pointer-events: none; interactive elements opt in via useMousePassthrough.
 //
-// This is deliberately a placeholder: a Scan button plus a colored border + name
-// label on every recognized pool slot, proving the scanning pipeline's coordinates
-// line up with the real game screen. No suggestions/scoring yet (Phase 2) and no
-// real visual design (Phase 3) — see ControlsPanel.tsx / AbilityHotspot.tsx.
+// Deliberately minimal: the scan controls plus the highest-winrate panel. No
+// per-ability borders/labels are drawn over the board (the scan's results are still in
+// the overlay:data payload). No scoring yet (Phase 2) and no real visual design
+// (Phase 3) — see ControlsPanel.tsx / TopPicksPanel.tsx.
 
 function App(): JSX.Element {
-  const { overlayData, scanState, scanError, triggerScan } = useOverlayData()
+  const { overlayData, scanState, scanError, live, startLive, stopLive } = useOverlayData()
+
+  const closeOverlay = (): void => window.electronApi.send('overlay:close')
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
@@ -32,24 +32,10 @@ function App(): JSX.Element {
   const poolSlots = overlayData?.scanData
     ? [...overlayData.scanData.ultimates, ...overlayData.scanData.standard]
     : []
+  const pickedCount = poolSlots.filter((s) => s.picked).length
 
   return (
-    <div
-      className={`overlay-root${scanState === 'scanning' ? ' capture-mode' : ''}`}
-      style={{ position: 'fixed', inset: 0, pointerEvents: 'none' }}
-    >
-      {poolSlots.map((slot) => (
-        <AbilityHotspot
-          key={`${slot.hero_order}-${slot.ability_order}-${slot.is_ultimate}`}
-          slot={slot}
-          scaleFactor={scaleFactor}
-        />
-      ))}
-
-      {overlayData?.identifiedHeroModels.map((model) => (
-        <HeroModelLabel key={model.heroOrder} model={model} scaleFactor={scaleFactor} />
-      ))}
-
+    <div className="overlay-root" style={{ position: 'fixed', inset: 0, pointerEvents: 'none' }}>
       {overlayData && (
         <TopPicksPanel
           picks={overlayData.topWinratePicks}
@@ -58,7 +44,15 @@ function App(): JSX.Element {
         />
       )}
 
-      <ControlsPanel scanState={scanState} scanError={scanError} onScan={triggerScan} />
+      <ControlsPanel
+        scanState={scanState}
+        scanError={scanError}
+        live={live}
+        pickedCount={pickedCount}
+        onStartLive={startLive}
+        onStopLive={stopLive}
+        onClose={closeOverlay}
+      />
     </div>
   )
 }

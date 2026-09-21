@@ -228,7 +228,8 @@ export interface IpcSendMap {
   'overlay:close': void
   'overlay:reset': void
   'overlay:setMouseIgnore': { ignore: boolean; forward?: boolean }
-  'ml:scan': void
+  'ml:startLive': void
+  'ml:stopLive': void
   'draft:selectMySpot': { heroOrder: number; dbHeroId: number }
   'draft:selectMyModel': { heroOrder: number; dbHeroId: number }
   'app:openExternal': { url: string }

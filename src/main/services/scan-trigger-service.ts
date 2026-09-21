@@ -25,8 +25,15 @@ import type { InitialScanResults } from '@shared/types/ml'
 
 const logger = log.scope('scan-trigger')
 
+// Pause between the end of one live scan and the start of the next. A pick shows up on
+// the board within a couple of seconds either way; this keeps CPU use low.
+const LIVE_SCAN_INTERVAL_MS = 1500
+
 export interface ScanTriggerService {
   performScan(): Promise<void>
+  /** Scan repeatedly (and reset pick tracking) until stopLive() or the overlay closes. */
+  startLive(): void
+  stopLive(): void
 }
 
 export function createScanTriggerService(
@@ -39,7 +46,37 @@ export function createScanTriggerService(
   appStore: AppStore,
   windowTracker: WindowTrackerService,
 ): ScanTriggerService {
-  return {
+  // Bumped on every start/stop so a scan still in flight from an earlier loop can't
+  // schedule another iteration after it was stopped or restarted.
+  let liveGeneration = 0
+  let liveTimer: ReturnType<typeof setTimeout> | null = null
+
+  function stopLive(): void {
+    liveGeneration += 1
+    if (liveTimer) {
+      clearTimeout(liveTimer)
+      liveTimer = null
+    }
+  }
+
+  const service: ScanTriggerService = {
+    startLive(): void {
+      stopLive()
+      scanProcessingService.reset()
+      const generation = liveGeneration
+      const tick = async (): Promise<void> => {
+        if (generation !== liveGeneration) return
+        if (!appStore.getState().activeResolution) {
+          stopLive()
+          return
+        }
+        await service.performScan()
+        if (generation !== liveGeneration) return
+        liveTimer = setTimeout(() => void tick(), LIVE_SCAN_INTERVAL_MS)
+      }
+      void tick()
+    },
+    stopLive,
     async performScan(): Promise<void> {
       try {
         const resolution = appStore.getState().activeResolution
@@ -155,6 +192,7 @@ export function createScanTriggerService(
       }
     },
   }
+  return service
 }
 
 // @DEV-GUIDE: Broadcasts raw ML results to both windows. Control panel uses this for status/debug

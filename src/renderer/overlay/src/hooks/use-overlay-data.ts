@@ -1,13 +1,17 @@
 import { useState, useEffect, useRef } from 'react'
 import type { OverlayDataPayload } from '@shared/types'
 
-// Safety net: if main never responds (hung ML init, dead worker), unstick the UI.
+// Safety net: if main never delivers the first result (hung ML init, dead worker),
+// unstick the UI. Only armed until the first result of a live session arrives.
 const SCAN_TIMEOUT_MS = 30_000
 
-// @DEV-GUIDE: Phase-1 overlay state hook — trimmed to just what a placeholder
-// scan-and-show-borders UI needs. The upstream version this replaces also tracked
-// My Spot / My Model selection and screenshot-feedback status; reintroduce those
-// once the corresponding IPC channels/services come back (Phase 2+).
+// @DEV-GUIDE: Phase-1 overlay state hook — trimmed to just what the scan controls and
+// the winrate panel need. The upstream version this replaces also tracked My Spot /
+// My Model selection and screenshot-feedback status; reintroduce those once the
+// corresponding IPC channels/services come back (Phase 2+).
+//
+// Scanning is a live loop owned by the main process (scan-trigger-service.ts): the
+// renderer only starts/stops it and receives an overlay:data push after every scan.
 
 export type ScanState = 'idle' | 'scanning' | 'scanned' | 'error'
 
@@ -15,12 +19,14 @@ export interface OverlayState {
   overlayData: OverlayDataPayload | null
   scanState: ScanState
   scanError: string | null
+  live: boolean
 }
 
-export function useOverlayData(): OverlayState & { triggerScan: () => void } {
+export function useOverlayData(): OverlayState & { startLive: () => void; stopLive: () => void } {
   const [overlayData, setOverlayData] = useState<OverlayDataPayload | null>(null)
   const [scanState, setScanState] = useState<ScanState>('idle')
   const [scanError, setScanError] = useState<string | null>(null)
+  const [live, setLive] = useState(false)
   const scanTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const clearScanTimeout = (): void => {
@@ -59,11 +65,12 @@ export function useOverlayData(): OverlayState & { triggerScan: () => void } {
     }
   }, [])
 
-  const triggerScan = (): void => {
+  const startLive = (): void => {
     if (!overlayData) {
-      console.warn('[overlay] triggerScan called but overlayData is null — initial data not received yet')
+      console.warn('[overlay] startLive called but overlayData is null — initial data not received yet')
       return
     }
+    setLive(true)
     setScanState('scanning')
     setScanError(null)
     clearScanTimeout()
@@ -72,15 +79,15 @@ export function useOverlayData(): OverlayState & { triggerScan: () => void } {
       setScanState('error')
       setScanError('Scan timed out')
     }, SCAN_TIMEOUT_MS)
-    // CRITICAL: the scanning state hides overlay decorations (capture-mode CSS) so
-    // this window's own borders don't get captured inside the ability crops. Wait
-    // two frames for the compositor to actually paint their removal first.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        window.electronApi.send('ml:scan')
-      })
-    })
+    window.electronApi.send('ml:startLive')
   }
 
-  return { overlayData, scanState, scanError, triggerScan }
+  const stopLive = (): void => {
+    clearScanTimeout()
+    setLive(false)
+    setScanState((s) => (s === 'scanning' ? 'idle' : s))
+    window.electronApi.send('ml:stopLive')
+  }
+
+  return { overlayData, scanState, scanError, live, startLive, stopLive }
 }

@@ -9,7 +9,8 @@ import type { AppStore } from '../store/app-store'
 // staleness reporting) — dropped along with the DB layer; reintroduce once there's a real data
 // layer to check the model's class list against.
 // - ml:init (handle): Explicit re-init from UI retry button. Sets mlStatus in AppStore.
-// - ml:scan (on/fire-and-forget): Delegates to ScanTriggerService.
+// - ml:startLive / ml:stopLive (on/fire-and-forget): Start/stop the repeating scan loop in
+//   ScanTriggerService. Also stopped when the overlay closes (see ipc/index.ts).
 
 const logger = log.scope('ipc-ml')
 
@@ -32,7 +33,6 @@ export function registerMlHandlers(
     }
   })
 
-  ipcMain.on('ml:scan', () => {
-    void scanTrigger.performScan()
-  })
+  ipcMain.on('ml:startLive', () => scanTrigger.startLive())
+  ipcMain.on('ml:stopLive', () => scanTrigger.stopLive())
 }
