@@ -148,51 +148,38 @@ export interface ScanResult {
 }
 
 
-// --- Phase 1 (placeholder) overlay payload -----------------------------
-// The original upstream types this replaces (EnrichedScanSlot,
-// OverlayDataPayload, SynergyPairDisplay, HeroSynergyDisplay,
-// HeroModelDisplay, HeroSpotDisplay, RoleContextDisplay, ThirdAbilitySuggestion)
-// carried the old scoring/role/personalization system's output shape. This
-// fork's own scoring module (Phase 2+) will grow this payload back out as
-// needed — for now it's just enough to prove the scan pipeline end-to-end.
+// --- Overlay payload ----------------------------------------------------
+// The upstream types this replaces (EnrichedScanSlot, the old OverlayDataPayload,
+// SynergyPairDisplay, HeroSynergyDisplay, HeroModelDisplay, HeroSpotDisplay,
+// RoleContextDisplay, ThirdAbilitySuggestion) carried the old scoring/role/
+// personalization system's output. This fork's payload is just the per-seat pick
+// suggestions produced by core/scoring (see scan-processing-service.ts).
 
-export interface DisplayScanSlot extends ScanResult {
+/** One suggested ability for a seat. Lower score = better (see core/scoring). */
+export interface SeatSuggestion {
+  name: string
   displayName: string
-  /** High-skill win rate [0, 1] from ad-simulator's Windrun-sourced data, or
-   * null when the slot is unrecognized or missing from that dataset. */
-  winrateHigh: number | null
-  /** True once the ability has been drafted (its pool box no longer holds it).
-   * `name` stays the ability's baseline identity even when picked. */
-  picked: boolean
+  score: number
 }
 
-/**
- * A hero identified for one of the 12 draft-board model slots — via its
- * hero-defining ability (ability_order === 2), not image recognition. Every
- * hero's abilities are already being classified as part of the normal pool
- * scan, and ability internal names encode their owning hero (e.g.
- * "night_stalker_void" -> hero "night_stalker"), so a plain data lookup is
- * enough. See scan-processing-service.ts.
- */
-export interface IdentifiedHeroModel {
-  heroOrder: number
-  name: string | null
-  displayName: string
-  winrateHigh: number | null
-  confidence: number
-  coord: SlotCoordinate
+export interface SeatMenu {
+  /** Player row 0-9: 0-4 the left (Radiant) column, 5-9 the right (Dire) column. */
+  seat: number
+  /** Best options for this seat right now, best first. */
+  suggestions: SeatSuggestion[]
+  /** Where the menu sits, in layout pixels (divide by scaleFactor at render). */
+  x: number
+  y: number
+  width: number
+  height: number
 }
 
 export interface OverlayDataPayload {
-  scanData: {
-    ultimates: DisplayScanSlot[]
-    standard: DisplayScanSlot[]
-  } | null
-  /** Recognized pool slots (ultimates + standard combined), highest win rate
-   * first, capped to a fixed list length — see scan-processing-service.ts. */
-  topWinratePicks: DisplayScanSlot[]
-  /** The 12 draft-board hero models, identified via their defining ability. */
-  identifiedHeroModels: IdentifiedHeroModel[]
+  /** False until the first live scan completes. */
+  scanned: boolean
+  seatMenus: SeatMenu[]
+  /** Picks made so far in the draft (0-50), across both teams. */
+  pickCount: number
   targetResolution: string
   scaleFactor: number
 }

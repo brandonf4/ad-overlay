@@ -8,6 +8,7 @@ import { createScreenshotService } from './services/screenshot-service'
 import { createCachedWindowCaptureService } from './services/cached-window-capture-service'
 import { createScanProcessingService } from './services/scan-processing-service'
 import { createAbilityDataService } from './services/ability-data-service'
+import { createIconCacheService, loadAbilityClassNames } from './services/icon-cache-service'
 import { createScanTriggerService } from './services/scan-trigger-service'
 import { createWindowTrackerService } from './services/window-tracker-service'
 import { createAppStore, createAppStoreHandlers } from './store/app-store'
@@ -85,6 +86,18 @@ app.whenReady().then(async () => {
 
   const appHandlers = createAppStoreHandlers(appStore)
   const bridge = createZustandBridge(appStore, { handlers: appHandlers })
+
+  // Official ability icons for template-matching the player rows' pick boxes. Warmed in
+  // the background (first run downloads ~500 small files; later runs only revalidate
+  // stale ones) — a failure just leaves those abilities unmatchable, never blocks startup.
+  const iconCache = createIconCacheService()
+  loadAbilityClassNames()
+    .then((names) => iconCache.prefetchAbilities(names))
+    .catch((error: unknown) => {
+      logger.warn('Ability icon prefetch failed', {
+        error: error instanceof Error ? error.message : String(error),
+      })
+    })
 
   const abilityData = createAbilityDataService()
   const scanProcessingService = createScanProcessingService(windowManager, abilityData)

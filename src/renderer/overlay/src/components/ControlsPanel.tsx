@@ -1,35 +1,51 @@
+import { useState } from 'react'
 import type { JSX } from 'react'
 import { useMousePassthrough } from '../hooks/use-mouse-passthrough'
 import type { ScanState } from '../hooks/use-overlay-data'
 
-// @DEV-GUIDE: Phase-1 placeholder control bar — Scan/Stop and Close buttons plus status
-// text, positioned top-right. Replace with real chrome in Phase 3.
+// @DEV-GUIDE: Phase-1 placeholder control bar — Scan/Stop and Close buttons, a Pick side
+// button, and status text, positioned top-right. Replace with real chrome in Phase 3.
+
+export type Side = 'radiant' | 'dire'
 
 interface ControlsPanelProps {
   scanState: ScanState
   scanError: string | null
   live: boolean
-  pickedCount: number
+  pickCount: number
+  side: Side | null
+  onSideChange: (side: Side) => void
   onStartLive: () => void
   onStopLive: () => void
   onClose: () => void
 }
 
+const SIDE_LABEL: Record<Side, string> = { radiant: 'Radiant', dire: 'Dire' }
+
 export function ControlsPanel({
   scanState,
   scanError,
   live,
-  pickedCount,
+  pickCount,
+  side,
+  onSideChange,
   onStartLive,
   onStopLive,
   onClose,
 }: ControlsPanelProps): JSX.Element {
   const { onMouseEnter, onMouseLeave } = useMousePassthrough()
+  const [choosingSide, setChoosingSide] = useState(false)
   const status = live
     ? scanState === 'scanning'
       ? 'starting…'
-      : `live · ${pickedCount} picked`
+      : `live · ${pickCount}/50 picks`
     : scanState
+
+  const chooseSide = (s: Side): void => {
+    onSideChange(s)
+    setChoosingSide(false)
+  }
+
   return (
     <div
       onMouseEnter={onMouseEnter}
@@ -58,6 +74,16 @@ export function ControlsPanel({
         )}
         <button onClick={onClose}>Close</button>
       </div>
+      {choosingSide ? (
+        <div style={{ display: 'flex', gap: 6 }}>
+          <button onClick={() => chooseSide('radiant')}>Radiant</button>
+          <button onClick={() => chooseSide('dire')}>Dire</button>
+        </div>
+      ) : (
+        <button onClick={() => setChoosingSide(true)}>
+          {side ? `Side: ${SIDE_LABEL[side]}` : 'Pick side'}
+        </button>
+      )}
       <span>Status: {status}</span>
       {scanError && <span style={{ color: '#ff5c5c' }}>{scanError}</span>}
     </div>

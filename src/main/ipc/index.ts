@@ -106,9 +106,9 @@ export function registerIpcHandlers(
 
     const scaleFactor = layoutService.getScaleFactor()
     pendingOverlayData = {
-      scanData: null,
-      topWinratePicks: [],
-      identifiedHeroModels: [],
+      scanned: false,
+      seatMenus: [],
+      pickCount: 0,
       targetResolution: resolution,
       scaleFactor,
     }

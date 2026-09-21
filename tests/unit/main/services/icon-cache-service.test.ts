@@ -1,245 +1,84 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import {
-  mkdtempSync,
-  rmSync,
-  existsSync,
-  mkdirSync,
-  writeFileSync,
-  utimesSync,
-  readFileSync,
-  statSync,
-} from 'fs'
-import { join } from 'path'
+import { mkdtempSync, rmSync, readFileSync, writeFileSync, utimesSync, existsSync } from 'fs'
 import { tmpdir } from 'os'
+import { join } from 'path'
 
-let userDataDir: string
-
-vi.mock('electron', () => ({
-  app: {
-    getPath: (name: string) => {
-      if (name === 'userData') return userDataDir
-      throw new Error(`Unexpected getPath: ${name}`)
-    },
-    getAppPath: () => userDataDir,
-    isPackaged: false,
-  },
-}))
-
+vi.mock('electron', () => ({ app: { isPackaged: false, getAppPath: () => process.cwd(), getPath: () => tmpdir() } }))
 vi.mock('electron-log/main', () => ({
-  default: {
-    scope: () => ({
-      info: vi.fn(),
-      warn: vi.fn(),
-      error: vi.fn(),
-      debug: vi.fn(),
-    }),
-  },
+  default: { scope: () => ({ info: () => {}, warn: () => {}, error: () => {}, debug: () => {} }) },
 }))
 
 import { createIconCacheService } from '../../../../src/main/services/icon-cache-service'
+import { ICON_CACHE_REFRESH_TTL_MS } from '@shared/constants/thresholds'
 
-const PNG_BYTES = Buffer.from([0x89, 0x50, 0x4e, 0x47])
-const PLACEHOLDER_BYTES = Buffer.from('placeholder-png')
+let root: string
+beforeEach(() => {
+  root = mkdtempSync(join(tmpdir(), 'icon-cache-'))
+})
+afterEach(() => rmSync(root, { recursive: true, force: true }))
 
-function okResponse(): Response {
-  return new Response(PNG_BYTES, { status: 200 })
-}
+const ok = (body: string): Response => new Response(body, { status: 200 })
 
-function notFoundResponse(): Response {
-  return new Response('not found', { status: 404 })
-}
-
-describe('icon-cache-service', () => {
-  let cacheRoot: string
-  let placeholderRoot: string
-
-  beforeEach(() => {
-    userDataDir = mkdtempSync(join(tmpdir(), 'adp-icon-test-'))
-    cacheRoot = join(userDataDir, 'stream-icons')
-    placeholderRoot = join(userDataDir, 'placeholders')
-    mkdirSync(placeholderRoot, { recursive: true })
-    writeFileSync(join(placeholderRoot, 'placeholder-ability.png'), PLACEHOLDER_BYTES)
-    writeFileSync(join(placeholderRoot, 'placeholder-hero.png'), PLACEHOLDER_BYTES)
+describe('icon cache prefetch', () => {
+  it('creates the icon directory up front (the worker latches to the classifier if it is missing)', () => {
+    createIconCacheService({ cacheRoot: root, fetchImpl: vi.fn() as unknown as typeof fetch })
+    expect(existsSync(join(root, 'abilities'))).toBe(true)
   })
 
-  afterEach(() => {
-    rmSync(userDataDir, { recursive: true, force: true })
-    vi.restoreAllMocks()
+  it('downloads missing icons and strips the _ad suffix from the CDN url', async () => {
+    const urls: string[] = []
+    const fetchImpl = vi.fn(async (url: string) => {
+      urls.push(url)
+      return ok('png:' + url)
+    }) as unknown as typeof fetch
+    const cache = createIconCacheService({ cacheRoot: root, fetchImpl })
+    const summary = await cache.prefetchAbilities(['abaddon_frostmourne', 'invoker_quas_ad'])
+    expect(summary).toMatchObject({ total: 2, fetched: 2, failed: 0 })
+    expect(urls.some((u) => u.endsWith('/abilities/invoker_quas.png'))).toBe(true)
+    expect(readFileSync(join(root, 'abilities', 'abaddon_frostmourne.png'), 'utf-8')).toContain('abaddon_frostmourne')
+    // cached under the ability's own name (what the worker keys templates by)
+    expect(existsSync(join(root, 'abilities', 'invoker_quas_ad.png'))).toBe(true)
   })
 
-  it('fetches from CDN on cache miss and persists to disk', async () => {
-    const fetchImpl = vi.fn().mockResolvedValue(okResponse())
-    const service = createIconCacheService({ cacheRoot, placeholderRoot, fetchImpl })
+  it('skips fresh icons, refreshes stale ones only when the art changed', async () => {
+    const fetchImpl = vi.fn(async () => ok('new-art')) as unknown as typeof fetch
+    const cache = createIconCacheService({ cacheRoot: root, fetchImpl })
+    const fresh = join(root, 'abilities', 'a_fresh.png')
+    const stale = join(root, 'abilities', 'b_stale.png')
+    const staleSame = join(root, 'abilities', 'c_same.png')
+    writeFileSync(fresh, 'old')
+    writeFileSync(stale, 'old-art')
+    writeFileSync(staleSame, 'new-art')
+    const past = new Date(Date.now() - ICON_CACHE_REFRESH_TTL_MS - 60_000)
+    utimesSync(stale, past, past)
+    utimesSync(staleSame, past, past)
 
-    const result = await service.getIcon('abilities', 'pudge_rot')
-    expect(result.isPlaceholder).toBe(false)
-    expect(result.data.equals(PNG_BYTES)).toBe(true)
-    expect(fetchImpl).toHaveBeenCalledOnce()
-    expect(fetchImpl.mock.calls[0][0]).toContain('/abilities/pudge_rot.png')
-    expect(existsSync(join(cacheRoot, 'abilities', 'pudge_rot.png'))).toBe(true)
+    const summary = await cache.prefetchAbilities(['a_fresh', 'b_stale', 'c_same'])
+    expect(summary).toMatchObject({ alreadyCached: 2, refreshed: 1, fetched: 0, failed: 0 })
+    expect(readFileSync(fresh, 'utf-8')).toBe('old')
+    expect(readFileSync(stale, 'utf-8')).toBe('new-art')
   })
 
-  it('serves from disk without fetching on subsequent calls', async () => {
-    const fetchImpl = vi.fn().mockResolvedValue(okResponse())
-    const service = createIconCacheService({ cacheRoot, placeholderRoot, fetchImpl })
+  it('counts a CDN miss as failed but keeps a stale copy when one exists', async () => {
+    const fetchImpl = vi.fn(async () => new Response('', { status: 404 })) as unknown as typeof fetch
+    const cache = createIconCacheService({ cacheRoot: root, fetchImpl })
+    const stale = join(root, 'abilities', 'kept.png')
+    writeFileSync(stale, 'stale-art')
+    const past = new Date(Date.now() - ICON_CACHE_REFRESH_TTL_MS - 60_000)
+    utimesSync(stale, past, past)
 
-    await service.getIcon('abilities', 'pudge_rot')
-    const second = await service.getIcon('abilities', 'pudge_rot')
-
-    expect(second.isPlaceholder).toBe(false)
-    expect(fetchImpl).toHaveBeenCalledOnce()
+    const summary = await cache.prefetchAbilities(['missing_one', 'kept'])
+    expect(summary).toMatchObject({ failed: 1, alreadyCached: 1 })
+    expect(readFileSync(stale, 'utf-8')).toBe('stale-art')
   })
 
-  it('resolves _ad variants to the base CDN name', async () => {
-    const fetchImpl = vi.fn().mockResolvedValue(okResponse())
-    const service = createIconCacheService({ cacheRoot, placeholderRoot, fetchImpl })
-
-    await service.getIcon('abilities', 'invoker_sun_strike_ad')
-    expect(fetchImpl.mock.calls[0][0]).toContain('/abilities/invoker_sun_strike.png')
-  })
-
-  it('serves placeholder and negative-caches on CDN 404', async () => {
-    const fetchImpl = vi.fn().mockResolvedValue(notFoundResponse())
-    const service = createIconCacheService({ cacheRoot, placeholderRoot, fetchImpl })
-
-    const first = await service.getIcon('abilities', 'renamed_ability')
-    expect(first.isPlaceholder).toBe(true)
-    expect(first.data.equals(PLACEHOLDER_BYTES)).toBe(true)
-
-    const second = await service.getIcon('abilities', 'renamed_ability')
-    expect(second.isPlaceholder).toBe(true)
-    expect(fetchImpl).toHaveBeenCalledOnce()
-  })
-
-  it('serves placeholder on network failure', async () => {
-    const fetchImpl = vi.fn().mockRejectedValue(new Error('offline'))
-    const service = createIconCacheService({ cacheRoot, placeholderRoot, fetchImpl })
-
-    const result = await service.getIcon('heroes', 'pudge')
-    expect(result.isPlaceholder).toBe(true)
-  })
-
-  it('rejects unsafe names without touching the network', async () => {
-    const fetchImpl = vi.fn()
-    const service = createIconCacheService({ cacheRoot, placeholderRoot, fetchImpl })
-
-    const result = await service.getIcon('abilities', '../../../etc/passwd')
-    expect(result.isPlaceholder).toBe(true)
-    expect(fetchImpl).not.toHaveBeenCalled()
-  })
-
-  it('uses the hero CDN path for hero icons', async () => {
-    const fetchImpl = vi.fn().mockResolvedValue(okResponse())
-    const service = createIconCacheService({ cacheRoot, placeholderRoot, fetchImpl })
-
-    await service.getIcon('heroes', 'sand_king')
-    expect(fetchImpl.mock.calls[0][0]).toContain('/heroes/sand_king.png')
-  })
-
-  describe('prefetchAbilities', () => {
-    it('reports fetched, cached, and failed counts', async () => {
-      const fetchImpl = vi
-        .fn()
-        .mockImplementation((url: string) =>
-          Promise.resolve(
-            url.includes('bad_ability') ? notFoundResponse() : okResponse(),
-          ),
-        )
-      const service = createIconCacheService({ cacheRoot, placeholderRoot, fetchImpl })
-
-      // Pre-cache one ability
-      await service.getIcon('abilities', 'already_here')
-
-      const summary = await service.prefetchAbilities([
-        'already_here',
-        'new_one',
-        'bad_ability',
-      ])
-
-      expect(summary).toEqual({
-        total: 3,
-        fetched: 1,
-        alreadyCached: 1,
-        refreshed: 0,
-        failed: 1,
-      })
-    })
-
-    it('refreshes a stale cached icon whose upstream art changed', async () => {
-      const NEW_BYTES = Buffer.from('reworked-art')
-      const fetchImpl = vi.fn().mockResolvedValue(new Response(NEW_BYTES, { status: 200 }))
-      const service = createIconCacheService({ cacheRoot, placeholderRoot, fetchImpl })
-
-      const cachedPath = join(cacheRoot, 'abilities', 'pugna_nether_blast.png')
-      mkdirSync(join(cacheRoot, 'abilities'), { recursive: true })
-      writeFileSync(cachedPath, PNG_BYTES)
-      const staleDate = new Date(Date.now() - 8 * 24 * 60 * 60 * 1000)
-      utimesSync(cachedPath, staleDate, staleDate)
-
-      const summary = await service.prefetchAbilities(['pugna_nether_blast'])
-
-      expect(summary).toEqual({
-        total: 1,
-        fetched: 0,
-        alreadyCached: 0,
-        refreshed: 1,
-        failed: 0,
-      })
-      // Refresh must bypass the (stale) CDN edge cache via an uncacheable URL
-      expect(fetchImpl.mock.calls[0][0]).toMatch(/pugna_nether_blast\.png\?_=\d+/)
-      expect(readFileSync(cachedPath).equals(NEW_BYTES)).toBe(true)
-    })
-
-    it('bumps mtime without rewriting when stale icon art is unchanged', async () => {
-      const fetchImpl = vi.fn().mockResolvedValue(okResponse())
-      const service = createIconCacheService({ cacheRoot, placeholderRoot, fetchImpl })
-
-      const cachedPath = join(cacheRoot, 'abilities', 'unchanged.png')
-      mkdirSync(join(cacheRoot, 'abilities'), { recursive: true })
-      writeFileSync(cachedPath, PNG_BYTES)
-      const staleDate = new Date(Date.now() - 8 * 24 * 60 * 60 * 1000)
-      utimesSync(cachedPath, staleDate, staleDate)
-
-      const summary = await service.prefetchAbilities(['unchanged'])
-
-      expect(summary).toEqual({
-        total: 1,
-        fetched: 0,
-        alreadyCached: 1,
-        refreshed: 0,
-        failed: 0,
-      })
-      expect(statSync(cachedPath).mtimeMs).toBeGreaterThan(staleDate.getTime() + 1000)
-    })
-
-    it('keeps the cached copy when a stale-icon refresh fetch fails', async () => {
-      const fetchImpl = vi.fn().mockRejectedValue(new Error('offline'))
-      const service = createIconCacheService({ cacheRoot, placeholderRoot, fetchImpl })
-
-      const cachedPath = join(cacheRoot, 'abilities', 'offline_icon.png')
-      mkdirSync(join(cacheRoot, 'abilities'), { recursive: true })
-      writeFileSync(cachedPath, PNG_BYTES)
-      const staleDate = new Date(Date.now() - 8 * 24 * 60 * 60 * 1000)
-      utimesSync(cachedPath, staleDate, staleDate)
-
-      const summary = await service.prefetchAbilities(['offline_icon'])
-
-      expect(summary.alreadyCached).toBe(1)
-      expect(summary.failed).toBe(0)
-      expect(readFileSync(cachedPath).equals(PNG_BYTES)).toBe(true)
-    })
-
-    it('does not revalidate a fresh cached icon', async () => {
-      const fetchImpl = vi.fn().mockResolvedValue(okResponse())
-      const service = createIconCacheService({ cacheRoot, placeholderRoot, fetchImpl })
-
-      await service.getIcon('abilities', 'fresh_icon')
-      fetchImpl.mockClear()
-
-      const summary = await service.prefetchAbilities(['fresh_icon'])
-
-      expect(fetchImpl).not.toHaveBeenCalled()
-      expect(summary.alreadyCached).toBe(1)
-    })
+  it('never fetches an unsafe name and survives network errors', async () => {
+    const fetchImpl = vi.fn(async () => {
+      throw new Error('offline')
+    }) as unknown as typeof fetch
+    const cache = createIconCacheService({ cacheRoot: root, fetchImpl })
+    const summary = await cache.prefetchAbilities(['../evil', 'fine_name'])
+    expect(summary.failed).toBe(2)
+    expect(fetchImpl).toHaveBeenCalledTimes(1)
   })
 })

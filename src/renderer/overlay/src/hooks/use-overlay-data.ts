@@ -43,7 +43,7 @@ export function useOverlayData(): OverlayState & { startLive: () => void; stopLi
 
     const unsubOverlayData = window.electronApi.on('overlay:data', (data) => {
       setOverlayData(data)
-      if (data.scanData) {
+      if (data.scanned) {
         clearScanTimeout()
         setScanState('scanned')
         setScanError(null)

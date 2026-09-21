@@ -12,16 +12,17 @@ import type { ScanProcessingService } from './scan-processing-service'
 import type { WindowTrackerService } from './window-tracker-service'
 import type { AppStore } from '../store/app-store'
 import type { InitialScanResults } from '@shared/types/ml'
+import type { ScanResult } from '@shared/types'
 
-// @DEV-GUIDE: Phase-1 scan pipeline — deliberately trimmed to an INITIAL-SCAN-ONLY
-// flow while the suggestion/UI layers are being rebuilt (see the fork's plan doc).
-// The original upstream service also supported rescans (pick-slot template
-// matching, pool retry, OCR, feedback snapshots) — all of that depended on either
-// the old DB/domain layer or state this fork doesn't track yet. Re-add rescanning
-// once "my picks so far" is actually tracked (Phase 2+), following the same
-// capture -> layout -> ml scan -> handoff shape as here.
+// @DEV-GUIDE: Live scan pipeline. Every scan captures ONE screenshot and reads it twice:
+// the pool grid (ultimates + standard, an "initial"-type scan: also yields the model
+// tiles) and the 10 player rows' pick boxes (a rescan-type scan: template-matched
+// against the cached official icons). ScanProcessingService folds both into the draft
+// state. The original upstream service also did pool retries, OCR, GSI-driven rescans
+// and feedback snapshots — dropped; this fork just polls (see startLive).
 // Pipeline: capture (raw RGB, no PNG round-trip) -> (lazy ML init) -> layout ->
-// crop to game window -> inference -> broadcast raw results -> ScanProcessingService.
+// crop to game window -> pool scan + rows scan -> broadcast raw results ->
+// ScanProcessingService.
 
 const logger = log.scope('scan-trigger')
 
@@ -165,24 +166,36 @@ export function createScanTriggerService(
           }
         }
 
-        const result = await mlService.scan(screenshot, layout, true)
+        // The worker handles one request at a time, so these run back to back on the
+        // same screenshot (its buffer is copied per call).
+        const poolScan = await mlService.scan(screenshot, layout, true)
+        const rowsScan = await mlService.scan(
+          screenshot,
+          layout,
+          false,
+          undefined,
+          undefined,
+          scanProcessingService.pickCandidates(),
+        )
 
         appStore.setState({ mlStatus: 'ready' })
 
         sendScanResults(windowManager, {
-          results: result.results,
-          isInitialScan: result.isInitialScan,
+          results: poolScan.results,
+          isInitialScan: poolScan.isInitialScan,
         })
 
-        const scaleFactor = layoutService.getScaleFactor()
-        // Phase 1 only ever requests an initial scan (see the top-of-file note), so
-        // result.results is always the InitialScanResults shape here — the union with
-        // ScanResult[] on MlWorkerSuccessResponse only applies to the rescan path.
-        scanProcessingService.handleScanResults(
-          result.results as InitialScanResults,
+        // poolScan is an initial-type scan and rowsScan a rescan-type one, so the
+        // result unions on MlWorkerSuccessResponse narrow as below.
+        scanProcessingService.handleScan(
+          {
+            pool: poolScan.results as InitialScanResults,
+            rows: rowsScan.results as ScanResult[],
+            modelTiles: poolScan.modelTiles,
+          },
           resolution,
-          scaleFactor,
-          layout.models_coords ?? [],
+          layoutService.getScaleFactor(),
+          layout,
         )
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error)

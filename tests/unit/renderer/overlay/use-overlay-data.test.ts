@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import type { OverlayDataPayload } from '@shared/types'
 
@@ -19,367 +19,142 @@ function mockOn(channel: string, cb: Listener): () => void {
 }
 
 const mockSend = vi.fn()
+const mockInvoke = vi.fn()
 
-Object.defineProperty(globalThis, 'window', {
-  value: globalThis,
-  writable: true,
-})
-
-const mockInvoke = vi.fn().mockResolvedValue(null)
-
+Object.defineProperty(globalThis, 'window', { value: globalThis, writable: true })
 ;(globalThis as Record<string, unknown>).electronApi = {
   on: mockOn,
   send: mockSend,
   invoke: mockInvoke,
 }
 
-// Import hook AFTER mocking window.electronApi
+// Import the hook AFTER mocking window.electronApi
 let useOverlayData: typeof import('../../../../src/renderer/overlay/src/hooks/use-overlay-data').useOverlayData
 
 function emit(channel: string, data: unknown): void {
-  for (const cb of channelListeners[channel] ?? []) {
-    cb(data)
-  }
+  for (const cb of channelListeners[channel] ?? []) cb(data)
 }
 
-function makeOverlayPayload(overrides: Partial<OverlayDataPayload> = {}): OverlayDataPayload {
+function payload(overrides: Partial<OverlayDataPayload> = {}): OverlayDataPayload {
   return {
-    initialSetup: false,
-    scanData: null,
+    scanned: false,
+    seatMenus: [],
+    pickCount: 0,
     targetResolution: '1920x1080',
     scaleFactor: 1,
-    opCombinations: [],
-    trapCombinations: [],
-    heroSynergies: [],
-    heroTraps: [],
-    heroModels: [],
-    heroesForMySpotUI: [],
-    selectedHeroForDraftingDbId: null,
-    selectedSpotHeroOrder: null,
-    selectedModelHeroOrder: null,
-    heroesCoords: [],
-    heroesParams: { width: 358, height: 170 },
-    modelsCoords: [],
     ...overrides,
   }
 }
 
+// The hook is the renderer's side of the live scan: it starts/stops the loop that runs
+// in the main process and reflects the overlay:data / ml:scanResults pushes it receives.
 describe('useOverlayData', () => {
   beforeEach(async () => {
-    // Clear all listeners
-    for (const key of Object.keys(channelListeners)) {
-      channelListeners[key] = []
-    }
+    for (const key of Object.keys(channelListeners)) channelListeners[key] = []
     mockSend.mockClear()
-    mockInvoke.mockClear()
-    mockInvoke.mockResolvedValue(null)
-
-    // Dynamic import to ensure mock is in place
-    const mod = await import('../../../../src/renderer/overlay/src/hooks/use-overlay-data')
-    useOverlayData = mod.useOverlayData
+    mockInvoke.mockReset()
+    mockInvoke.mockResolvedValue(payload())
+    ;({ useOverlayData } = await import('../../../../src/renderer/overlay/src/hooks/use-overlay-data'))
   })
 
-  it('initializes with default state', () => {
-    const { result } = renderHook(() => useOverlayData())
-
-    expect(result.current.overlayData).toBeNull()
-    expect(result.current.selectedSpotHeroOrder).toBeNull()
-    expect(result.current.selectedModelHeroOrder).toBeNull()
-    expect(result.current.scanState).toBe('idle')
-    expect(result.current.scanError).toBeNull()
-    expect(result.current.snapshotMessage).toBeNull()
-    expect(result.current.snapshotIsError).toBe(false)
+  afterEach(() => {
+    vi.useRealTimers()
   })
 
-  it('requests initial data via invoke on mount', () => {
-    renderHook(() => useOverlayData())
+  async function mounted() {
+    const hook = renderHook(() => useOverlayData())
+    await act(async () => {}) // let overlay:getInitialData resolve
+    return hook
+  }
 
+  it('loads the initial overlay data', async () => {
+    const { result } = await mounted()
     expect(mockInvoke).toHaveBeenCalledWith('overlay:getInitialData')
+    expect(result.current.overlayData).toEqual(payload())
+    expect(result.current.scanState).toBe('idle')
+    expect(result.current.live).toBe(false)
   })
 
-  it('sets overlayData from initial invoke response', async () => {
-    const payload = makeOverlayPayload()
-    mockInvoke.mockResolvedValue(payload)
-
-    const { result } = renderHook(() => useOverlayData())
-
-    // Wait for the async invoke to resolve
-    await vi.waitFor(() => {
-      expect(result.current.overlayData).toEqual(payload)
-    })
+  it('startLive asks main to begin the live scan loop and shows scanning', async () => {
+    const { result } = await mounted()
+    act(() => result.current.startLive())
+    expect(mockSend).toHaveBeenCalledWith('ml:startLive')
+    expect(result.current.live).toBe(true)
+    expect(result.current.scanState).toBe('scanning')
   })
 
-  it('subscribes to all IPC channels on mount', () => {
-    renderHook(() => useOverlayData())
-
-    expect(channelListeners['overlay:data']?.length).toBe(1)
-    expect(channelListeners['draft:selectMySpot']?.length).toBe(1)
-    expect(channelListeners['draft:selectMyModel']?.length).toBe(1)
-    expect(channelListeners['ml:scanResults']?.length).toBe(1)
-    expect(channelListeners['feedback:snapshotStatus']?.length).toBe(1)
+  it('startLive does nothing until the initial overlay data has arrived', async () => {
+    mockInvoke.mockResolvedValue(null)
+    const { result } = await mounted()
+    act(() => result.current.startLive())
+    expect(mockSend).not.toHaveBeenCalled()
+    expect(result.current.live).toBe(false)
   })
 
-  it('unsubscribes all listeners on unmount', () => {
-    const { unmount } = renderHook(() => useOverlayData())
-
-    unmount()
-
-    expect(channelListeners['overlay:data']?.length).toBe(0)
-    expect(channelListeners['draft:selectMySpot']?.length).toBe(0)
-    expect(channelListeners['draft:selectMyModel']?.length).toBe(0)
-    expect(channelListeners['ml:scanResults']?.length).toBe(0)
-    expect(channelListeners['feedback:snapshotStatus']?.length).toBe(0)
+  it('a scanned overlay:data push updates the data and marks the scan done', async () => {
+    const { result } = await mounted()
+    act(() => result.current.startLive())
+    act(() => emit('overlay:data', payload({ scanned: true, pickCount: 7 })))
+    expect(result.current.scanState).toBe('scanned')
+    expect(result.current.overlayData?.pickCount).toBe(7)
+    expect(result.current.live).toBe(true) // still polling
   })
 
-  describe('overlay:data listener', () => {
-    it('updates overlayData on overlay:data event', () => {
-      const { result } = renderHook(() => useOverlayData())
-      const payload = makeOverlayPayload()
-
-      act(() => emit('overlay:data', payload))
-
-      expect(result.current.overlayData).toEqual(payload)
-    })
-
-    it('sets scanState to scanned when scanData is present', () => {
-      const { result } = renderHook(() => useOverlayData())
-      const payload = makeOverlayPayload({
-        scanData: {
-          ultimates: [],
-          standard: [],
-          selectedAbilities: [],
-        },
-      })
-
-      act(() => emit('overlay:data', payload))
-
-      expect(result.current.scanState).toBe('scanned')
-      expect(result.current.scanError).toBeNull()
-    })
-
-    it('does not change scanState when scanData is null (initial setup)', () => {
-      const { result } = renderHook(() => useOverlayData())
-      const payload = makeOverlayPayload({ initialSetup: true, scanData: null })
-
-      act(() => emit('overlay:data', payload))
-
-      expect(result.current.scanState).toBe('idle')
-    })
-
-    it('syncs selectedSpotHeroOrder from the payload row directly', () => {
-      const { result } = renderHook(() => useOverlayData())
-      // The dbId is the MODEL hero and must NOT be resolved against the pool
-      // list (pool row != player row); the payload row wins
-      const payload = makeOverlayPayload({
-        selectedHeroForDraftingDbId: 42,
-        selectedSpotHeroOrder: 7,
-        heroesForMySpotUI: [
-          { heroOrder: 3, heroName: 'npc_dota_hero_axe', dbHeroId: 42 },
-        ],
-      })
-
-      act(() => emit('overlay:data', payload))
-
-      expect(result.current.selectedSpotHeroOrder).toBe(7)
-    })
-
-    it('clears selectedSpotHeroOrder when the payload row is null', () => {
-      const { result } = renderHook(() => useOverlayData())
-
-      act(() =>
-        emit(
-          'overlay:data',
-          makeOverlayPayload({ selectedSpotHeroOrder: 3 }),
-        ),
-      )
-      expect(result.current.selectedSpotHeroOrder).toBe(3)
-
-      act(() =>
-        emit(
-          'overlay:data',
-          makeOverlayPayload({ selectedSpotHeroOrder: null }),
-        ),
-      )
-      expect(result.current.selectedSpotHeroOrder).toBeNull()
-    })
-
-    it('syncs selectedModelHeroOrder from payload', () => {
-      const { result } = renderHook(() => useOverlayData())
-      const payload = makeOverlayPayload({ selectedModelHeroOrder: 5 })
-
-      act(() => emit('overlay:data', payload))
-
-      expect(result.current.selectedModelHeroOrder).toBe(5)
-    })
+  it('an unscanned overlay:data push does not claim a scan finished', async () => {
+    const { result } = await mounted()
+    act(() => emit('overlay:data', payload({ scanned: false })))
+    expect(result.current.scanState).toBe('idle')
   })
 
-  describe('draft:selectMySpot listener', () => {
-    it('updates selectedSpotHeroOrder', () => {
-      const { result } = renderHook(() => useOverlayData())
-
-      act(() =>
-        emit('draft:selectMySpot', { selectedHeroOrderForDrafting: 7 }),
-      )
-
-      expect(result.current.selectedSpotHeroOrder).toBe(7)
-    })
-
-    it('clears selectedSpotHeroOrder with null', () => {
-      const { result } = renderHook(() => useOverlayData())
-
-      act(() =>
-        emit('draft:selectMySpot', { selectedHeroOrderForDrafting: 5 }),
-      )
-      act(() =>
-        emit('draft:selectMySpot', { selectedHeroOrderForDrafting: null }),
-      )
-
-      expect(result.current.selectedSpotHeroOrder).toBeNull()
-    })
+  it('shows a scan error and recovers on the next good scan (the loop keeps running)', async () => {
+    const { result } = await mounted()
+    act(() => result.current.startLive())
+    act(() => emit('ml:scanResults', { error: 'No Dota window' }))
+    expect(result.current.scanState).toBe('error')
+    expect(result.current.scanError).toBe('No Dota window')
+    expect(result.current.live).toBe(true)
+    act(() => emit('overlay:data', payload({ scanned: true })))
+    expect(result.current.scanState).toBe('scanned')
+    expect(result.current.scanError).toBeNull()
   })
 
-  describe('draft:selectMyModel listener', () => {
-    it('updates selectedModelHeroOrder', () => {
-      const { result } = renderHook(() => useOverlayData())
-
-      act(() =>
-        emit('draft:selectMyModel', { selectedModelHeroOrder: 10 }),
-      )
-
-      expect(result.current.selectedModelHeroOrder).toBe(10)
-    })
+  it('stopLive tells main to stop and leaves the last results showing', async () => {
+    const { result } = await mounted()
+    act(() => result.current.startLive())
+    act(() => emit('overlay:data', payload({ scanned: true, pickCount: 3 })))
+    act(() => result.current.stopLive())
+    expect(mockSend).toHaveBeenCalledWith('ml:stopLive')
+    expect(result.current.live).toBe(false)
+    expect(result.current.scanState).toBe('scanned')
+    expect(result.current.overlayData?.pickCount).toBe(3)
   })
 
-  describe('ml:scanResults listener', () => {
-    it('sets scanState to error on error message', () => {
-      const { result } = renderHook(() => useOverlayData())
-
-      act(() => emit('ml:scanResults', { error: 'ML model failed' }))
-
-      expect(result.current.scanState).toBe('error')
-      expect(result.current.scanError).toBe('ML model failed')
-    })
-
-    it('does not change state when no error', () => {
-      const { result } = renderHook(() => useOverlayData())
-
-      act(() => emit('ml:scanResults', { results: [], isInitialScan: true }))
-
-      expect(result.current.scanState).toBe('idle')
-      expect(result.current.scanError).toBeNull()
-    })
+  it('stopping before any result returns to idle', async () => {
+    const { result } = await mounted()
+    act(() => result.current.startLive())
+    act(() => result.current.stopLive())
+    expect(result.current.scanState).toBe('idle')
   })
 
-  describe('feedback:snapshotStatus listener', () => {
-    it('resolves the messageKey to a translated snapshot message', () => {
-      const { result } = renderHook(() => useOverlayData())
-
-      act(() =>
-        emit('feedback:snapshotStatus', {
-          messageKey: 'snapshot.saved',
-          params: { count: 3 },
-        }),
-      )
-
-      expect(result.current.snapshotMessage).toContain('3')
-      expect(result.current.snapshotMessage).not.toContain('snapshot.saved')
-      expect(result.current.snapshotIsError).toBe(false)
+  it('gives up with an error if main never produces a first result', async () => {
+    vi.useFakeTimers()
+    const { result } = await mounted()
+    act(() => result.current.startLive())
+    act(() => {
+      vi.advanceTimersByTime(30_000)
     })
-
-    it('updates snapshot error state', () => {
-      const { result } = renderHook(() => useOverlayData())
-
-      act(() =>
-        emit('feedback:snapshotStatus', {
-          messageKey: 'snapshot.noScan',
-          error: true,
-        }),
-      )
-
-      expect(result.current.snapshotMessage).toBeTruthy()
-      expect(result.current.snapshotMessage).not.toContain('snapshot.noScan')
-      expect(result.current.snapshotIsError).toBe(true)
-    })
+    expect(result.current.scanState).toBe('error')
+    expect(result.current.scanError).toBe('Scan timed out')
   })
 
-  describe('triggerScan', () => {
-    // The ml:scan send is deferred by two animation frames so the capture-mode
-    // CSS (hiding overlay decorations) is painted before main captures the screen
-    const flushAnimationFrames = () =>
-      act(() => new Promise<void>((resolve) => setTimeout(resolve, 100)))
-
-    it('sets scanState to scanning immediately and sends ml:scan after paint', async () => {
-      const { result } = renderHook(() => useOverlayData())
-
-      // Must have overlayData first
-      act(() => emit('overlay:data', makeOverlayPayload()))
-
-      act(() => result.current.triggerScan(true))
-
-      expect(result.current.scanState).toBe('scanning')
-      await flushAnimationFrames()
-      expect(mockSend).toHaveBeenCalledWith('ml:scan', {
-        heroOrder: 0,
-        isInitialScan: true,
-      })
+  it('does not time out once a result has arrived', async () => {
+    vi.useFakeTimers()
+    const { result } = await mounted()
+    act(() => result.current.startLive())
+    act(() => emit('overlay:data', payload({ scanned: true })))
+    act(() => {
+      vi.advanceTimersByTime(60_000)
     })
-
-    it('uses selectedSpotHeroOrder in scan request', async () => {
-      const { result } = renderHook(() => useOverlayData())
-
-      act(() => emit('overlay:data', makeOverlayPayload()))
-      act(() =>
-        emit('draft:selectMySpot', { selectedHeroOrderForDrafting: 4 }),
-      )
-
-      act(() => result.current.triggerScan(false))
-      await flushAnimationFrames()
-
-      expect(mockSend).toHaveBeenCalledWith('ml:scan', {
-        heroOrder: 4,
-        isInitialScan: false,
-      })
-    })
-
-    it('does nothing when overlayData is null', () => {
-      const { result } = renderHook(() => useOverlayData())
-
-      act(() => result.current.triggerScan(true))
-
-      expect(result.current.scanState).toBe('idle')
-      expect(mockSend).not.toHaveBeenCalled()
-    })
-  })
-
-  describe('resetOverlay', () => {
-    it('resets scan state and selections', () => {
-      const { result } = renderHook(() => useOverlayData())
-
-      // Set up some state
-      act(() =>
-        emit(
-          'overlay:data',
-          makeOverlayPayload({
-            scanData: { ultimates: [], standard: [], selectedAbilities: [] },
-          }),
-        ),
-      )
-      act(() =>
-        emit('draft:selectMySpot', { selectedHeroOrderForDrafting: 3 }),
-      )
-      act(() =>
-        emit('draft:selectMyModel', { selectedModelHeroOrder: 7 }),
-      )
-
-      // Now reset
-      act(() => result.current.resetOverlay())
-
-      expect(result.current.scanState).toBe('idle')
-      expect(result.current.scanError).toBeNull()
-      expect(result.current.selectedSpotHeroOrder).toBeNull()
-      expect(result.current.selectedModelHeroOrder).toBeNull()
-      expect(result.current.overlayData?.scanData).toBeNull()
-      expect(result.current.overlayData?.opCombinations).toEqual([])
-    })
+    expect(result.current.scanState).toBe('scanned')
   })
 })
