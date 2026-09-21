@@ -2,7 +2,8 @@ import type { CSSProperties, JSX } from 'react'
 import type { SeatMenu } from '@shared/types'
 
 // @DEV-GUIDE: Phase-1 placeholder menu — one per player on the chosen team, listing that
-// player's best remaining abilities by the simulator's pick score (lower = better). Sits
+// player's best remaining picks (abilities and hero models together, models tagged HERO)
+// by the simulator's pick score (lower = better). Sits
 // in the strip between the screen edge and the player's outer pick box (positioned by
 // core/resolution/seat-menu-box.ts). Same coordinate-driven positioning as the rest of
 // the overlay: layout pixels divided by scaleFactor. Replace the chrome in Phase 3.
@@ -44,6 +45,9 @@ export function SeatMenuBox({ menu, scaleFactor }: SeatMenuBoxProps): JSX.Elemen
             <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {i + 1}. {s.displayName}
             </span>
+            {s.kind === 'model' && (
+              <span style={{ color: '#f0b429', fontSize: Math.max(7, fontSize - 3), alignSelf: 'center' }}>HERO</span>
+            )}
             <span style={{ color: '#3ddc84', fontVariantNumeric: 'tabular-nums' }}>{s.score.toFixed(1)}</span>
           </div>
         ))

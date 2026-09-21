@@ -13,6 +13,7 @@ interface ControlsPanelProps {
   scanError: string | null
   live: boolean
   pickCount: number
+  modelStatus: { read: number; picked: number }
   side: Side | null
   onSideChange: (side: Side) => void
   onStartLive: () => void
@@ -27,6 +28,7 @@ export function ControlsPanel({
   scanError,
   live,
   pickCount,
+  modelStatus,
   side,
   onSideChange,
   onStartLive,
@@ -85,6 +87,11 @@ export function ControlsPanel({
         </button>
       )}
       <span>Status: {status}</span>
+      {live && scanState !== 'scanning' && (
+        <span title="Hero models whose hero was identified from the pool, and how many of those are drafted">
+          Models: {modelStatus.read}/12 read · {modelStatus.picked} taken
+        </span>
+      )}
       {scanError && <span style={{ color: '#ff5c5c' }}>{scanError}</span>}
     </div>
   )

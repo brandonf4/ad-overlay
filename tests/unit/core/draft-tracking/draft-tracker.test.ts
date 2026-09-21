@@ -179,3 +179,27 @@ describe('draft tracker', () => {
     expect(state.pickIndex).toBe(1)
   })
 })
+
+describe('hero identification robustness', () => {
+  it('still reads a model when its defining ability box did not read, if two other abilities agree', () => {
+    const game = new FakeGame()
+    const tracker = createDraftTracker(heroOfAbility)
+    const pool = game.poolSlots().map((s) =>
+      // hero 5's middle basic (the defining ability) reads Unknown
+      s.hero_order === 5 && s.ability_order === 2 && !s.is_ultimate ? { ...s, name: null } : s,
+    )
+    const snap = tracker.update({ pool, seatSlots: [], modelTiles: game.tiles() })
+    expect(snap.models.find((m) => m.heroOrder === 5)?.heroName).toBe('hero5')
+    expect(snap.models).toHaveLength(12)
+  })
+
+  it('does not guess a hero from a single agreeing ability', () => {
+    const game = new FakeGame()
+    const tracker = createDraftTracker(heroOfAbility)
+    const pool = game.poolSlots().map((s) =>
+      s.hero_order === 5 && !(s.ability_order === 1 && !s.is_ultimate) ? { ...s, name: null } : s,
+    )
+    const snap = tracker.update({ pool, seatSlots: [], modelTiles: game.tiles() })
+    expect(snap.models.find((m) => m.heroOrder === 5)).toBeUndefined()
+  })
+})

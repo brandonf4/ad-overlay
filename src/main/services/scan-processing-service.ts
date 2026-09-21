@@ -75,6 +75,7 @@ export function createScanProcessingService(
   windowManager: WindowManager,
   abilityData: AbilityDataService,
 ): ScanProcessingService {
+  let lastSummaryKey = ''
   const tracker = createDraftTracker((abilityName) => abilityData.getHeroByAbility(abilityName)?.name ?? null)
 
   function broadcastError(message: string): void {
@@ -92,6 +93,7 @@ export function createScanProcessingService(
   return {
     reset() {
       tracker.reset()
+      lastSummaryKey = ''
     },
     pickCandidates() {
       return tracker.pickCandidates()
@@ -118,15 +120,19 @@ export function createScanProcessingService(
         for (let seat = 0; seat < SEAT_COUNT; seat++) {
           const box = seatMenuBox(layout, seat, screenWidth)
           if (!box) continue
+          // Models and abilities compete directly, exactly as in the simulator.
           const suggestions = rankPicksForSeat(
             seat,
             state,
             abilityData.synergy,
             SUGGESTIONS_PER_SEAT,
-            'ability',
           ).map((r) => ({
             name: r.item.name,
-            displayName: abilityData.getAbility(r.item.name)?.displayName ?? prettifyName(r.item.name),
+            displayName:
+              (r.item.kind === 'model'
+                ? abilityData.getHeroModel(r.item.name)?.displayName
+                : abilityData.getAbility(r.item.name)?.displayName) ?? prettifyName(r.item.name),
+            kind: r.item.kind,
             score: r.score,
           }))
           seatMenus.push({ seat, suggestions, ...box })
@@ -136,6 +142,10 @@ export function createScanProcessingService(
           scanned: true,
           seatMenus,
           pickCount: snapshot.pickIndex,
+          modelStatus: {
+            read: snapshot.models.length,
+            picked: snapshot.models.filter((m) => m.picked).length,
+          },
           targetResolution: resolution,
           scaleFactor,
         }
@@ -150,10 +160,24 @@ export function createScanProcessingService(
           cp.webContents.send('overlay:data', payload)
         }
 
-        logger.debug('Scan processed', {
+        // One info line whenever the reconstructed draft changes (not every scan) — the
+        // log is how a live problem like "models aren't being read" gets diagnosed.
+        const summary = {
           pickIndex: snapshot.pickIndex,
-          durationMs: Math.round(performance.now() - start),
-        })
+          modelTiles: scan.modelTiles?.length ?? 0,
+          modelsRead: payload.modelStatus.read,
+          modelsPicked: payload.modelStatus.picked,
+          heldPerSeat: snapshot.seats.map((e) => e.length).join(''),
+          seatsWithModel: snapshot.seats
+            .map((e, i) => (e.some((x) => x.kind === 'model') ? i : -1))
+            .filter((i) => i >= 0)
+            .join(','),
+        }
+        const summaryKey = JSON.stringify(summary)
+        if (summaryKey !== lastSummaryKey) {
+          lastSummaryKey = summaryKey
+          logger.info('Draft state', { ...summary, durationMs: Math.round(performance.now() - start) })
+        }
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error)
         logger.error('Scan processing failed', { error: message })

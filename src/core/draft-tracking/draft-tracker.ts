@@ -96,12 +96,26 @@ export function createDraftTracker(
   }
 
   function modelHeroName(heroOrder: number, trackedNames: Map<string, string | null>): string | null {
-    const defining = lastPool.find(
-      (s) => s.hero_order === heroOrder && s.ability_order === DEFINING_ABILITY_ORDER && !s.is_ultimate,
-    )
-    if (!defining) return null
-    const abilityName = trackedNames.get(poolSlotKey(defining)) ?? null
-    return abilityName ? heroOfAbility(abilityName) : null
+    const group = lastPool.filter((s) => s.hero_order === heroOrder)
+    const nameOf = (slot: PoolSlotInput): string | null => trackedNames.get(poolSlotKey(slot)) ?? null
+
+    const defining = group.find((s) => s.ability_order === DEFINING_ABILITY_ORDER && !s.is_ultimate)
+    const definingName = defining ? nameOf(defining) : null
+    if (definingName) return heroOfAbility(definingName)
+
+    // The defining ability's box didn't read: fall back to the hero that owns most of the
+    // rest of this group. Needs two agreeing abilities, since a group can contain
+    // backfilled abilities from other heroes.
+    const votes = new Map<string, number>()
+    for (const slot of group) {
+      const name = nameOf(slot)
+      const hero = name ? heroOfAbility(name) : null
+      if (hero) votes.set(hero, (votes.get(hero) ?? 0) + 1)
+    }
+    const ranked = [...votes].sort((a, b) => b[1] - a[1])
+    return ranked.length > 0 && ranked[0][1] >= 2 && ranked[0][1] > (ranked[1]?.[1] ?? 0)
+      ? ranked[0][0]
+      : null
   }
 
   return {

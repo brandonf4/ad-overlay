@@ -109,6 +109,7 @@ export function registerIpcHandlers(
       scanned: false,
       seatMenus: [],
       pickCount: 0,
+      modelStatus: { read: 0, picked: 0 },
       targetResolution: resolution,
       scaleFactor,
     }

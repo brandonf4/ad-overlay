@@ -64,6 +64,7 @@ function App(): JSX.Element {
         scanError={scanError}
         live={live}
         pickCount={overlayData?.pickCount ?? 0}
+        modelStatus={overlayData?.modelStatus ?? { read: 0, picked: 0 }}
         side={side}
         onSideChange={changeSide}
         onStartLive={startLive}

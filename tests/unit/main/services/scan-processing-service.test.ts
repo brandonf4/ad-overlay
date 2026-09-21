@@ -24,7 +24,24 @@ interface RawHero {
 const usable = (heroes as RawHero[]).filter(
   (h) => h.abilities.filter((a) => !a.is_ultimate).length >= 3 && h.abilities.some((a) => a.is_ultimate),
 )
-const poolHeroes = usable.slice(0, 12)
+let poolHeroes = usable.slice(0, 12)
+
+// The 12 heroes whose MODELS the simulator's data rates best — a pool where hero models
+// are attractive picks, so they must show up among the suggestions.
+const modelStrong = (
+  usable as (RawHero & { model_avg_pick_position_high: number | null })[]
+)
+  .filter((h) => h.model_avg_pick_position_high != null)
+  .sort((a, b) => (a.model_avg_pick_position_high as number) - (b.model_avg_pick_position_high as number))
+  .slice(0, 12)
+
+// One 12-tile model capture: a drafted model's tile looks nothing like its baseline.
+function modelTiles(picked: number[] = []): { heroOrder: number; tile: ArrayBuffer }[] {
+  return Array.from({ length: 12 }, (_, heroOrder) => ({
+    heroOrder,
+    tile: new Uint8Array(200).fill(picked.includes(heroOrder) ? 200 : 20).buffer,
+  }))
+}
 
 function scanResult(coord: ResolutionLayout['standard_slots_coords'][number], name: string | null): ScanResult {
   return {
@@ -70,8 +87,12 @@ function setup() {
     refreshOverlayMouseEvents: () => {},
   }
   const service = createScanProcessingService(windowManager as never, createAbilityDataService())
-  const run = (pool: LiveScan['pool'], rows: ScanResult[]): OverlayDataPayload => {
-    service.handleScan({ pool, rows }, '1920x1080', 1, layout)
+  const run = (
+    pool: LiveScan['pool'],
+    rows: ScanResult[],
+    tiles?: LiveScan['modelTiles'],
+  ): OverlayDataPayload => {
+    service.handleScan({ pool, rows, modelTiles: tiles }, '1920x1080', 1, layout)
     return sent[sent.length - 1]
   }
   return { service, run, sent }
@@ -132,7 +153,7 @@ describe('scan processing (real data, real layout)', () => {
     const abilities = poolHeroes.flatMap((h) => h.abilities.map((a) => a.name))
     const scoreOf = (p: OverlayDataPayload, seat: number): number =>
       p.seatMenus.find((m) => m.seat === seat)!.suggestions[0].score
-    const pickName = before.seatMenus.find((m) => m.seat === 5)!.suggestions[0].name
+    const pickName = before.seatMenus.find((m) => m.seat === 5)!.suggestions.find((s) => s.kind === 'ability')!.name
     expect(abilities).toContain(pickName)
     const taken = new Set([pickName])
     const held = { 5: [pickName, null, null, null] }
@@ -149,5 +170,53 @@ describe('scan processing (real data, real layout)', () => {
     run(poolScan(taken), rowsScan({ 0: [poolHeroes[0].abilities[0].name, null, null, null] }))
     service.reset()
     expect(run(poolScan(new Set()), rowsScan({})).pickCount).toBe(0)
+  })
+})
+
+describe('hero models take part in the suggestions', () => {
+  it('ranks models together with abilities, tagged as models, with their hero name', () => {
+    poolHeroes = modelStrong
+    try {
+      const { run } = setup()
+      const payload = run(poolScan(new Set()), rowsScan({}), modelTiles())
+      const all = payload.seatMenus.flatMap((m) => m.suggestions)
+      expect(all.every((s) => s.kind === 'ability' || s.kind === 'model')).toBe(true)
+      const models = all.filter((s) => s.kind === 'model')
+      expect(models.length).toBeGreaterThan(0)
+      for (const m of models) {
+        expect(m.displayName.length).toBeGreaterThan(0)
+        expect(poolHeroes.map((h) => h.name)).toContain(m.name) // model item = the hero's name
+      }
+      expect(payload.modelStatus).toEqual({ read: 12, picked: 0 })
+    } finally {
+      poolHeroes = usable.slice(0, 12)
+    }
+  })
+
+  it('notices a drafted model from its tile, stops offering it, and gives that seat its model', () => {
+    poolHeroes = modelStrong
+    try {
+      const { run } = setup()
+      run(poolScan(new Set()), rowsScan({}), modelTiles()) // baseline
+      const takenHero = 2
+      run(poolScan(new Set()), rowsScan({}), modelTiles([takenHero])) // first sighting
+      const after = run(poolScan(new Set()), rowsScan({}), modelTiles([takenHero])) // committed
+      expect(after.modelStatus).toEqual({ read: 12, picked: 1 })
+      expect(after.pickCount).toBe(1)
+      const heroName = poolHeroes[takenHero].name
+      for (const menu of after.seatMenus) {
+        expect(menu.suggestions.map((s) => s.name)).not.toContain(heroName)
+      }
+      // seat 0 made the first pick, so it is the one holding a model: none offered again
+      const seat0 = after.seatMenus.find((m) => m.seat === 0)!
+      expect(seat0.suggestions.some((s) => s.kind === 'model')).toBe(false)
+    } finally {
+      poolHeroes = usable.slice(0, 12)
+    }
+  })
+
+  it('reports no models read when the scan returned no model tiles', () => {
+    const { run } = setup()
+    expect(run(poolScan(new Set()), rowsScan({})).modelStatus).toEqual({ read: 0, picked: 0 })
   })
 })

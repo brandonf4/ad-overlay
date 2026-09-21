@@ -155,10 +155,12 @@ export interface ScanResult {
 // personalization system's output. This fork's payload is just the per-seat pick
 // suggestions produced by core/scoring (see scan-processing-service.ts).
 
-/** One suggested ability for a seat. Lower score = better (see core/scoring). */
+/** One suggested pick for a seat — an ability or a hero model, ranked together like the
+ * simulator does. Lower score = better (see core/scoring). */
 export interface SeatSuggestion {
   name: string
   displayName: string
+  kind: 'ability' | 'model'
   score: number
 }
 
@@ -180,6 +182,9 @@ export interface OverlayDataPayload {
   seatMenus: SeatMenu[]
   /** Picks made so far in the draft (0-50), across both teams. */
   pickCount: number
+  /** How the hero-model scan is doing: models whose hero was identified, and how many
+   * of those have been drafted. Both 0 means no model tiles were read. */
+  modelStatus: { read: number; picked: number }
   targetResolution: string
   scaleFactor: number
 }

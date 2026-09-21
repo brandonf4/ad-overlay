@@ -40,6 +40,7 @@ function payload(overrides: Partial<OverlayDataPayload> = {}): OverlayDataPayloa
     scanned: false,
     seatMenus: [],
     pickCount: 0,
+    modelStatus: { read: 0, picked: 0 },
     targetResolution: '1920x1080',
     scaleFactor: 1,
     ...overrides,
