@@ -35,6 +35,16 @@ const modelStrong = (
   .sort((a, b) => (a.model_avg_pick_position_high as number) - (b.model_avg_pick_position_high as number))
   .slice(0, 12)
 
+// Earthshaker + Storm Spirit: a real cross-hero pair with recorded synergy data, used to
+// check the combo-winrate reconstruction end-to-end against real numbers.
+const COMBO_A = 'earthshaker_aftershock'
+const COMBO_B = 'storm_spirit_static_remnant'
+const comboPool = [
+  usable.find((h) => h.name === 'earthshaker')!,
+  usable.find((h) => h.name === 'storm_spirit')!,
+  ...usable.filter((h) => h.name !== 'earthshaker' && h.name !== 'storm_spirit').slice(0, 10),
+]
+
 // One 12-tile model capture: a drafted model's tile looks nothing like its baseline.
 function modelTiles(picked: number[] = []): { heroOrder: number; tile: ArrayBuffer }[] {
   return Array.from({ length: 12 }, (_, heroOrder) => ({
@@ -218,5 +228,52 @@ describe('hero models take part in the suggestions', () => {
   it('reports no models read when the scan returned no model tiles', () => {
     const { run } = setup()
     expect(run(poolScan(new Set()), rowsScan({})).modelStatus).toEqual({ read: 0, picked: 0 })
+  })
+})
+
+describe('top combos panel', () => {
+  it('reconstructs the real combo win rate for a known pair, positioned right of the ultimates', () => {
+    poolHeroes = comboPool
+    try {
+      const { run } = setup()
+      const payload = run(poolScan(new Set()), rowsScan({}))
+      expect(payload.topCombos).not.toBeNull()
+      const box = payload.topCombos!
+      const rightEdge = Math.max(...layout.ultimate_slots_coords.map((s) => s.x + s.width))
+      expect(box.x).toBeGreaterThan(rightEdge)
+      expect(box.y).toBe(Math.min(...layout.ultimate_slots_coords.map((s) => s.y)))
+
+      const combo = box.combos.find(
+        (c) =>
+          (c.a.name === COMBO_A && c.b.name === COMBO_B) || (c.a.name === COMBO_B && c.b.name === COMBO_A),
+      )
+      expect(combo).toBeDefined()
+      // synergy lift 12.83 percentage points + average(0.634, 0.5255) solo win rates
+      expect(combo!.comboWinrate).toBeCloseTo(12.83 / 100 + (0.634 + 0.5255) / 2, 6)
+      expect(combo!.a.displayName.length).toBeGreaterThan(0)
+
+      const scores = box.combos.map((c) => c.comboWinrate)
+      expect(scores).toEqual([...scores].sort((a, b) => b - a))
+      expect(box.combos.every((c) => !(c.a.kind === 'model' && c.b.kind === 'model'))).toBe(true)
+    } finally {
+      poolHeroes = usable.slice(0, 12)
+    }
+  })
+
+  it('drops a combo once either of its abilities is drafted', () => {
+    poolHeroes = comboPool
+    try {
+      const { run } = setup()
+      const taken = new Set([COMBO_A])
+      const held = { 0: [COMBO_A, null, null, null] }
+      run(poolScan(taken), rowsScan(held))
+      const after = run(poolScan(taken), rowsScan(held))
+      const stillThere = after.topCombos?.combos.some(
+        (c) => c.a.name === COMBO_A || c.b.name === COMBO_A,
+      )
+      expect(stillThere).toBe(false)
+    } finally {
+      poolHeroes = usable.slice(0, 12)
+    }
   })
 })

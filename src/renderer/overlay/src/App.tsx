@@ -3,6 +3,7 @@ import type { JSX } from 'react'
 import { useOverlayData } from './hooks/use-overlay-data'
 import { ControlsPanel, type Side } from './components/ControlsPanel'
 import { SeatMenuBox } from './components/SeatMenuBox'
+import { TopCombosPanel } from './components/TopCombosPanel'
 
 // @DEV-GUIDE: Root component for the overlay renderer, Phase 1 (see the fork's plan
 // doc). Renders on a transparent, click-through window on top of the Dota 2 game.
@@ -58,6 +59,8 @@ function App(): JSX.Element {
       {menus.map((menu) => (
         <SeatMenuBox key={menu.seat} menu={menu} scaleFactor={scaleFactor} />
       ))}
+
+      <TopCombosPanel data={overlayData?.topCombos ?? null} scaleFactor={scaleFactor} />
 
       <ControlsPanel
         scanState={scanState}

@@ -5,8 +5,16 @@ import { createDraftTracker } from '@core/draft-tracking/draft-tracker'
 import { buildScoreState } from '@core/draft-tracking/score-state'
 import type { SeatSlotRead } from '@core/draft-tracking/seat-pick-tracker'
 import { rankPicksForSeat, SEAT_COUNT } from '@core/scoring/pick-score'
+import { rankTopCombos, type ComboItem } from '@core/scoring/top-combos'
 import { seatMenuBox } from '@core/resolution/seat-menu-box'
-import type { ScanResult, ResolutionLayout, OverlayDataPayload, SeatMenu } from '@shared/types'
+import { topCombosBox } from '@core/resolution/top-combos-box'
+import type {
+  ScanResult,
+  ResolutionLayout,
+  OverlayDataPayload,
+  SeatMenu,
+  ComboSuggestion,
+} from '@shared/types'
 import type { InitialScanResults, PickCandidates } from '@shared/types/ml'
 
 // @DEV-GUIDE: Bridges live ML scans to the overlay. Each scan is folded into a
@@ -19,6 +27,15 @@ import type { InitialScanResults, PickCandidates } from '@shared/types/ml'
 const logger = log.scope('scan-processing')
 
 const SUGGESTIONS_PER_SEAT = 5
+const TOP_COMBOS_COUNT = 8
+
+function displayNameOf(item: { name: string; kind: 'ability' | 'model' }, abilityData: AbilityDataService): string {
+  return (
+    (item.kind === 'model'
+      ? abilityData.getHeroModel(item.name)?.displayName
+      : abilityData.getAbility(item.name)?.displayName) ?? prettifyName(item.name)
+  )
+}
 
 // "night_stalker_void" -> "Night Stalker Void". Fallback for anything the data file
 // doesn't have an entry for (e.g. a very new patch).
@@ -128,19 +145,36 @@ export function createScanProcessingService(
             SUGGESTIONS_PER_SEAT,
           ).map((r) => ({
             name: r.item.name,
-            displayName:
-              (r.item.kind === 'model'
-                ? abilityData.getHeroModel(r.item.name)?.displayName
-                : abilityData.getAbility(r.item.name)?.displayName) ?? prettifyName(r.item.name),
+            displayName: displayNameOf(r.item, abilityData),
             kind: r.item.kind,
             score: r.score,
           }))
           seatMenus.push({ seat, suggestions, ...box })
         }
 
+        const comboItems: ComboItem[] = state.available.map((item) => ({
+          name: item.name,
+          kind: item.kind,
+          winrateHigh: item.winrateHigh,
+        }))
+        const combosBox = topCombosBox(layout, screenWidth)
+        const topCombos: OverlayDataPayload['topCombos'] = combosBox
+          ? {
+              ...combosBox,
+              combos: rankTopCombos(comboItems, abilityData.synergy, TOP_COMBOS_COUNT).map(
+                (r): ComboSuggestion => ({
+                  a: { name: r.a.name, kind: r.a.kind, displayName: displayNameOf(r.a, abilityData) },
+                  b: { name: r.b.name, kind: r.b.kind, displayName: displayNameOf(r.b, abilityData) },
+                  comboWinrate: r.comboWinrate,
+                }),
+              ),
+            }
+          : null
+
         const payload: OverlayDataPayload = {
           scanned: true,
           seatMenus,
+          topCombos,
           pickCount: snapshot.pickIndex,
           modelStatus: {
             read: snapshot.models.length,

@@ -39,6 +39,7 @@ function payload(overrides: Partial<OverlayDataPayload> = {}): OverlayDataPayloa
   return {
     scanned: false,
     seatMenus: [],
+    topCombos: null,
     pickCount: 0,
     modelStatus: { read: 0, picked: 0 },
     targetResolution: '1920x1080',

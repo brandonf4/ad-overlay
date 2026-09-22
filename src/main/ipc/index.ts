@@ -117,6 +117,7 @@ export function registerIpcHandlers(
     pendingOverlayData = {
       scanned: false,
       seatMenus: [],
+      topCombos: null,
       pickCount: 0,
       modelStatus: { read: 0, picked: 0 },
       targetResolution: resolution,

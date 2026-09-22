@@ -176,10 +176,28 @@ export interface SeatMenu {
   height: number
 }
 
+/** One suggested ability/model pair, ranked by their estimated combo win rate. */
+export interface ComboSuggestion {
+  a: { name: string; displayName: string; kind: 'ability' | 'model' }
+  b: { name: string; displayName: string; kind: 'ability' | 'model' }
+  /** Estimated win rate [0, 1] of holding both together. */
+  comboWinrate: number
+}
+
+export interface TopCombosPanelData {
+  combos: ComboSuggestion[]
+  x: number
+  y: number
+  width: number
+}
+
 export interface OverlayDataPayload {
   /** False until the first live scan completes. */
   scanned: boolean
   seatMenus: SeatMenu[]
+  /** Best still-available ability/model pairs by combo win rate; null when the current
+   * layout leaves no room for the panel (see core/resolution/top-combos-box.ts). */
+  topCombos: TopCombosPanelData | null
   /** Picks made so far in the draft (0-50), across both teams. */
   pickCount: number
   /** How the hero-model scan is doing: models whose hero was identified, and how many
