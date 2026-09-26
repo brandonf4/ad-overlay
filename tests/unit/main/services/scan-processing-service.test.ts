@@ -11,6 +11,7 @@ import heroes from '../../../../resources/data/heroes_abilities.json'
 import { createAbilityDataService } from '../../../../src/main/services/ability-data-service'
 import { createScanProcessingService, type LiveScan } from '../../../../src/main/services/scan-processing-service'
 import type { OverlayDataPayload, ResolutionLayout, ScanResult } from '@shared/types'
+import { picture, dimmed } from '../../core/draft-tracking/thumb-fixtures'
 
 // Whole processing path — draft tracker, scoring, the REAL data files and the REAL
 // 1920x1080 layout — driven by synthetic scans of a mid-draft board.
@@ -64,9 +65,12 @@ function scanResult(coord: ResolutionLayout['standard_slots_coords'][number], na
   }
 }
 
-// A drafted ability's pool box goes solid black: unreadable AND blank.
+// A drafted ability's pool box stays in the grid as a dimmed copy of its icon (and, for most
+// abilities, reads Unknown).
 function poolBox(coord: ResolutionLayout['standard_slots_coords'][number], name: string, taken: Set<string>): ScanResult {
-  return taken.has(name) ? { ...scanResult(coord, null), blank: true } : scanResult(coord, name)
+  return taken.has(name)
+    ? { ...scanResult(coord, null), thumb: dimmed(picture(name)) }
+    : { ...scanResult(coord, name), thumb: picture(name) }
 }
 
 function poolScan(taken: Set<string>): LiveScan['pool'] {

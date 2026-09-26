@@ -27,6 +27,7 @@ import {
 } from '@core/ml/template-matcher'
 import type { IconTemplate, PickMatchResult } from '@core/ml/template-matcher'
 import { matchModelTile } from '@core/ml/model-tile-matcher'
+import { lumaThumb } from '@core/draft-tracking/box-appearance'
 import {
   MODEL_TILE_COMPARE_SIZE,
   PLAYER_CARD_COMPARE_SIZE,
@@ -39,7 +40,6 @@ import {
   PICK_TEMPLATE_CROP_INSET_RATIO,
   PICK_TEMPLATE_FALLBACK_MIN_NCC,
   PICK_TEMPLATE_EMPTY_STD,
-  POOL_BLANK_MAX_MEAN,
   MODEL_INPUT_SIZE,
   OCR_NAME_STRIP_HEIGHT_RATIO,
   OCR_STRIP_TARGET_WIDTH,
@@ -821,20 +821,13 @@ async function identifySlots(
     }
   }
 
-  // An unreadable box is ambiguous: a DRAFTED ability leaves a solid black box, but a
-  // hover tooltip over the box, the gold hover highlight, or a different screen entirely
-  // reads just as "unknown". Only the first means the ability is gone, so say which.
-  for (let i = 0; i < results.length; i++) {
-    if (results[i].name !== null) continue
-    const slot = slots[i]
-    if (slot.width <= 0 || slot.height <= 0) continue
-    try {
-      const raw = await cropTile(screenshot, slot, PICK_TEMPLATE_COMPARE_SIZE)
-      const { mean, std } = computePixelStats(new Uint8Array(raw.buffer, raw.byteOffset, raw.byteLength))
-      results[i].blank = std < PICK_TEMPLATE_EMPTY_STD && mean < POOL_BLANK_MAX_MEAN
-    } catch {
-      // Out-of-bounds crop (layout drift) — leave blank unknown
-    }
+  // What the box LOOKS like, from the pixels the classifier just saw: a drafted pool
+  // ability stays in the grid as a dimmed copy of its icon, and the read's name alone
+  // can't say so (some dimmed icons still classify as themselves, most don't). The draft
+  // tracker compares this against how the same box looked while it was available.
+  const pixelsPerImage = MODEL_INPUT_SIZE * MODEL_INPUT_SIZE * 3
+  for (let j = 0; j < validIndices.length; j++) {
+    results[validIndices[j]].thumb = lumaThumb(batch, j * pixelsPerImage, MODEL_INPUT_SIZE)
   }
 
   return results

@@ -3,6 +3,7 @@ import { createDraftTracker, type PoolSlotInput } from '@core/draft-tracking/dra
 import { buildScoreState } from '@core/draft-tracking/score-state'
 import { PICK_ORDER } from '@core/scoring/pick-score'
 import type { SeatSlotRead } from '@core/draft-tracking/seat-pick-tracker'
+import { picture, dimmed, tooltip } from './thumb-fixtures'
 
 // A fake 12-hero draft: hero h has basics h_b1..h_b3 (pool ability_order 1-3; order 2 is
 // the "defining" one) and ultimate h_ult. The tests play a full snake draft and feed the
@@ -41,24 +42,22 @@ class FakeGame {
   seatItems: Item[][] = Array.from({ length: 10 }, () => [])
   picksMade = 0
 
-  // Pool boxes covered by a hover tooltip: they read Unknown, but are NOT blank.
+  // Pool boxes covered by a hover tooltip: they read Unknown and show unrelated content.
   covered = new Set<string>()
+  // Drafted abilities whose DIMMED box the scanner still names as themselves (the Atrophy
+  // Aura case); every other drafted box reads Unknown.
+  dimmedStillNamed = new Set<string>()
 
   poolSlots(): PoolSlotInput[] {
     return this.pool
       .filter((i) => i.kind === 'ability')
       .map((i) => {
-        const drafted = this.taken.has(i.name)
-        const covered = this.covered.has(i.name)
-        return {
-          hero_order: i.heroOrder,
-          ability_order: i.abilityOrder,
-          is_ultimate: i.isUlt,
-          // a drafted ability leaves a solid black box (unreadable AND blank); one under a
-          // tooltip is unreadable but not blank
-          name: drafted || covered ? null : i.name,
-          blank: drafted,
-        }
+        const base = { hero_order: i.heroOrder, ability_order: i.abilityOrder, is_ultimate: i.isUlt }
+        // a drafted ability's box stays in the grid as a dimmed copy of its icon
+        if (this.taken.has(i.name))
+          return { ...base, name: this.dimmedStillNamed.has(i.name) ? i.name : null, thumb: dimmed(picture(i.name)) }
+        if (this.covered.has(i.name)) return { ...base, name: null, thumb: tooltip(i.name) }
+        return { ...base, name: i.name, thumb: picture(i.name) }
       })
   }
   seatSlots(): SeatSlotRead[] {
@@ -252,7 +251,8 @@ describe('does not forget things that are still there', () => {
     scan(tracker, game)
     game.pick(0, game.pool.find((i) => i.name === 'hero3_b1')!)
     game.covered.add('hero3_b1') // box unreadable AND (say) not blank — only the row proves it
-    const pool = () => game.poolSlots().map((s) => ({ ...s, blank: false }))
+    // the box never dims (say) — it just reads Unknown under something; only the row proves it
+    const pool = () => game.poolSlots().map((s) => ({ ...s, name: null, thumb: tooltip('cover') }))
     let snap
     for (let i = 0; i < 3; i++) snap = tracker.update({ pool: pool(), seatSlots: game.seatSlots(), modelTiles: game.tiles() })
     expect(snap!.poolAbilities.find((a) => a.name === 'hero3_b1')?.picked).toBe(true)
@@ -297,5 +297,57 @@ describe('does not forget things that are still there', () => {
     tracker.update({ pool: game.poolSlots(), seatSlots: game.seatSlots(), modelTiles: burst })
     const snap = scan(tracker, game)
     expect(snap.models.every((m) => !m.picked)).toBe(true)
+  })
+})
+
+describe('a drafted ability is dropped even when nothing else identifies it', () => {
+  it('Atrophy Aura case: dimmed box still named as itself, and the row read failed', () => {
+    const game = new FakeGame()
+    const tracker = createDraftTracker(heroOfAbility)
+    scan(tracker, game)
+    // seat 5 drafts hero3_b2; its pool box dims but the scanner still names it, and the
+    // player-row scan never manages to read it (rows are left empty here)
+    game.dimmedStillNamed.add('hero3_b2')
+    game.taken.add('hero3_b2')
+    const emptyRows = (): SeatSlotRead[] => []
+    let snap
+    for (let i = 0; i < 3; i++)
+      snap = tracker.update({ pool: game.poolSlots(), seatSlots: emptyRows(), modelTiles: game.tiles() })
+    expect(snap!.poolAbilities.find((a) => a.name === 'hero3_b2')?.picked).toBe(true)
+    const state = buildScoreState(snap!, {
+      ability: () => ({ isUltimate: false, winrateHigh: 0.5, pickPositionHigh: 10 }),
+      model: () => ({ winrateHigh: 0.5, pickPositionHigh: 10 }),
+    })
+    expect(state.available.find((i) => i.name === 'hero3_b2')).toBeUndefined() // no longer suggested
+    expect(snap!.pickIndex).toBe(1) // and it counts as a pick
+  })
+
+  it('a whole-screen dim (a dialog over the draft) does not drop the pool', () => {
+    const game = new FakeGame()
+    const tracker = createDraftTracker(heroOfAbility)
+    scan(tracker, game)
+    let snap
+    for (let i = 0; i < 6; i++)
+      snap = tracker.update({
+        pool: game.poolSlots().map((s) => ({ ...s, thumb: dimmed(s.thumb!, 0.35) })),
+        seatSlots: game.seatSlots(),
+        modelTiles: game.tiles(),
+      })
+    expect(snap!.poolAbilities.filter((a) => a.picked)).toHaveLength(0)
+    expect(snap!.pickIndex).toBe(0)
+  })
+
+  it('a black transition screen at the end of the draft does not mark the pool as drafted', () => {
+    const game = new FakeGame()
+    const tracker = createDraftTracker(heroOfAbility)
+    scan(tracker, game)
+    let snap
+    for (let i = 0; i < 6; i++)
+      snap = tracker.update({
+        pool: game.poolSlots().map((s) => ({ ...s, name: null, thumb: new Uint8Array(576) })),
+        seatSlots: game.seatSlots(),
+        modelTiles: game.tiles(),
+      })
+    expect(snap!.poolAbilities.filter((a) => a.picked)).toHaveLength(0)
   })
 })

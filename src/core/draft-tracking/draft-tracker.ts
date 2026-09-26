@@ -1,4 +1,4 @@
-import { createPoolTracker, poolSlotKey } from './pool-tracker'
+import { createPoolTracker, poolSlotKey, type PoolEvent } from './pool-tracker'
 import { createSeatPickTracker, type SeatSlotRead } from './seat-pick-tracker'
 import { createModelPickTracker, type ModelTileCapture } from './model-pick-tracker'
 import { PICK_ORDER, SEAT_COUNT } from '@core/scoring/pick-score'
@@ -23,8 +23,8 @@ export interface PoolSlotInput {
   ability_order: number
   is_ultimate: boolean
   name: string | null
-  /** The box is solid dark (drafted) rather than merely unreadable — see ScanResult.blank. */
-  blank?: boolean
+  /** Luma thumbnail of the box — see ScanResult.thumb. */
+  thumb?: Uint8Array
 }
 
 export interface DraftUpdate {
@@ -54,6 +54,8 @@ export interface DraftTracker {
   update(update: DraftUpdate): DraftSnapshot
   /** Names a pick box can hold, for scoping the next rows scan (empty = unrestricted). */
   pickCandidates(): { standard: string[]; ultimates: string[] }
+  /** Notable pool changes (drafted / restored / screen-wide dim ignored) since last call. */
+  drainPoolEvents(): PoolEvent[]
   reset(): void
 }
 
@@ -126,7 +128,7 @@ export function createDraftTracker(
     update(update) {
       lastPool = update.pool
       const tracked = poolTracker.update(
-        update.pool.map((s) => ({ key: poolSlotKey(s), name: s.name, blank: s.blank })),
+        update.pool.map((s) => ({ key: poolSlotKey(s), name: s.name, thumb: s.thumb })),
       )
       lastTrackedNames = new Map([...tracked].map(([k, v]) => [k, v.name]))
 
@@ -226,5 +228,6 @@ export function createDraftTracker(
         ultimates: ultimatesUnknown ? [] : ultimates,
       }
     },
+    drainPoolEvents: () => poolTracker.drainEvents(),
   }
 }

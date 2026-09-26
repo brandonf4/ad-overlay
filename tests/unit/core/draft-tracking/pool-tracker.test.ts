@@ -1,101 +1,205 @@
 import { describe, it, expect } from 'vitest'
-import { createPoolTracker } from '@core/draft-tracking/pool-tracker'
+import { createPoolTracker, DIM_BURST_LIMIT } from '@core/draft-tracking/pool-tracker'
+import { picture, dimmed, brightened, tooltip, blackScreen } from './thumb-fixtures'
 
-const read = (key: string, name: string | null, blank = false) => ({ key, name, blank })
-const blankBox = (key: string) => read(key, null, true)
-const unreadable = (key: string) => read(key, null, false) // tooltip / hover highlight / other screen
+// A drafted ability's pool box stays in the grid as a dimmed copy of its icon. Whether the
+// scanner still names the dimmed icon varies, so these tests cover both: some dimmed boxes
+// read as themselves (the Atrophy Aura case from a real draft), most read as unknown.
 
-describe('pool tracker', () => {
-  it('keeps a slot available while it keeps reading its baseline', () => {
+const available = (key: string, name: string) => ({ key, name, thumb: picture(name) })
+const draftedStillNamed = (key: string, name: string) => ({ key, name, thumb: dimmed(picture(name)) })
+const draftedUnread = (key: string, name: string) => ({ key, name: null, thumb: dimmed(picture(name)) })
+const underTooltip = (key: string) => ({ key, name: null as string | null, thumb: tooltip(key) })
+
+describe('pool tracker: drafted = the box turns into a dimmed copy of its own icon', () => {
+  it('keeps a slot available while it keeps reading normally', () => {
     const t = createPoolTracker()
-    t.update([read('a', 'x_one')])
-    const r = t.update([read('a', 'x_one')])
-    expect(r.get('a')).toEqual({ key: 'a', name: 'x_one', picked: false })
+    t.update([available('a', 'x_one')])
+    expect(t.update([available('a', 'x_one')]).get('a')).toEqual({ key: 'a', name: 'x_one', picked: false })
   })
 
-  it('never treats an unreadable-but-not-blank box as drafted, however long it lasts', () => {
-    // a hover tooltip lying over the box (or the gold hover highlight) for a long time
+  it('marks a drafted ability whose dimmed box the scanner still names (Atrophy Aura)', () => {
     const t = createPoolTracker()
-    t.update([read('a', 'x_one')])
+    t.update([available('a', 'atrophy')])
+    expect(t.update([draftedStillNamed('a', 'atrophy')]).get('a')?.picked).toBe(false) // one frame is not enough
+    expect(t.update([draftedStillNamed('a', 'atrophy')]).get('a')?.picked).toBe(true)
+  })
+
+  it('marks a drafted ability whose dimmed box the scanner cannot name', () => {
+    const t = createPoolTracker()
+    t.update([available('a', 'x_one')])
+    t.update([draftedUnread('a', 'x_one')])
+    expect(t.update([draftedUnread('a', 'x_one')]).get('a')?.picked).toBe(true)
+  })
+
+  it('a dimmed box the scanner names as something ELSE still counts, if it is the same picture', () => {
+    const t = createPoolTracker()
+    t.update([available('a', 'x_one')])
+    const misnamed = { key: 'a', name: 'other_thing', thumb: dimmed(picture('x_one')) }
+    t.update([misnamed])
+    expect(t.update([misnamed]).get('a')?.picked).toBe(true)
+  })
+
+  it('never treats a hover tooltip over the box as drafted, however long it lasts', () => {
+    const t = createPoolTracker()
+    t.update([available('a', 'x_one')])
     let last
-    for (let i = 0; i < 40; i++) last = t.update([unreadable('a')])
+    for (let i = 0; i < 40; i++) last = t.update([underTooltip('a')])
     expect(last!.get('a')?.picked).toBe(false)
   })
 
-  it('a tooltip covering a whole cluster of boxes does not make them all vanish', () => {
+  it('a tooltip covering a whole cluster of boxes does not make them vanish', () => {
     const t = createPoolTracker()
     const keys = Array.from({ length: 9 }, (_, i) => `s${i}`)
-    t.update(keys.map((k) => read(k, `name_${k}`)))
+    t.update(keys.map((k) => available(k, `name_${k}`)))
     let last
-    for (let i = 0; i < 10; i++) last = t.update(keys.map(unreadable))
+    for (let i = 0; i < 10; i++) last = t.update(keys.map(underTooltip))
     expect([...last!.values()].filter((s) => s.picked)).toHaveLength(0)
   })
 
-  it('does not count a confident different read on a non-blank box either', () => {
+  it('a dark tooltip that happens to be as dim as a drafted box is still not the same picture', () => {
     const t = createPoolTracker()
-    t.update([read('a', 'x_one')])
-    for (let i = 0; i < 5; i++) t.update([read('a', 'something_else')])
-    expect(t.update([read('a', 'something_else')]).get('a')?.picked).toBe(false)
+    t.update([available('a', 'x_one')])
+    for (let i = 0; i < 5; i++) t.update([{ key: 'a', name: null, thumb: tooltip('a') }])
+    expect(t.update([underTooltip('a')]).get('a')?.picked).toBe(false)
   })
 
-  it('marks picked after consecutive blank boxes (what a drafted ability leaves)', () => {
+  it('a black screen (a transition) says nothing — it has no picture to judge', () => {
     const t = createPoolTracker()
-    t.update([read('a', 'x_one')])
-    expect(t.update([blankBox('a')]).get('a')?.picked).toBe(false) // one blank frame is not enough
-    expect(t.update([blankBox('a')]).get('a')).toEqual({ key: 'a', name: 'x_one', picked: true })
+    t.update([available('a', 'x_one')])
+    let last
+    for (let i = 0; i < 10; i++) last = t.update([{ key: 'a', name: null, thumb: blackScreen() }])
+    expect(last!.get('a')?.picked).toBe(false)
   })
 
-  it('a non-blank frame in between does not reset the blank count', () => {
+  it('the brighter gold hover highlight is not dim', () => {
     const t = createPoolTracker()
-    t.update([read('a', 'x_one')])
-    t.update([blankBox('a')])
-    t.update([unreadable('a')]) // e.g. the cursor's tooltip passes over the empty box
-    expect(t.update([blankBox('a')]).get('a')?.picked).toBe(true)
+    t.update([available('a', 'x_one')])
+    let last
+    for (let i = 0; i < 5; i++) last = t.update([{ key: 'a', name: 'x_one', thumb: brightened(picture('x_one')) }])
+    expect(last!.get('a')?.picked).toBe(false)
   })
 
-  it('a flat non-dark frame (a white flash) is not a blank box', () => {
+  it('a partly dim box (not dim enough) is not drafted', () => {
     const t = createPoolTracker()
-    t.update([read('a', 'x_one')])
-    for (let i = 0; i < 5; i++) t.update([unreadable('a')]) // worker reports blank=false for bright frames
-    expect(t.update([unreadable('a')]).get('a')?.picked).toBe(false)
+    t.update([available('a', 'x_one')])
+    let last
+    for (let i = 0; i < 5; i++) last = t.update([{ key: 'a', name: 'x_one', thumb: dimmed(picture('x_one'), 0.7) }])
+    expect(last!.get('a')?.picked).toBe(false)
   })
 
-  it('a baseline read in between resets the blank count', () => {
+  it('a normal read in between resets the dim count', () => {
     const t = createPoolTracker()
-    t.update([read('a', 'x_one')])
-    t.update([blankBox('a')])
-    t.update([read('a', 'x_one')])
-    expect(t.update([blankBox('a')]).get('a')?.picked).toBe(false)
+    t.update([available('a', 'x_one')])
+    t.update([draftedUnread('a', 'x_one')])
+    t.update([available('a', 'x_one')])
+    expect(t.update([draftedUnread('a', 'x_one')]).get('a')?.picked).toBe(false)
   })
 
-  it('undoes a pick when the baseline ability reads again — a drafted ability never returns', () => {
+  it('a tooltip frame in between does not reset the dim count', () => {
     const t = createPoolTracker()
-    t.update([read('a', 'x_one')])
-    t.update([blankBox('a')])
-    t.update([blankBox('a')])
-    expect(t.update([read('a', 'x_one')]).get('a')?.picked).toBe(true) // one read: not yet
-    expect(t.update([read('a', 'x_one')]).get('a')?.picked).toBe(false)
+    t.update([available('a', 'x_one')])
+    t.update([draftedUnread('a', 'x_one')])
+    t.update([underTooltip('a')])
+    expect(t.update([draftedUnread('a', 'x_one')]).get('a')?.picked).toBe(true)
   })
 
-  it('adopts a name for an initially unknown slot only after repeated identical reads', () => {
+  it('stays drafted while the dimmed box keeps reading dim, whether or not it is named', () => {
     const t = createPoolTracker()
-    t.update([unreadable('a')])
-    expect(t.update([read('a', 'x_one')]).get('a')?.name).toBeNull()
-    expect(t.update([read('a', 'x_one')]).get('a')?.name).toBe('x_one')
+    t.update([available('a', 'x_one')])
+    t.update([draftedUnread('a', 'x_one')])
+    t.update([draftedUnread('a', 'x_one')])
+    for (let i = 0; i < 6; i++) t.update([draftedStillNamed('a', 'x_one')])
+    expect(t.update([draftedUnread('a', 'x_one')]).get('a')?.picked).toBe(true)
+  })
+
+  it('takes the ability back if the box reads at normal brightness again — it never left', () => {
+    const t = createPoolTracker()
+    t.update([available('a', 'x_one')])
+    t.update([draftedUnread('a', 'x_one')])
+    t.update([draftedUnread('a', 'x_one')])
+    expect(t.update([available('a', 'x_one')]).get('a')?.picked).toBe(true) // one read: not yet
+    expect(t.update([available('a', 'x_one')]).get('a')?.picked).toBe(false)
+  })
+
+  it('has no verdict without a normal look to compare against (a box that was never read)', () => {
+    const t = createPoolTracker()
+    t.update([{ key: 'a', name: 'x_one', thumb: undefined }])
+    let last
+    for (let i = 0; i < 5; i++) last = t.update([draftedUnread('a', 'x_one')])
+    expect(last!.get('a')?.picked).toBe(false)
+  })
+
+  it('cannot judge a box whose normal look is already nearly black', () => {
+    const t = createPoolTracker()
+    const darkIcon = dimmed(picture('x_one'), 0.08) // mean ~9
+    t.update([{ key: 'a', name: 'x_one', thumb: darkIcon }])
+    let last
+    for (let i = 0; i < 5; i++) last = t.update([{ key: 'a', name: null, thumb: dimmed(darkIcon, 0.3) }])
+    expect(last!.get('a')?.picked).toBe(false)
+  })
+
+  it('many boxes dimming in one scan is a screen-wide effect, not picks', () => {
+    const t = createPoolTracker()
+    const keys = Array.from({ length: DIM_BURST_LIMIT + 3 }, (_, i) => `s${i}`)
+    t.update(keys.map((k) => available(k, `name_${k}`)))
+    let last
+    for (let i = 0; i < 6; i++) last = t.update(keys.map((k) => draftedStillNamed(k, `name_${k}`)))
+    expect([...last!.values()].filter((s) => s.picked)).toHaveLength(0)
+    expect(t.drainEvents().some((e) => e.kind === 'burst-ignored')).toBe(true)
+  })
+
+  it('a couple of boxes dimming at once (a scan gap over two real picks) still counts', () => {
+    const t = createPoolTracker()
+    const keys = ['s0', 's1', 's2', 's3', 's4', 's5']
+    t.update(keys.map((k) => available(k, `name_${k}`)))
+    t.update(keys.map((k, i) => (i < 2 ? draftedUnread(k, `name_${k}`) : available(k, `name_${k}`))))
+    const r = t.update(keys.map((k, i) => (i < 2 ? draftedUnread(k, `name_${k}`) : available(k, `name_${k}`))))
+    expect([...r.values()].filter((s) => s.picked).map((s) => s.key)).toEqual(['s0', 's1'])
+  })
+
+  it('records why it decided, for the log', () => {
+    const t = createPoolTracker()
+    t.update([available('a', 'x_one')])
+    t.update([draftedUnread('a', 'x_one')])
+    t.update([draftedUnread('a', 'x_one')])
+    const [event] = t.drainEvents()
+    expect(event).toMatchObject({ kind: 'drafted', name: 'x_one' })
+    expect(event.mean).toBeLessThan(event.refMean! * 0.55)
+    expect(event.ncc).toBeGreaterThan(0.9)
+    expect(t.drainEvents()).toEqual([]) // drained
+  })
+})
+
+describe('pool tracker: slots whose ability was not read at first', () => {
+  it('adopts a name only after repeated identical reads', () => {
+    const t = createPoolTracker()
+    t.update([{ key: 'a', name: null }])
+    expect(t.update([available('a', 'x_one')]).get('a')?.name).toBeNull()
+    expect(t.update([available('a', 'x_one')]).get('a')?.name).toBe('x_one')
   })
 
   it('does not adopt a name already claimed by another slot', () => {
     const t = createPoolTracker()
-    t.update([read('a', 'x_one'), unreadable('b')])
-    t.update([read('a', 'x_one'), read('b', 'x_one')])
-    const r = t.update([read('a', 'x_one'), read('b', 'x_one')])
+    t.update([available('a', 'x_one'), { key: 'b', name: null }])
+    t.update([available('a', 'x_one'), available('b', 'x_one')])
+    const r = t.update([available('a', 'x_one'), available('b', 'x_one')])
     expect(r.get('b')?.name).toBeNull()
   })
 
-  it('reset forgets the baseline', () => {
+  it('an adopted slot can then be judged like any other', () => {
     const t = createPoolTracker()
-    t.update([read('a', 'x_one')])
+    t.update([{ key: 'a', name: null }])
+    t.update([available('a', 'x_one')])
+    t.update([available('a', 'x_one')]) // adopted
+    t.update([draftedUnread('a', 'x_one')])
+    expect(t.update([draftedUnread('a', 'x_one')]).get('a')?.picked).toBe(true)
+  })
+
+  it('reset forgets everything', () => {
+    const t = createPoolTracker()
+    t.update([available('a', 'x_one')])
     t.reset()
-    expect(t.update([read('a', 'y_two')]).get('a')).toEqual({ key: 'a', name: 'y_two', picked: false })
+    expect(t.update([available('a', 'y_two')]).get('a')).toEqual({ key: 'a', name: 'y_two', picked: false })
   })
 })

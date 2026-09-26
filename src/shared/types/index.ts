@@ -135,12 +135,12 @@ export interface ScanResult {
   is_ultimate: boolean
   coord: SlotCoordinate
   /**
-   * Pool scans only, and only when `name` is null: true when the box is a solid dark
-   * uniform rectangle — i.e. genuinely EMPTY, which is what a drafted pool ability
-   * leaves behind. A box that merely failed to read (a hover tooltip over it, the
-   * gold hover highlight, another screen entirely) is NOT blank. Absent = unknown.
+   * Pool scans only: a small luma thumbnail of the box (see core/draft-tracking/
+   * box-appearance.ts). A drafted pool ability stays in the grid as a DIMMED copy of its
+   * icon, and comparing this against how the same box looked while the ability was
+   * available is how the draft tracker tells drafted from merely unreadable.
    */
-  blank?: boolean
+  thumb?: Uint8Array
   /**
    * Present only when pick-slot template matching REJECTED its best candidate
    * (name === null on a non-empty pick box) — carries what would have matched

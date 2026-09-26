@@ -57,9 +57,9 @@ function poolInput(r: ScanResult): {
   hero_order: number
   ability_order: number
   name: string | null
-  blank: boolean | undefined
+  thumb: Uint8Array | undefined
 } {
-  return { hero_order: r.hero_order, ability_order: r.ability_order, name: r.name, blank: r.blank }
+  return { hero_order: r.hero_order, ability_order: r.ability_order, name: r.name, thumb: r.thumb }
 }
 
 // Pick boxes come back as flat results; a row's boxes read left to right as
@@ -135,6 +135,17 @@ export function createScanProcessingService(
             ? scan.modelTiles.map((t) => ({ heroOrder: t.heroOrder, tile: new Uint8Array(t.tile) }))
             : null,
         })
+        // Pool boxes judged drafted (or restored) by how they LOOK — logged with the numbers
+        // behind the call, since that judgement is the thing to check when a pick is missed.
+        for (const event of tracker.drainPoolEvents()) {
+          logger.info(`Pool box: ${event.kind}`, {
+            name: event.name,
+            brightness: event.mean === undefined ? undefined : Math.round(event.mean),
+            normalBrightness: event.refMean === undefined ? undefined : Math.round(event.refMean),
+            correlation: event.ncc === undefined ? undefined : Number(event.ncc.toFixed(2)),
+            boxesDimmedAtOnce: event.count,
+          })
+        }
         const state = buildScoreState(snapshot, abilityData.scoringData)
         const screenWidth = Number(resolution.split('x')[0])
 
