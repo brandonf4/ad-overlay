@@ -39,6 +39,7 @@ import {
   PICK_TEMPLATE_CROP_INSET_RATIO,
   PICK_TEMPLATE_FALLBACK_MIN_NCC,
   PICK_TEMPLATE_EMPTY_STD,
+  POOL_BLANK_MAX_MEAN,
   MODEL_INPUT_SIZE,
   OCR_NAME_STRIP_HEIGHT_RATIO,
   OCR_STRIP_TARGET_WIDTH,
@@ -817,6 +818,22 @@ async function identifySlots(
     // the reason is inspectable (dev builds only; no-op otherwise).
     if (cr.name === null) {
       await dumpLowConfidencePoolCrop(screenshot, slot, cr.confidence)
+    }
+  }
+
+  // An unreadable box is ambiguous: a DRAFTED ability leaves a solid black box, but a
+  // hover tooltip over the box, the gold hover highlight, or a different screen entirely
+  // reads just as "unknown". Only the first means the ability is gone, so say which.
+  for (let i = 0; i < results.length; i++) {
+    if (results[i].name !== null) continue
+    const slot = slots[i]
+    if (slot.width <= 0 || slot.height <= 0) continue
+    try {
+      const raw = await cropTile(screenshot, slot, PICK_TEMPLATE_COMPARE_SIZE)
+      const { mean, std } = computePixelStats(new Uint8Array(raw.buffer, raw.byteOffset, raw.byteLength))
+      results[i].blank = std < PICK_TEMPLATE_EMPTY_STD && mean < POOL_BLANK_MAX_MEAN
+    } catch {
+      // Out-of-bounds crop (layout drift) — leave blank unknown
     }
   }
 

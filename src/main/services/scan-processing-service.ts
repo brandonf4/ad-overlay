@@ -4,7 +4,7 @@ import type { AbilityDataService } from './ability-data-service'
 import { createDraftTracker } from '@core/draft-tracking/draft-tracker'
 import { buildScoreState } from '@core/draft-tracking/score-state'
 import type { SeatSlotRead } from '@core/draft-tracking/seat-pick-tracker'
-import { rankPicksForSeat, SEAT_COUNT } from '@core/scoring/pick-score'
+import { rankPicksForSeat, pickBlockedFor, SEAT_COUNT } from '@core/scoring/pick-score'
 import { rankTopCombos, type ComboItem } from '@core/scoring/top-combos'
 import { seatMenuBox } from '@core/resolution/seat-menu-box'
 import { topCombosBox } from '@core/resolution/top-combos-box'
@@ -53,8 +53,13 @@ export interface LiveScan {
   modelTiles?: { heroOrder: number; tile: ArrayBuffer }[]
 }
 
-function poolInput(r: ScanResult): { hero_order: number; ability_order: number; name: string | null } {
-  return { hero_order: r.hero_order, ability_order: r.ability_order, name: r.name }
+function poolInput(r: ScanResult): {
+  hero_order: number
+  ability_order: number
+  name: string | null
+  blank: boolean | undefined
+} {
+  return { hero_order: r.hero_order, ability_order: r.ability_order, name: r.name, blank: r.blank }
 }
 
 // Pick boxes come back as flat results; a row's boxes read left to right as
@@ -152,19 +157,47 @@ export function createScanProcessingService(
           seatMenus.push({ seat, suggestions, ...box })
         }
 
-        const comboItems: ComboItem[] = state.available.map((item) => ({
-          name: item.name,
-          kind: item.kind,
-          winrateHigh: item.winrateHigh,
-        }))
+        // Combos still worth chasing: both halves in the pool, or one half already drafted
+        // by a player who has room to take the other.
+        const comboItems: ComboItem[] = [
+          ...state.available.map((item) => ({
+            name: item.name,
+            kind: item.kind,
+            winrateHigh: item.winrateHigh,
+            heldBy: null,
+          })),
+          ...state.picks.flatMap((items, seat) =>
+            items.map((item) => ({
+              name: item.name,
+              kind: item.kind,
+              winrateHigh: item.winrateHigh,
+              heldBy: seat,
+            })),
+          ),
+        ]
+        const availableByName = new Map(state.available.map((item) => [item.name, item]))
+        const canComplete = (seat: number, item: ComboItem): boolean => {
+          const scoreItem = availableByName.get(item.name)
+          return scoreItem !== undefined && !pickBlockedFor(state.picks, seat, scoreItem)
+        }
         const combosBox = topCombosBox(layout, screenWidth)
         const topCombos: OverlayDataPayload['topCombos'] = combosBox
           ? {
               ...combosBox,
-              combos: rankTopCombos(comboItems, abilityData.synergy, TOP_COMBOS_COUNT).map(
+              combos: rankTopCombos(comboItems, abilityData.synergy, TOP_COMBOS_COUNT, canComplete).map(
                 (r): ComboSuggestion => ({
-                  a: { name: r.a.name, kind: r.a.kind, displayName: displayNameOf(r.a, abilityData) },
-                  b: { name: r.b.name, kind: r.b.kind, displayName: displayNameOf(r.b, abilityData) },
+                  a: {
+                    name: r.a.name,
+                    kind: r.a.kind,
+                    displayName: displayNameOf(r.a, abilityData),
+                    heldBy: r.a.heldBy,
+                  },
+                  b: {
+                    name: r.b.name,
+                    kind: r.b.kind,
+                    displayName: displayNameOf(r.b, abilityData),
+                    heldBy: r.b.heldBy,
+                  },
                   comboWinrate: r.comboWinrate,
                 }),
               ),

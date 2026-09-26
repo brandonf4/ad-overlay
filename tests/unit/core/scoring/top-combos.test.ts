@@ -16,8 +16,18 @@ function synergyOf(pairs: Record<string, number>): SynergyLookup {
   }
 }
 
-const ability = (name: string, winrateHigh: number | null): ComboItem => ({ name, kind: 'ability', winrateHigh })
-const model = (name: string, winrateHigh: number | null): ComboItem => ({ name, kind: 'model', winrateHigh })
+const ability = (name: string, winrateHigh: number | null, heldBy: number | null = null): ComboItem => ({
+  name,
+  kind: 'ability',
+  winrateHigh,
+  heldBy,
+})
+const model = (name: string, winrateHigh: number | null, heldBy: number | null = null): ComboItem => ({
+  name,
+  kind: 'model',
+  winrateHigh,
+  heldBy,
+})
 
 describe('rankTopCombos', () => {
   it('computes the real combo win rate by inverting the stored synergy lift', () => {
@@ -61,5 +71,59 @@ describe('rankTopCombos', () => {
     const items = [model('x', 0.5), ability('x_a', 0.5)]
     const ranked = rankTopCombos(items, synergyOf({ 'x|x_a': 10 }), 5)
     expect(ranked).toHaveLength(1)
+  })
+})
+
+describe('combos with one half already drafted', () => {
+  const synergy = synergyOf({ 'a|b': 10, 'a|c': 5, 'b|c': 8 })
+
+  it('lists a pair whose other half is still in the pool, with who holds the drafted one', () => {
+    const items = [ability('a', 0.5, 3), ability('b', 0.5)]
+    const [top] = rankTopCombos(items, synergy, 5)
+    expect(top.a.heldBy).toBe(3)
+    expect(top.b.heldBy).toBeNull()
+    expect(top.comboWinrate).toBeCloseTo(0.6, 10) // 0.10 + avg(0.5, 0.5)
+  })
+
+  it('finds the drafted half whichever side of the pair it sits on', () => {
+    const items = [ability('b', 0.5), ability('a', 0.5, 7)]
+    const ranked = rankTopCombos(items, synergy, 5)
+    expect(ranked).toHaveLength(1)
+    expect(ranked[0].b.heldBy).toBe(7)
+  })
+
+  it('drops a pair once BOTH halves are drafted — the combo is over, or split across players', () => {
+    const items = [ability('a', 0.5, 1), ability('b', 0.5, 6)]
+    expect(rankTopCombos(items, synergy, 5)).toEqual([])
+    const sameHolder = [ability('a', 0.5, 2), ability('b', 0.5, 2)]
+    expect(rankTopCombos(sameHolder, synergy, 5)).toEqual([])
+  })
+
+  it('drops a pair when the player holding one half has no room to take the other', () => {
+    const items = [ability('a', 0.5, 4), ability('b', 0.5), ability('c', 0.5)]
+    // player 4 is full for 'b' but can still take 'c'
+    const canComplete = (_seat: number, item: ComboItem): boolean => item.name !== 'b'
+    const ranked = rankTopCombos(items, synergy, 5, canComplete)
+    const pairs = ranked.map((r) => [r.a.name, r.b.name].sort().join('+'))
+    expect(pairs).not.toContain('a+b')
+    expect(pairs).toContain('a+c')
+    expect(pairs).toContain('b+c') // both still in the pool: unaffected
+  })
+
+  it('asks canComplete about the right player and the pool half', () => {
+    const calls: [number, string][] = []
+    rankTopCombos([ability('a', 0.5, 9), ability('b', 0.5)], synergy, 5, (seat, item) => {
+      calls.push([seat, item.name])
+      return true
+    })
+    expect(calls).toEqual([[9, 'b']])
+  })
+
+  it('ranks drafted-half combos alongside pool-only ones by win rate', () => {
+    const items = [ability('a', 0.5, 0), ability('b', 0.5), ability('c', 0.5)]
+    const ranked = rankTopCombos(items, synergy, 5)
+    const rates = ranked.map((r) => r.comboWinrate)
+    expect(rates).toEqual([...rates].sort((x, y) => y - x))
+    expect(ranked).toHaveLength(3)
   })
 })

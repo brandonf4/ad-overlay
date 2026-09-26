@@ -135,6 +135,13 @@ export interface ScanResult {
   is_ultimate: boolean
   coord: SlotCoordinate
   /**
+   * Pool scans only, and only when `name` is null: true when the box is a solid dark
+   * uniform rectangle — i.e. genuinely EMPTY, which is what a drafted pool ability
+   * leaves behind. A box that merely failed to read (a hover tooltip over it, the
+   * gold hover highlight, another screen entirely) is NOT blank. Absent = unknown.
+   */
+  blank?: boolean
+  /**
    * Present only when pick-slot template matching REJECTED its best candidate
    * (name === null on a non-empty pick box) — carries what would have matched
    * (and who ran it closest, for margin failures) so the miss is diagnosable
@@ -176,10 +183,20 @@ export interface SeatMenu {
   height: number
 }
 
-/** One suggested ability/model pair, ranked by their estimated combo win rate. */
+/** One half of a suggested combo. `heldBy` is the seat (0-9) that has already drafted it,
+ * or null while it is still in the pool. */
+export interface ComboHalf {
+  name: string
+  displayName: string
+  kind: 'ability' | 'model'
+  heldBy: number | null
+}
+
+/** One suggested ability/model pair, ranked by their estimated combo win rate. At most one
+ * half is drafted: the combo is still open to that player (see core/scoring/top-combos). */
 export interface ComboSuggestion {
-  a: { name: string; displayName: string; kind: 'ability' | 'model' }
-  b: { name: string; displayName: string; kind: 'ability' | 'model' }
+  a: ComboHalf
+  b: ComboHalf
   /** Estimated win rate [0, 1] of holding both together. */
   comboWinrate: number
 }

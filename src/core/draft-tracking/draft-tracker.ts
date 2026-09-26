@@ -1,14 +1,15 @@
 import { createPoolTracker, poolSlotKey } from './pool-tracker'
 import { createSeatPickTracker, type SeatSlotRead } from './seat-pick-tracker'
-import { detectModelPicks, type ModelTileCapture } from './model-pick-detection'
+import { createModelPickTracker, type ModelTileCapture } from './model-pick-tracker'
 import { PICK_ORDER, SEAT_COUNT } from '@core/scoring/pick-score'
 
 // @DEV-GUIDE: Reconstructs the live draft from repeated scans, in the shape the
 // scoring needs (see core/scoring/pick-score.ts): what each of the 10 seats holds, what
 // is still in the pool, and how many picks have been made. Three signals feed it:
-// - the pool grid (pool-tracker.ts): which pool abilities have been drafted
+// - the pool grid (pool-tracker.ts): which pool abilities have been drafted (an ability
+//   held in a player's row is drafted too, whatever its pool box looks like)
 // - the 10 player rows (seat-pick-tracker.ts): which seat holds which ability
-// - the 12 model tiles (model-pick-detection.ts): which pool hero MODELS were drafted —
+// - the 12 model tiles (model-pick-tracker.ts): which pool hero MODELS were drafted —
 //   their tiles change when picked, and the hero behind a tile is known from its
 //   defining ability (same lookup as hero identification), so no model recognition.
 // The board never shows which seat took a model, but the snake pick order does: after
@@ -22,6 +23,8 @@ export interface PoolSlotInput {
   ability_order: number
   is_ultimate: boolean
   name: string | null
+  /** The box is solid dark (drafted) rather than merely unreadable — see ScanResult.blank. */
+  blank?: boolean
 }
 
 export interface DraftUpdate {
@@ -73,8 +76,8 @@ export function createDraftTracker(
   const poolTracker = createPoolTracker()
   const seatTracker = createSeatPickTracker()
 
-  let modelBaselines: ModelTileCapture[] | null = null
-  let modelPending: number[] = []
+  const modelTracker = createModelPickTracker()
+  let modelHeroOrders: number[] = [] // the tile positions, fixed by the first capture
   let modelPicked: number[] = []
   const modelOwner = new Map<number, number>() // pool hero order -> seat
   const seatModel = new Map<number, number>() // seat -> pool hero order
@@ -85,8 +88,8 @@ export function createDraftTracker(
   function reset(): void {
     poolTracker.reset()
     seatTracker.reset()
-    modelBaselines = null
-    modelPending = []
+    modelTracker.reset()
+    modelHeroOrders = []
     modelPicked = []
     modelOwner.clear()
     seatModel.clear()
@@ -123,7 +126,7 @@ export function createDraftTracker(
     update(update) {
       lastPool = update.pool
       const tracked = poolTracker.update(
-        update.pool.map((s) => ({ key: poolSlotKey(s), name: s.name })),
+        update.pool.map((s) => ({ key: poolSlotKey(s), name: s.name, blank: s.blank })),
       )
       lastTrackedNames = new Map([...tracked].map(([k, v]) => [k, v.name]))
 
@@ -137,17 +140,17 @@ export function createDraftTracker(
       }
 
       if (update.modelTiles && update.modelTiles.length > 0) {
-        if (modelBaselines === null) {
-          modelBaselines = update.modelTiles.map((t) => ({ heroOrder: t.heroOrder, tile: t.tile }))
-        } else {
-          const result = detectModelPicks({
-            baselines: modelBaselines,
-            current: [...update.modelTiles],
-            pending: modelPending,
-            picked: modelPicked,
-          })
-          modelPending = result.pending
-          modelPicked = result.picked
+        if (modelHeroOrders.length === 0) modelHeroOrders = update.modelTiles.map((t) => t.heroOrder)
+        const result = modelTracker.update(update.modelTiles)
+        modelPicked = result.picked
+        // A pick that turned out to be a tooltip over the tile: give the model (and the
+        // seat it had been handed to) back.
+        for (const heroOrder of result.revived) {
+          const seat = modelOwner.get(heroOrder)
+          if (seat === undefined) continue
+          modelOwner.delete(heroOrder)
+          seatModel.delete(seat)
+          seatEntries[seat] = seatEntries[seat].filter((e) => e.kind !== 'model')
         }
       }
 
@@ -190,14 +193,10 @@ export function createDraftTracker(
       }
 
       const models: DraftSnapshot['models'] = []
-      for (const baseline of modelBaselines ?? []) {
-        const heroName = modelHeroName(baseline.heroOrder, lastTrackedNames)
+      for (const heroOrder of modelHeroOrders) {
+        const heroName = modelHeroName(heroOrder, lastTrackedNames)
         if (heroName === null) continue
-        models.push({
-          heroOrder: baseline.heroOrder,
-          heroName,
-          picked: modelPicked.includes(baseline.heroOrder),
-        })
+        models.push({ heroOrder, heroName, picked: modelPicked.includes(heroOrder) })
       }
 
       return {

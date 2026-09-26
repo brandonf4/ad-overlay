@@ -41,16 +41,25 @@ class FakeGame {
   seatItems: Item[][] = Array.from({ length: 10 }, () => [])
   picksMade = 0
 
+  // Pool boxes covered by a hover tooltip: they read Unknown, but are NOT blank.
+  covered = new Set<string>()
+
   poolSlots(): PoolSlotInput[] {
     return this.pool
       .filter((i) => i.kind === 'ability')
-      .map((i) => ({
-        hero_order: i.heroOrder,
-        ability_order: i.abilityOrder,
-        is_ultimate: i.isUlt,
-        // a drafted ability's pool box is empty and reads Unknown
-        name: this.taken.has(i.name) ? null : i.name,
-      }))
+      .map((i) => {
+        const drafted = this.taken.has(i.name)
+        const covered = this.covered.has(i.name)
+        return {
+          hero_order: i.heroOrder,
+          ability_order: i.abilityOrder,
+          is_ultimate: i.isUlt,
+          // a drafted ability leaves a solid black box (unreadable AND blank); one under a
+          // tooltip is unreadable but not blank
+          name: drafted || covered ? null : i.name,
+          blank: drafted,
+        }
+      })
   }
   seatSlots(): SeatSlotRead[] {
     const reads: SeatSlotRead[] = []
@@ -101,7 +110,8 @@ describe('draft tracker', () => {
       const options = game.pool.filter((i) => !game.taken.has(i.name) && game.canTake(seat, i))
       game.pick(seat, options[Math.floor(rand() * options.length)])
       scan(tracker, game)
-      const snap = scan(tracker, game) // two scans per pick: changes must persist to commit
+      scan(tracker, game)
+      const snap = scan(tracker, game) // three scans per pick: model changes must persist to commit
 
       expect(snap.pickIndex).toBe(k + 1)
       for (let s = 0; s < 10; s++) {
@@ -117,6 +127,7 @@ describe('draft tracker', () => {
     scan(tracker, game)
     game.pick(PICK_ORDER[0], game.pool.find((i) => i.name === 'hero4')!)
     scan(tracker, game)
+    scan(tracker, game)
     const snap = scan(tracker, game)
     expect(snap.pickIndex).toBe(1)
     expect(snap.models.find((m) => m.heroName === 'hero4')?.picked).toBe(true)
@@ -129,6 +140,7 @@ describe('draft tracker', () => {
     scan(tracker, game)
     const blip = game.tiles().map((t) => (t.heroOrder === 3 ? { ...t, tile: tile(true) } : t))
     tracker.update({ pool: game.poolSlots(), seatSlots: game.seatSlots(), modelTiles: blip })
+    tracker.update({ pool: game.poolSlots(), seatSlots: game.seatSlots(), modelTiles: blip })
     const snap = scan(tracker, game)
     expect(snap.pickIndex).toBe(0)
     expect(snap.models.every((m) => !m.picked)).toBe(true)
@@ -140,6 +152,7 @@ describe('draft tracker', () => {
     scan(tracker, game)
     game.pick(0, game.pool.find((i) => i.name === 'hero2_b2')!) // the defining ability
     game.pick(5, game.pool.find((i) => i.name === 'hero2')!)
+    scan(tracker, game)
     scan(tracker, game)
     const snap = scan(tracker, game)
     const model = snap.models.find((m) => m.heroName === 'hero2')
@@ -201,5 +214,88 @@ describe('hero identification robustness', () => {
     )
     const snap = tracker.update({ pool, seatSlots: [], modelTiles: game.tiles() })
     expect(snap.models.find((m) => m.heroOrder === 5)).toBeUndefined()
+  })
+})
+
+describe('does not forget things that are still there', () => {
+  it('a hover tooltip over a cluster of pool boxes for a long time does not drop those abilities', () => {
+    const game = new FakeGame()
+    const tracker = createDraftTracker(heroOfAbility)
+    scan(tracker, game)
+    // the tooltip covers nine boxes for a long think (20 scans = 30 seconds)
+    for (const name of ['hero0_b1', 'hero0_b2', 'hero0_b3', 'hero1_b1', 'hero1_b2', 'hero1_b3', 'hero2_b1', 'hero2_b2', 'hero2_b3'])
+      game.covered.add(name)
+    let snap
+    for (let i = 0; i < 20; i++) snap = scan(tracker, game)
+    expect(snap!.pickIndex).toBe(0)
+    expect(snap!.poolAbilities.filter((a) => a.picked)).toHaveLength(0)
+    const state = buildScoreState(snap!, {
+      ability: () => ({ isUltimate: false, winrateHigh: 0.5, pickPositionHigh: 10 }),
+      model: () => ({ winrateHigh: 0.5, pickPositionHigh: 10 }),
+    })
+    expect(state.available.filter((i) => i.kind === 'ability')).toHaveLength(48)
+  })
+
+  it('an ability that really was drafted is still dropped from the pool', () => {
+    const game = new FakeGame()
+    const tracker = createDraftTracker(heroOfAbility)
+    scan(tracker, game)
+    game.pick(0, game.pool.find((i) => i.name === 'hero3_b1')!)
+    scan(tracker, game)
+    const snap = scan(tracker, game)
+    expect(snap.poolAbilities.find((a) => a.name === 'hero3_b1')?.picked).toBe(true)
+  })
+
+  it('an ability held in a player row is drafted even if its pool box never goes blank', () => {
+    const game = new FakeGame()
+    const tracker = createDraftTracker(heroOfAbility)
+    scan(tracker, game)
+    game.pick(0, game.pool.find((i) => i.name === 'hero3_b1')!)
+    game.covered.add('hero3_b1') // box unreadable AND (say) not blank — only the row proves it
+    const pool = () => game.poolSlots().map((s) => ({ ...s, blank: false }))
+    let snap
+    for (let i = 0; i < 3; i++) snap = tracker.update({ pool: pool(), seatSlots: game.seatSlots(), modelTiles: game.tiles() })
+    expect(snap!.poolAbilities.find((a) => a.name === 'hero3_b1')?.picked).toBe(true)
+  })
+
+  it('a pool ability marked drafted comes back if it reads normally again', () => {
+    const game = new FakeGame()
+    const tracker = createDraftTracker(heroOfAbility)
+    scan(tracker, game)
+    // two blank frames (say, a transition), then the real box reads again
+    const ability = game.pool.find((i) => i.name === 'hero6_b2')!
+    game.taken.add(ability.name)
+    scan(tracker, game)
+    expect(scan(tracker, game).poolAbilities.find((a) => a.name === 'hero6_b2')?.picked).toBe(true)
+    game.taken.delete(ability.name)
+    scan(tracker, game)
+    expect(scan(tracker, game).poolAbilities.find((a) => a.name === 'hero6_b2')?.picked).toBe(false)
+  })
+
+  it('a model tile change from a tooltip that lasts several scans is undone once it clears', () => {
+    const game = new FakeGame()
+    const tracker = createDraftTracker(heroOfAbility)
+    scan(tracker, game)
+    const covered = game.tiles().map((t) => (t.heroOrder === 3 ? { ...t, tile: tile(true) } : t))
+    let snap
+    for (let i = 0; i < 4; i++)
+      snap = tracker.update({ pool: game.poolSlots(), seatSlots: game.seatSlots(), modelTiles: covered })
+    expect(snap!.models.find((m) => m.heroOrder === 3)?.picked).toBe(true) // it looked picked for a while
+    scan(tracker, game)
+    snap = scan(tracker, game)
+    expect(snap.models.find((m) => m.heroOrder === 3)?.picked).toBe(false)
+    expect(snap.pickIndex).toBe(0)
+    expect(snap.seats.every((e) => e.length === 0)).toBe(true) // and no seat is left holding it
+  })
+
+  it('a burst of model tiles changing at once for less than the commit window commits nothing', () => {
+    const game = new FakeGame()
+    const tracker = createDraftTracker(heroOfAbility)
+    scan(tracker, game)
+    const burst = game.tiles().map((t) => (t.heroOrder < 3 ? { ...t, tile: tile(true) } : t))
+    tracker.update({ pool: game.poolSlots(), seatSlots: game.seatSlots(), modelTiles: burst })
+    tracker.update({ pool: game.poolSlots(), seatSlots: game.seatSlots(), modelTiles: burst })
+    const snap = scan(tracker, game)
+    expect(snap.models.every((m) => !m.picked)).toBe(true)
   })
 })

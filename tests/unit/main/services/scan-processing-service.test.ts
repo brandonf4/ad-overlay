@@ -64,16 +64,21 @@ function scanResult(coord: ResolutionLayout['standard_slots_coords'][number], na
   }
 }
 
+// A drafted ability's pool box goes solid black: unreadable AND blank.
+function poolBox(coord: ResolutionLayout['standard_slots_coords'][number], name: string, taken: Set<string>): ScanResult {
+  return taken.has(name) ? { ...scanResult(coord, null), blank: true } : scanResult(coord, name)
+}
+
 function poolScan(taken: Set<string>): LiveScan['pool'] {
   const standard = layout.standard_slots_coords.map((c) => {
     const basics = poolHeroes[c.hero_order].abilities.filter((a) => !a.is_ultimate)
     const name = basics[(c.ability_order as number) - 1].name
-    return scanResult(c, taken.has(name) ? null : name)
+    return poolBox(c, name, taken)
   })
   const ultimates = layout.ultimate_slots_coords.map((c) => {
     const name = poolHeroes[c.hero_order].abilities.find((a) => a.is_ultimate)!.name
     // the layout's ultimate boxes carry no is_ultimate flag, so the worker reports false
-    return scanResult(c, taken.has(name) ? null : name)
+    return poolBox(c, name, taken)
   })
   return { ultimates, standard, selectedAbilities: [], heroDefiningAbilities: [] }
 }
@@ -210,6 +215,7 @@ describe('hero models take part in the suggestions', () => {
       run(poolScan(new Set()), rowsScan({}), modelTiles()) // baseline
       const takenHero = 2
       run(poolScan(new Set()), rowsScan({}), modelTiles([takenHero])) // first sighting
+      run(poolScan(new Set()), rowsScan({}), modelTiles([takenHero])) // still changed
       const after = run(poolScan(new Set()), rowsScan({}), modelTiles([takenHero])) // committed
       expect(after.modelStatus).toEqual({ read: 12, picked: 1 })
       expect(after.pickCount).toBe(1)
@@ -260,7 +266,13 @@ describe('top combos panel', () => {
     }
   })
 
-  it('drops a combo once either of its abilities is drafted', () => {
+  const findCombo = (p: OverlayDataPayload) =>
+    p.topCombos?.combos.find(
+      (c) =>
+        (c.a.name === COMBO_A && c.b.name === COMBO_B) || (c.a.name === COMBO_B && c.b.name === COMBO_A),
+    )
+
+  it('keeps a combo open when only one half is drafted, marked with who holds it', () => {
     poolHeroes = comboPool
     try {
       const { run } = setup()
@@ -268,10 +280,45 @@ describe('top combos panel', () => {
       const held = { 0: [COMBO_A, null, null, null] }
       run(poolScan(taken), rowsScan(held))
       const after = run(poolScan(taken), rowsScan(held))
-      const stillThere = after.topCombos?.combos.some(
-        (c) => c.a.name === COMBO_A || c.b.name === COMBO_A,
-      )
-      expect(stillThere).toBe(false)
+      const combo = findCombo(after)
+      expect(combo).toBeDefined()
+      const drafted = combo!.a.name === COMBO_A ? combo!.a : combo!.b
+      const open = combo!.a.name === COMBO_A ? combo!.b : combo!.a
+      expect(drafted.heldBy).toBe(0)
+      expect(open.name).toBe(COMBO_B)
+      expect(open.heldBy).toBeNull()
+      // same real win rate as when both were in the pool
+      expect(combo!.comboWinrate).toBeCloseTo(12.83 / 100 + (0.634 + 0.5255) / 2, 6)
+    } finally {
+      poolHeroes = usable.slice(0, 12)
+    }
+  })
+
+  it('drops the combo when the player holding one half has no room left for the other', () => {
+    poolHeroes = comboPool
+    try {
+      const { run } = setup()
+      // seat 0 holds three basics (COMBO_A among them) — it cannot take COMBO_B, also a basic
+      const three = [COMBO_A, 'earthshaker_enchant_totem', 'earthshaker_fissure']
+      const taken = new Set(three)
+      const held = { 0: [...three, null] }
+      run(poolScan(taken), rowsScan(held))
+      const after = run(poolScan(taken), rowsScan(held))
+      expect(findCombo(after)).toBeUndefined()
+    } finally {
+      poolHeroes = usable.slice(0, 12)
+    }
+  })
+
+  it('drops the combo once both halves are drafted, by different players', () => {
+    poolHeroes = comboPool
+    try {
+      const { run } = setup()
+      const taken = new Set([COMBO_A, COMBO_B])
+      const held = { 0: [COMBO_A, null, null, null], 5: [COMBO_B, null, null, null] }
+      run(poolScan(taken), rowsScan(held))
+      const after = run(poolScan(taken), rowsScan(held))
+      expect(findCombo(after)).toBeUndefined()
     } finally {
       poolHeroes = usable.slice(0, 12)
     }

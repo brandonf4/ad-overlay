@@ -49,6 +49,11 @@ export const PICK_TEMPLATE_FALLBACK_MIN_NCC = 0.85
 // any real icon. Detected before matching — empties never reach the matcher
 // (the classifier used to argmax tusk_snowball 0.33-0.52 on them).
 export const PICK_TEMPLATE_EMPTY_STD = 5
+// A drafted POOL box goes solid black; a flat bright frame (a white flash between
+// screens — 14 of them among 2,874 saved unreadable crops) is uniform too but is not a
+// drafted ability. An unreadable pool box only counts as blank when it is uniform AND
+// this dark (real blank boxes measured mean 0).
+export const POOL_BLANK_MAX_MEAN = 50
 // Cached CDN icons go stale when Valve reworks art in place (2026-08: all four
 // Pugna icons — old art broke pick-slot template matching AND the streamer
 // view). During prefetch, a cached icon older than this TTL is refetched with a

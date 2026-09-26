@@ -1,17 +1,28 @@
-// @DEV-GUIDE: Tracks which pool abilities have been picked during a live draft, from
-// repeated scans of the (static) pool grid. A picked ability's pool box goes empty, and
-// the classifier can misread an empty box — so a slot's identity is fixed from its
-// baseline read and later reads are only ever compared against it:
-// - a slot is marked picked after PICKED_AFTER_MISSES consecutive reads that differ from
-//   its baseline (a lone bad frame — tooltip, animation — must not drop a live ability)
-// - picked is sticky: a drafted ability never returns to the pool
+// @DEV-GUIDE: Tracks which pool abilities have been drafted during a live draft, from
+// repeated scans of the pool grid. A slot's identity is fixed from its baseline read and
+// later reads are only compared against it.
+//
+// What counts as evidence that an ability is GONE is deliberately narrow. A drafted
+// ability leaves a solid black (blank) box, but an ability that is still there can fail to
+// read too: a hover tooltip lying over the box, the gold hover highlight, another screen.
+// Real logs showed a tooltip covering a cluster of boxes making ~9 present abilities
+// vanish at once, so "unreadable" is NOT evidence:
+// - a slot is marked picked only after PICKED_AFTER_BLANKS reads of a BLANK box
+//   (the scanner reports `blank`; see ScanResult) — unreadable-but-not-blank reads are
+//   ignored, neither a match nor a miss
+// - picked can be undone: if the baseline ability reads confidently again for
+//   REVIVE_AFTER_MATCHES scans it never left (a drafted ability cannot return to the pool)
 // - a slot whose baseline read was Unknown adopts a name only after ADOPT_AFTER_READS
 //   identical consecutive reads, and never one already claimed by another slot
+// (Independent of all this, an ability held in a player's row is drafted — see
+// draft-tracker.ts, which combines both signals.)
 // Pure logic, no Electron imports.
 
 export interface PoolSlotRead {
   key: string
   name: string | null
+  /** The box is a solid dark rectangle (drafted). Only meaningful when name is null. */
+  blank?: boolean
 }
 
 export interface TrackedPoolSlot {
@@ -26,13 +37,15 @@ export interface PoolTracker {
   reset(): void
 }
 
-export const PICKED_AFTER_MISSES = 2
+export const PICKED_AFTER_BLANKS = 2
+export const REVIVE_AFTER_MATCHES = 2
 export const ADOPT_AFTER_READS = 2
 
 interface SlotState {
   name: string | null
   picked: boolean
-  misses: number
+  blanks: number
+  matches: number
   candidate: string | null
   candidateReads: number
 }
@@ -64,17 +77,27 @@ export function createPoolTracker(): PoolTracker {
       for (const read of reads) {
         let state = states.get(read.key)
         if (!state) {
-          state = { name: read.name, picked: false, misses: 0, candidate: null, candidateReads: 0 }
+          state = {
+            name: read.name,
+            picked: false,
+            blanks: 0,
+            matches: 0,
+            candidate: null,
+            candidateReads: 0,
+          }
           states.set(read.key, state)
           if (read.name) claimed.add(read.name)
-        } else if (state.picked) {
-          // sticky
         } else if (state.name !== null) {
           if (read.name === state.name) {
-            state.misses = 0
+            state.blanks = 0
+            state.matches += 1
+            if (state.picked && state.matches >= REVIVE_AFTER_MATCHES) state.picked = false
           } else {
-            state.misses += 1
-            if (state.misses >= PICKED_AFTER_MISSES) state.picked = true
+            state.matches = 0
+            if (read.blank && !state.picked) {
+              state.blanks += 1
+              if (state.blanks >= PICKED_AFTER_BLANKS) state.picked = true
+            }
           }
         } else if (read.name !== null && !claimed.has(read.name)) {
           state.candidateReads = state.candidate === read.name ? state.candidateReads + 1 : 1

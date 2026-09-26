@@ -60,7 +60,7 @@ function App(): JSX.Element {
         <SeatMenuBox key={menu.seat} menu={menu} scaleFactor={scaleFactor} />
       ))}
 
-      <TopCombosPanel data={overlayData?.topCombos ?? null} scaleFactor={scaleFactor} />
+      <TopCombosPanel data={overlayData?.topCombos ?? null} scaleFactor={scaleFactor} side={side} />
 
       <ControlsPanel
         scanState={scanState}
