@@ -1,0 +1,804 @@
+{
+ "note": "Scepter/shard upgrades per AD pick (game files + Brandon corrections). excess = winrate with upgrade - without, minus the average for picks with no such upgrade (scepter 9.7, shard 6.55). needs = other picks required in the same build.",
+ "scepter": {
+  "abaddon_borrowed_time": {
+   "excess": 0.05
+  },
+  "abyssal_underlord_dark_portal": {
+   "excess": 4.16,
+   "needs": [
+    "abyssal_underlord_pit_of_malice"
+   ]
+  },
+  "alchemist": {
+   "excess": 3.14
+  },
+  "ancient_apparition": {
+   "excess": -0.32
+  },
+  "ancient_apparition_chilling_touch": {
+   "excess": 11.78
+  },
+  "antimage_blink": {
+   "excess": -0.66
+  },
+  "antimage_mana_break": {
+   "excess": 3.9
+  },
+  "arc_warden_flux": {
+   "excess": 8.53
+  },
+  "axe_counter_helix": {
+   "excess": 5.35
+  },
+  "bane_fiends_grip": {
+   "excess": 7.04
+  },
+  "batrider_flaming_lasso": {
+   "excess": 3.56
+  },
+  "beastmaster_primal_roar": {
+   "excess": -0.1
+  },
+  "bloodseeker_rupture": {
+   "excess": 0.67
+  },
+  "bounty_hunter_shuriken_toss": {
+   "excess": 1.34,
+   "needs": [
+    "bounty_hunter_track"
+   ]
+  },
+  "brewmaster_primal_split": {
+   "excess": 0.98,
+   "needs": [
+    "brewmaster_drunken_brawler"
+   ]
+  },
+  "bristleback_bristleback": {
+   "excess": 0.05
+  },
+  "broodmother_spawn_spiderlings": {
+   "excess": 1.34
+  },
+  "centaur_stampede": {
+   "excess": 1.8
+  },
+  "chaos_knight_phantasm": {
+   "excess": 7.89
+  },
+  "chen_hand_of_god": {
+   "excess": 1.48
+  },
+  "crystal_maiden_freezing_field": {
+   "excess": 10.7
+  },
+  "dark_seer_wall_of_replica": {
+   "excess": 10.45
+  },
+  "dark_willow_shadow_realm": {
+   "excess": 16.97
+  },
+  "dawnbreaker": {
+   "excess": 0.18
+  },
+  "dawnbreaker_solar_guardian": {
+   "excess": 3.29
+  },
+  "dazzle_shadow_wave": {
+   "excess": 6.66
+  },
+  "death_prophet_exorcism": {
+   "excess": 2.07
+  },
+  "disruptor_static_storm": {
+   "excess": 0.01
+  },
+  "doom_bringer_doom": {
+   "excess": 1.9
+  },
+  "dragon_knight_elder_dragon_form": {
+   "excess": 13.89
+  },
+  "drow_ranger_frost_arrows": {
+   "excess": 5.8
+  },
+  "earth_spirit_magnetize": {
+   "excess": -0.23
+  },
+  "earthshaker_enchant_totem": {
+   "excess": 6.17
+  },
+  "elder_titan_ancestral_spirit": {
+   "excess": 6.13
+  },
+  "ember_spirit_fire_remnant": {
+   "excess": 5.74
+  },
+  "enchantress_enchant": {
+   "excess": 7.32
+  },
+  "enigma_black_hole": {
+   "excess": 6.61
+  },
+  "faceless_void_time_walk": {
+   "excess": -1.29
+  },
+  "furion_wrath_of_nature": {
+   "excess": 0.67
+  },
+  "grimstroke_soul_chain": {
+   "excess": 5.49
+  },
+  "gyrocopter_flak_cannon": {
+   "excess": 11.02
+  },
+  "hoodwink_sharpshooter": {
+   "excess": -0.44
+  },
+  "huskar_life_break": {
+   "excess": 8.03
+  },
+  "jakiro_macropyre": {
+   "excess": 3.57
+  },
+  "juggernaut_omni_slash": {
+   "excess": 11.08
+  },
+  "keeper_of_the_light_spirit_form": {
+   "excess": 4.63
+  },
+  "kunkka_ghostship": {
+   "excess": 3.77
+  },
+  "largo_amphibian_rhapsody": {
+   "excess": 2.7
+  },
+  "legion_commander_press_the_attack": {
+   "excess": 7.77
+  },
+  "leshrac_pulse_nova": {
+   "excess": 0.35
+  },
+  "lich_sinister_gaze": {
+   "excess": 6.19
+  },
+  "life_stealer_infest": {
+   "excess": 6.6
+  },
+  "lina_laguna_blade": {
+   "excess": 1.43
+  },
+  "lion_finger_of_death": {
+   "excess": 7.94
+  },
+  "lone_druid_entangle": {
+   "excess": 6.72
+  },
+  "luna_eclipse": {
+   "excess": 6.1,
+   "needs": [
+    "luna_lucent_beam"
+   ]
+  },
+  "lycan_shapeshift": {
+   "excess": 1.1
+  },
+  "magnataur_reverse_polarity": {
+   "excess": 1.07
+  },
+  "marci_unleash": {
+   "excess": 5.51
+  },
+  "mars_arena_of_blood": {
+   "excess": 2.76
+  },
+  "medusa_split_shot": {
+   "excess": 11.89
+  },
+  "meepo_poof": {
+   "excess": 3.03
+  },
+  "mirana_arrow": {
+   "excess": -0.27
+  },
+  "monkey_king_wukongs_command": {
+   "excess": 14.88
+  },
+  "muerta_dead_shot": {
+   "excess": 5.79
+  },
+  "naga_siren_ensnare": {
+   "excess": 3.66
+  },
+  "necrolyte_heartstopper_aura": {
+   "excess": 10.38
+  },
+  "nevermore_requiem": {
+   "excess": 2.0
+  },
+  "night_stalker": {
+   "excess": 2.67
+  },
+  "nyx_assassin_vendetta": {
+   "excess": -3.75
+  },
+  "obsidian_destroyer_objurgation": {
+   "excess": 11.09
+  },
+  "ogre_magi_fireblast": {
+   "excess": 0.75
+  },
+  "omniknight_guardian_angel": {
+   "excess": 4.81
+  },
+  "oracle_false_promise": {
+   "excess": 0.32
+  },
+  "pangolier_shield_crash": {
+   "excess": 1.94
+  },
+  "phantom_assassin_coup_de_grace": {
+   "excess": 2.57
+  },
+  "phantom_lancer_phantom_edge": {
+   "excess": 5.65
+  },
+  "phoenix_supernova": {
+   "excess": 2.61
+  },
+  "primal_beast_uproar": {
+   "excess": 13.21
+  },
+  "puck_dream_coil": {
+   "excess": 9.46
+  },
+  "pudge_rot": {
+   "excess": 16.39
+  },
+  "pugna_life_drain": {
+   "excess": 1.1
+  },
+  "queenofpain_shadow_strike": {
+   "excess": 2.64
+  },
+  "rattletrap_hookshot": {
+   "excess": -3.34
+  },
+  "razor_eye_of_the_storm": {
+   "excess": 6.66
+  },
+  "riki_tricks_of_the_trade": {
+   "excess": 3.27
+  },
+  "ringmaster_the_box": {
+   "excess": 4.15
+  },
+  "sandking_epicenter": {
+   "excess": -2.23
+  },
+  "shadow_demon_demonic_purge": {
+   "excess": 1.26
+  },
+  "shadow_shaman_shackles": {
+   "excess": 0.01
+  },
+  "shredder_reactive_armor": {
+   "excess": 7.95
+  },
+  "silencer_global_silence": {
+   "excess": -0.25
+  },
+  "skeleton_king": {
+   "excess": 7.75
+  },
+  "skywrath_mage_ancient_seal": {
+   "excess": 2.66
+  },
+  "skywrath_mage_concussive_shot": {
+   "excess": 1.25
+  },
+  "skywrath_mage_mystic_flare": {
+   "excess": 1.16
+  },
+  "slardar": {
+   "excess": 6.61,
+   "needs": [
+    "slardar_slithereen_crush"
+   ]
+  },
+  "slark_pounce": {
+   "excess": 7.6
+  },
+  "snapfire_mortimer_kisses": {
+   "excess": -2.91
+  },
+  "sniper_assassinate": {
+   "excess": 8.22
+  },
+  "spectre_haunt": {
+   "excess": 2.74
+  },
+  "spirit_breaker_greater_bash": {
+   "excess": 3.81
+  },
+  "spirit_breaker_nether_strike": {
+   "excess": 2.04
+  },
+  "storm_spirit_electric_vortex": {
+   "excess": 7.45
+  },
+  "sven_storm_bolt": {
+   "excess": 3.28
+  },
+  "templar_assassin_psionic_trap": {
+   "excess": -3.54
+  },
+  "terrorblade_metamorphosis": {
+   "excess": 3.71
+  },
+  "tidehunter_gush": {
+   "excess": 8.26
+  },
+  "tinker_deploy_turrets": {
+   "excess": 3.95
+  },
+  "tinker_laser": {
+   "excess": 4.98
+  },
+  "tinker_march_of_the_machines": {
+   "excess": 4.33
+  },
+  "tiny_tree_grab": {
+   "excess": -1.51
+  },
+  "treant_overgrowth": {
+   "excess": 7.48
+  },
+  "tusk_walrus_punch": {
+   "excess": -1.02
+  },
+  "undying_decay": {
+   "excess": 5.17
+  },
+  "ursa_enrage": {
+   "excess": 3.04
+  },
+  "vengefulspirit_command_aura": {
+   "excess": 14.98
+  },
+  "venomancer_noxious_plague": {
+   "excess": 0.89
+  },
+  "viper_corrosive_skin": {
+   "excess": 2.65,
+   "needs": [
+    "viper_viper_strike",
+    "viper_nethertoxin"
+   ]
+  },
+  "viper_viper_strike": {
+   "excess": -1.96,
+   "needs": [
+    "viper_corrosive_skin",
+    "viper_nethertoxin"
+   ]
+  },
+  "visage": {
+   "excess": 5.46
+  },
+  "void_spirit_resonant_pulse": {
+   "excess": 9.41
+  },
+  "warlock_rain_of_chaos": {
+   "excess": 4.31
+  },
+  "weaver_time_lapse": {
+   "excess": -1.8
+  },
+  "windrunner": {
+   "excess": 5.36
+  },
+  "winter_wyvern_arctic_burn": {
+   "excess": 11.04
+  },
+  "wisp_spirits": {
+   "excess": 16.39
+  },
+  "witch_doctor_death_ward": {
+   "excess": 4.12
+  },
+  "zuus_thundergods_wrath": {
+   "excess": 2.53
+  }
+ },
+ "shard": {
+  "abaddon_aphotic_shield": {
+   "excess": -0.18
+  },
+  "abyssal_underlord_firestorm": {
+   "excess": 0.04
+  },
+  "alchemist_chemical_rage": {
+   "excess": 5.51
+  },
+  "ancient_apparition_ice_blast": {
+   "excess": -3.72
+  },
+  "antimage_counterspell": {
+   "excess": 2.02
+  },
+  "axe_battle_hunger": {
+   "excess": 1.71,
+   "needs": [
+    "axe_berserkers_call"
+   ]
+  },
+  "axe_berserkers_call": {
+   "excess": -0.76,
+   "needs": [
+    "axe_battle_hunger"
+   ]
+  },
+  "bane_brain_sap": {
+   "excess": 4.94
+  },
+  "batrider_sticky_napalm": {
+   "excess": 7.29
+  },
+  "beastmaster_wild_axes": {
+   "excess": -1.14
+  },
+  "bloodseeker_bloodrage": {
+   "excess": 7.43
+  },
+  "bounty_hunter_wind_walk": {
+   "excess": 0.99
+  },
+  "brewmaster": {
+   "excess": 2.34
+  },
+  "bristleback_quill_spray": {
+   "excess": -0.75
+  },
+  "broodmother_insatiable_hunger": {
+   "excess": 9.25
+  },
+  "centaur_double_edge": {
+   "excess": 10.9
+  },
+  "chaos_knight_chaos_bolt": {
+   "excess": -1.29
+  },
+  "chen_holy_persuasion": {
+   "excess": 4.28
+  },
+  "clinkz_wind_walk": {
+   "excess": -4.66
+  },
+  "crystal_maiden_frostbite": {
+   "excess": -3.12
+  },
+  "dark_seer_surge": {
+   "excess": 5.31
+  },
+  "dark_willow_cursed_crown": {
+   "excess": 2.02
+  },
+  "dawnbreaker_fire_wreath": {
+   "excess": 5.03
+  },
+  "dazzle": {
+   "excess": 1.3
+  },
+  "death_prophet_spirit_siphon": {
+   "excess": 1.97
+  },
+  "disruptor_kinetic_field": {
+   "excess": -1.88
+  },
+  "doom_bringer_devour": {
+   "excess": 0.77
+  },
+  "dragon_knight_elder_dragon_form": {
+   "excess": -1.59
+  },
+  "drow_ranger_marksmanship": {
+   "excess": 6.27
+  },
+  "earth_spirit_geomagnetic_grip": {
+   "excess": 4.6
+  },
+  "earthshaker_fissure": {
+   "excess": -1.11
+  },
+  "elder_titan_echo_stomp": {
+   "excess": -0.51,
+   "needs": [
+    "elder_titan_ancestral_spirit"
+   ]
+  },
+  "ember_spirit": {
+   "excess": 7.29
+  },
+  "ember_spirit_fire_remnant": {
+   "excess": 6.14
+  },
+  "enchantress_untouchable": {
+   "excess": -1.08
+  },
+  "enigma_malefice": {
+   "excess": 1.63
+  },
+  "faceless_void_time_dilation": {
+   "excess": 4.8
+  },
+  "furion_wrath_of_nature": {
+   "excess": -1.87
+  },
+  "grimstroke_spirit_walk": {
+   "excess": 3.81
+  },
+  "gyrocopter_homing_missile": {
+   "excess": -2.59
+  },
+  "hoodwink_sharpshooter": {
+   "excess": 0.17
+  },
+  "huskar_berserkers_blood": {
+   "excess": 1.59
+  },
+  "juggernaut_healing_ward": {
+   "excess": 4.91
+  },
+  "keeper_of_the_light_spirit_form": {
+   "excess": 0.29
+  },
+  "kunkka_ghostship": {
+   "excess": -1.84
+  },
+  "largo": {
+   "excess": 2.15
+  },
+  "legion_commander_overwhelming_odds": {
+   "excess": 2.39
+  },
+  "leshrac_split_earth": {
+   "excess": 5.4
+  },
+  "lich_chain_frost": {
+   "excess": -2.27
+  },
+  "life_stealer_infest": {
+   "excess": 0.12
+  },
+  "lina_laguna_blade": {
+   "excess": -0.38
+  },
+  "lion_mana_drain": {
+   "excess": 2.91
+  },
+  "lone_druid_savage_roar": {
+   "excess": 4.45
+  },
+  "luna_lunar_orbit": {
+   "excess": 6.69
+  },
+  "lycan_summon_wolves": {
+   "excess": 3.05
+  },
+  "magnataur_skewer": {
+   "excess": -0.74
+  },
+  "marci_companion_run": {
+   "excess": 4.64
+  },
+  "mars_spear": {
+   "excess": 5.2
+  },
+  "medusa_mystic_snake": {
+   "excess": -0.55
+  },
+  "mirana": {
+   "excess": 2.54
+  },
+  "mirana_leap": {
+   "excess": 6.27
+  },
+  "monkey_king_boundless_strike": {
+   "excess": 0.47
+  },
+  "muerta_pierce_the_veil": {
+   "excess": 0.45
+  },
+  "naga_siren_song_of_the_siren": {
+   "excess": 4.18
+  },
+  "necrolyte_death_pulse": {
+   "excess": -1.73
+  },
+  "nevermore_shadowraze2": {
+   "excess": -0.49
+  },
+  "night_stalker_void": {
+   "excess": 2.06
+  },
+  "nyx_assassin_vendetta": {
+   "excess": 2.71
+  },
+  "obsidian_destroyer_astral_imprisonment": {
+   "excess": 4.95
+  },
+  "ogre_magi_ignite": {
+   "excess": -0.36
+  },
+  "omniknight_purification": {
+   "excess": 5.33
+  },
+  "oracle_false_promise": {
+   "excess": 4.64
+  },
+  "pangolier_gyroshell": {
+   "excess": 0.43
+  },
+  "phantom_assassin": {
+   "excess": 7.35
+  },
+  "phantom_lancer_juxtapose": {
+   "excess": 2.99
+  },
+  "phoenix_sun_ray": {
+   "excess": 4.14,
+   "needs": [
+    "phoenix_supernova"
+   ]
+  },
+  "primal_beast_pulverize": {
+   "excess": 1.03
+  },
+  "puck_phase_shift": {
+   "excess": 6.33
+  },
+  "pudge_meat_hook": {
+   "excess": -0.72
+  },
+  "pugna_life_drain": {
+   "excess": -2.28
+  },
+  "pugna_nether_ward": {
+   "excess": -0.65
+  },
+  "queenofpain_blink": {
+   "excess": 2.85
+  },
+  "rattletrap_hookshot": {
+   "excess": 1.28
+  },
+  "razor_storm_surge": {
+   "excess": 1.63
+  },
+  "riki_smoke_screen": {
+   "excess": 2.29
+  },
+  "ringmaster_wheel": {
+   "excess": -2.38
+  },
+  "rubick_telekinesis": {
+   "excess": 2.22
+  },
+  "sandking_epicenter": {
+   "excess": 6.48
+  },
+  "shadow_demon_demonic_purge": {
+   "excess": 2.33
+  },
+  "shadow_shaman_mass_serpent_ward": {
+   "excess": 1.95
+  },
+  "shredder_chakram": {
+   "excess": 4.27
+  },
+  "silencer_glaives_of_wisdom": {
+   "excess": 11.59
+  },
+  "skeleton_king_mortal_strike": {
+   "excess": 7.69
+  },
+  "skywrath_mage_arcane_bolt": {
+   "excess": 1.79
+  },
+  "slardar_slithereen_crush": {
+   "excess": 0.72
+  },
+  "slark_shadow_dance": {
+   "excess": 3.78
+  },
+  "snapfire_firesnap_cookie": {
+   "excess": 1.63
+  },
+  "sniper_assassinate": {
+   "excess": -0.15
+  },
+  "spectre_dispersion": {
+   "excess": -0.02
+  },
+  "spirit_breaker_nether_strike": {
+   "excess": 1.05
+  },
+  "storm_spirit_overload": {
+   "excess": 2.87
+  },
+  "sven_warcry": {
+   "excess": 6.63
+  },
+  "techies": {
+   "excess": 0.37
+  },
+  "templar_assassin_refraction": {
+   "excess": 2.35
+  },
+  "terrorblade_sunder": {
+   "excess": 2.71
+  },
+  "tidehunter_ravage": {
+   "excess": 0.32
+  },
+  "tinker_rearm": {
+   "excess": -1.37
+  },
+  "tiny_grow": {
+   "excess": 1.07
+  },
+  "treant_overgrowth": {
+   "excess": 0.54
+  },
+  "troll_warlord_fervor": {
+   "excess": 9.36
+  },
+  "tusk_tag_team": {
+   "excess": 2.85
+  },
+  "undying_tombstone": {
+   "excess": -2.16
+  },
+  "ursa_earthshock": {
+   "excess": 1.84
+  },
+  "vengefulspirit_magic_missile": {
+   "excess": 0.29
+  },
+  "venomancer_venomous_gale": {
+   "excess": -3.01
+  },
+  "viper_poison_attack": {
+   "excess": 14.59
+  },
+  "visage_gravekeepers_cloak": {
+   "excess": 3.92
+  },
+  "void_spirit_aether_remnant": {
+   "excess": 0.79
+  },
+  "warlock": {
+   "excess": -2.45
+  },
+  "warlock_upheaval": {
+   "excess": 0.19
+  },
+  "weaver_shukuchi": {
+   "excess": -3.04
+  },
+  "winter_wyvern_cold_embrace": {
+   "excess": 1.7
+  },
+  "wisp_tether": {
+   "excess": 1.19
+  },
+  "witch_doctor_death_ward": {
+   "excess": 2.73
+  },
+  "zuus_arc_lightning": {
+   "excess": 0.49
+  }
+ }
+}

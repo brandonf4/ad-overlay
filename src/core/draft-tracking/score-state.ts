@@ -1,9 +1,5 @@
 import type { DraftSnapshot } from './draft-tracker'
-import {
-  transformModelPickPosition,
-  type ScoreItem,
-  type ScoreState,
-} from '@core/scoring/pick-score'
+import type { ScoreItem, ScoreState } from '@core/scoring/pick-score'
 
 // @DEV-GUIDE: Turns a reconstructed draft (draft-tracker.ts) into the state the pick
 // scoring consumes, attaching each item's win rate / pick position from the data files.
@@ -17,7 +13,7 @@ export interface AbilityStats {
 
 export interface ModelStats {
   winrateHigh: number | null
-  /** Raw pick position — transformed here, like the simulator does at pool build. */
+  /** Raw pick position, used as is (the simulator no longer transforms it). */
   pickPositionHigh: number | null
 }
 
@@ -49,7 +45,7 @@ export function buildScoreState(snapshot: DraftSnapshot, data: ScoringData): Sco
       kind: 'model',
       isUlt: false,
       winrateHigh: stats?.winrateHigh ?? null,
-      pickPositionHigh: transformModelPickPosition(stats?.pickPositionHigh ?? null),
+      pickPositionHigh: stats?.pickPositionHigh ?? null,
     })
   }
 
@@ -62,7 +58,7 @@ export function buildScoreState(snapshot: DraftSnapshot, data: ScoringData): Sco
           kind: 'model' as const,
           isUlt: false,
           winrateHigh: stats?.winrateHigh ?? null,
-          pickPositionHigh: transformModelPickPosition(stats?.pickPositionHigh ?? null),
+          pickPositionHigh: stats?.pickPositionHigh ?? null,
         }
       }
       const stats = data.ability(e.name)

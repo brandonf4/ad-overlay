@@ -1,0 +1,1423 @@
+{
+ "updated": "2026-10-15",
+ "description": "Synergy edits baked into the site; they replace windrun pair values for every browser. Keys are ability/model names sorted alphabetically, joined by |. 'estimated' pairs are blanket model rules treated like estimated anti-synergy: no known-combo bonus, the seat's role weight applies, and they don't feed model roles.",
+ "overrides": {
+  "antimage_blink|queenofpain_blink": -9,
+  "chen_divine_favor|tinker_rearm": -5,
+  "juggernaut_blade_fury|tinker_rearm": 5,
+  "phantom_assassin_immaterial|tinker_rearm": -5,
+  "phantom_assassin_phantom_strike|tinker_rearm": -5,
+  "phantom_assassin_stifling_dagger|tinker_rearm": -5,
+  "tinker_rearm|viper_corrosive_skin": -5,
+  "broodmother_incapacitating_bite|rubick_arcane_supremacy": -5,
+  "broodmother_insatiable_hunger|rubick_arcane_supremacy": -7,
+  "earth_spirit|earth_spirit_boulder_smash": 3,
+  "gyrocopter_flak_cannon|terrorblade_metamorphosis": 7.7,
+  "medusa_split_shot|nevermore": 3,
+  "medusa_split_shot|rubick_arcane_supremacy": -7,
+  "monkey_king_wukongs_command|nevermore": 8,
+  "invoker_tornado_ad|tinker_rearm": 10
+ },
+ "readable": [
+  {
+   "pair": "Blink (Anti-Mage) + Blink (Queen of Pain)",
+   "value": -9,
+   "windrun": null
+  },
+  {
+   "pair": "Divine Favor (Chen) + Rearm (Tinker)",
+   "value": -5,
+   "windrun": null
+  },
+  {
+   "pair": "Blade Fury (Juggernaut) + Rearm (Tinker)",
+   "value": 5,
+   "windrun": null
+  },
+  {
+   "pair": "Immaterial (Phantom Assassin) + Rearm (Tinker)",
+   "value": -5,
+   "windrun": null
+  },
+  {
+   "pair": "Phantom Strike (Phantom Assassin) + Rearm (Tinker)",
+   "value": -5,
+   "windrun": null
+  },
+  {
+   "pair": "Stifling Dagger (Phantom Assassin) + Rearm (Tinker)",
+   "value": -5,
+   "windrun": null
+  },
+  {
+   "pair": "Rearm (Tinker) + Corrosive Skin (Viper)",
+   "value": -5,
+   "windrun": null
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Crystal Maiden (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Drow Ranger (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Mirana (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Morphling (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Shadow Fiend (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Puck (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Razor (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Storm Spirit (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Vengeful Spirit (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Windranger (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Zeus (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Lina (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Lion (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Shadow Shaman (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Witch Doctor (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Lich (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Enigma (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Tinker (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Sniper (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Necrophos (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Warlock (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Queen of Pain (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Venomancer (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Death Prophet (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Pugna (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Templar Assassin (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Viper (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Luna (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Dazzle (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Leshrac (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Nature's Prophet (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Clinkz (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Enchantress (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Huskar (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Weaver (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Jakiro (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Batrider (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Chen (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Ancient Apparition (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Gyrocopter (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Invoker (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Silencer (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Outworld Devourer (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Shadow Demon (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Lone Druid (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Rubick (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Disruptor (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Keeper of the Light (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Io (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Visage (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Medusa (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Skywrath Mage (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Techies (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Phoenix (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Oracle (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Winter Wyvern (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Arc Warden (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Dark Willow (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Grimstroke (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Hoodwink (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Snapfire (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Ringmaster (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Berserker's Rage (Troll Warlord) + Muerta (model)",
+   "value": -15,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Abaddon (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Underlord (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Alchemist (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Ancient Apparition (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Anti-Mage (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Arc Warden (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Axe (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Bane (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Batrider (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Beastmaster (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Bloodseeker (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Bounty Hunter (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Brewmaster (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Bristleback (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Broodmother (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Centaur Warrunner (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Chaos Knight (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Chen (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Clinkz (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Crystal Maiden (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Dark Seer (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Dark Willow (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Dawnbreaker (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Dazzle (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Death Prophet (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Disruptor (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Doom (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Dragon Knight (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Drow Ranger (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Earth Spirit (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Earthshaker (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Elder Titan (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Ember Spirit (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Enchantress (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Enigma (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Faceless Void (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Nature's Prophet (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Grimstroke (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Gyrocopter (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Hoodwink (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Huskar (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Invoker (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Jakiro (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Juggernaut (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Keeper of the Light (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Kez (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Kunkka (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Largo (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Legion Commander (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Leshrac (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Lich (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Lifestealer (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Lina (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Lion (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Lone Druid (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Luna (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Lycan (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Magnus (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Marci (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Mars (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Medusa (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Meepo (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Mirana (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Monkey King (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Morphling (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Muerta (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Naga Siren (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Necrophos (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Shadow Fiend (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Night Stalker (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Nyx Assassin (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Ogre Magi (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Omniknight (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Oracle (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Pangolier (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Phantom Assassin (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Phantom Lancer (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Phoenix (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Primal Beast (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Puck (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Pudge (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Pugna (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Queen of Pain (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Clockwerk (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Razor (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Riki (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Ringmaster (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Rubick (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Sand King (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Shadow Demon (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Shadow Shaman (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Timbersaw (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Silencer (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Wraith King (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Skywrath Mage (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Slardar (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Slark (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Snapfire (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Sniper (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Spectre (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Spirit Breaker (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Storm Spirit (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Sven (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Techies (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Templar Assassin (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Terrorblade (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Tidehunter (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Tinker (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Tiny (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Treant Protector (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Troll Warlord (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Tusk (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Undying (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Ursa (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Vengeful Spirit (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Venomancer (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Viper (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Visage (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Void Spirit (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Warlock (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Weaver (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Windranger (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Winter Wyvern (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Io (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Witch Doctor (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Arcane Orb (Outworld Devourer) + Zeus (model)",
+   "value": -20,
+   "windrun": null,
+   "estimated": true
+  },
+  {
+   "pair": "Incapacitating Bite (Broodmother) + Arcane Supremacy (Rubick)",
+   "value": -5,
+   "windrun": null
+  },
+  {
+   "pair": "Insatiable Hunger (Broodmother) + Arcane Supremacy (Rubick)",
+   "value": -7,
+   "windrun": null
+  },
+  {
+   "pair": "Earth Spirit (model) + Boulder Smash (Earth Spirit)",
+   "value": 3,
+   "windrun": 0.3
+  },
+  {
+   "pair": "Flak Cannon (Gyrocopter) + Metamorphosis (Terrorblade)",
+   "value": 7.7,
+   "windrun": null
+  },
+  {
+   "pair": "Split Shot (Medusa) + Shadow Fiend (model)",
+   "value": 3,
+   "windrun": null
+  },
+  {
+   "pair": "Split Shot (Medusa) + Arcane Supremacy (Rubick)",
+   "value": -7,
+   "windrun": null
+  },
+  {
+   "pair": "Wukong's Command (Monkey King) + Shadow Fiend (model)",
+   "value": 8,
+   "windrun": null
+  },
+  {
+   "pair": "Tornado (Invoker) + Rearm (Tinker)",
+   "value": 10,
+   "windrun": null
+  }
+ ],
+ "estimated": {
+  "crystal_maiden|troll_warlord_berserkers_rage": -15,
+  "drow_ranger|troll_warlord_berserkers_rage": -15,
+  "mirana|troll_warlord_berserkers_rage": -15,
+  "morphling|troll_warlord_berserkers_rage": -15,
+  "nevermore|troll_warlord_berserkers_rage": -15,
+  "puck|troll_warlord_berserkers_rage": -15,
+  "razor|troll_warlord_berserkers_rage": -15,
+  "storm_spirit|troll_warlord_berserkers_rage": -15,
+  "troll_warlord_berserkers_rage|vengefulspirit": -15,
+  "troll_warlord_berserkers_rage|windrunner": -15,
+  "troll_warlord_berserkers_rage|zuus": -15,
+  "lina|troll_warlord_berserkers_rage": -15,
+  "lion|troll_warlord_berserkers_rage": -15,
+  "shadow_shaman|troll_warlord_berserkers_rage": -15,
+  "troll_warlord_berserkers_rage|witch_doctor": -15,
+  "lich|troll_warlord_berserkers_rage": -15,
+  "enigma|troll_warlord_berserkers_rage": -15,
+  "tinker|troll_warlord_berserkers_rage": -15,
+  "sniper|troll_warlord_berserkers_rage": -15,
+  "necrolyte|troll_warlord_berserkers_rage": -15,
+  "troll_warlord_berserkers_rage|warlock": -15,
+  "queenofpain|troll_warlord_berserkers_rage": -15,
+  "troll_warlord_berserkers_rage|venomancer": -15,
+  "death_prophet|troll_warlord_berserkers_rage": -15,
+  "pugna|troll_warlord_berserkers_rage": -15,
+  "templar_assassin|troll_warlord_berserkers_rage": -15,
+  "troll_warlord_berserkers_rage|viper": -15,
+  "luna|troll_warlord_berserkers_rage": -15,
+  "dazzle|troll_warlord_berserkers_rage": -15,
+  "leshrac|troll_warlord_berserkers_rage": -15,
+  "furion|troll_warlord_berserkers_rage": -15,
+  "clinkz|troll_warlord_berserkers_rage": -15,
+  "enchantress|troll_warlord_berserkers_rage": -15,
+  "huskar|troll_warlord_berserkers_rage": -15,
+  "troll_warlord_berserkers_rage|weaver": -15,
+  "jakiro|troll_warlord_berserkers_rage": -15,
+  "batrider|troll_warlord_berserkers_rage": -15,
+  "chen|troll_warlord_berserkers_rage": -15,
+  "ancient_apparition|troll_warlord_berserkers_rage": -15,
+  "gyrocopter|troll_warlord_berserkers_rage": -15,
+  "invoker|troll_warlord_berserkers_rage": -15,
+  "silencer|troll_warlord_berserkers_rage": -15,
+  "obsidian_destroyer|troll_warlord_berserkers_rage": -15,
+  "shadow_demon|troll_warlord_berserkers_rage": -15,
+  "lone_druid|troll_warlord_berserkers_rage": -15,
+  "rubick|troll_warlord_berserkers_rage": -15,
+  "disruptor|troll_warlord_berserkers_rage": -15,
+  "keeper_of_the_light|troll_warlord_berserkers_rage": -15,
+  "troll_warlord_berserkers_rage|wisp": -15,
+  "troll_warlord_berserkers_rage|visage": -15,
+  "medusa|troll_warlord_berserkers_rage": -15,
+  "skywrath_mage|troll_warlord_berserkers_rage": -15,
+  "techies|troll_warlord_berserkers_rage": -15,
+  "phoenix|troll_warlord_berserkers_rage": -15,
+  "oracle|troll_warlord_berserkers_rage": -15,
+  "troll_warlord_berserkers_rage|winter_wyvern": -15,
+  "arc_warden|troll_warlord_berserkers_rage": -15,
+  "dark_willow|troll_warlord_berserkers_rage": -15,
+  "grimstroke|troll_warlord_berserkers_rage": -15,
+  "hoodwink|troll_warlord_berserkers_rage": -15,
+  "snapfire|troll_warlord_berserkers_rage": -15,
+  "ringmaster|troll_warlord_berserkers_rage": -15,
+  "muerta|troll_warlord_berserkers_rage": -15,
+  "abaddon|obsidian_destroyer_arcane_orb": -20,
+  "abyssal_underlord|obsidian_destroyer_arcane_orb": -20,
+  "alchemist|obsidian_destroyer_arcane_orb": -20,
+  "ancient_apparition|obsidian_destroyer_arcane_orb": -20,
+  "antimage|obsidian_destroyer_arcane_orb": -20,
+  "arc_warden|obsidian_destroyer_arcane_orb": -20,
+  "axe|obsidian_destroyer_arcane_orb": -20,
+  "bane|obsidian_destroyer_arcane_orb": -20,
+  "batrider|obsidian_destroyer_arcane_orb": -20,
+  "beastmaster|obsidian_destroyer_arcane_orb": -20,
+  "bloodseeker|obsidian_destroyer_arcane_orb": -20,
+  "bounty_hunter|obsidian_destroyer_arcane_orb": -20,
+  "brewmaster|obsidian_destroyer_arcane_orb": -20,
+  "bristleback|obsidian_destroyer_arcane_orb": -20,
+  "broodmother|obsidian_destroyer_arcane_orb": -20,
+  "centaur|obsidian_destroyer_arcane_orb": -20,
+  "chaos_knight|obsidian_destroyer_arcane_orb": -20,
+  "chen|obsidian_destroyer_arcane_orb": -20,
+  "clinkz|obsidian_destroyer_arcane_orb": -20,
+  "crystal_maiden|obsidian_destroyer_arcane_orb": -20,
+  "dark_seer|obsidian_destroyer_arcane_orb": -20,
+  "dark_willow|obsidian_destroyer_arcane_orb": -20,
+  "dawnbreaker|obsidian_destroyer_arcane_orb": -20,
+  "dazzle|obsidian_destroyer_arcane_orb": -20,
+  "death_prophet|obsidian_destroyer_arcane_orb": -20,
+  "disruptor|obsidian_destroyer_arcane_orb": -20,
+  "doom_bringer|obsidian_destroyer_arcane_orb": -20,
+  "dragon_knight|obsidian_destroyer_arcane_orb": -20,
+  "drow_ranger|obsidian_destroyer_arcane_orb": -20,
+  "earth_spirit|obsidian_destroyer_arcane_orb": -20,
+  "earthshaker|obsidian_destroyer_arcane_orb": -20,
+  "elder_titan|obsidian_destroyer_arcane_orb": -20,
+  "ember_spirit|obsidian_destroyer_arcane_orb": -20,
+  "enchantress|obsidian_destroyer_arcane_orb": -20,
+  "enigma|obsidian_destroyer_arcane_orb": -20,
+  "faceless_void|obsidian_destroyer_arcane_orb": -20,
+  "furion|obsidian_destroyer_arcane_orb": -20,
+  "grimstroke|obsidian_destroyer_arcane_orb": -20,
+  "gyrocopter|obsidian_destroyer_arcane_orb": -20,
+  "hoodwink|obsidian_destroyer_arcane_orb": -20,
+  "huskar|obsidian_destroyer_arcane_orb": -20,
+  "invoker|obsidian_destroyer_arcane_orb": -20,
+  "jakiro|obsidian_destroyer_arcane_orb": -20,
+  "juggernaut|obsidian_destroyer_arcane_orb": -20,
+  "keeper_of_the_light|obsidian_destroyer_arcane_orb": -20,
+  "kez|obsidian_destroyer_arcane_orb": -20,
+  "kunkka|obsidian_destroyer_arcane_orb": -20,
+  "largo|obsidian_destroyer_arcane_orb": -20,
+  "legion_commander|obsidian_destroyer_arcane_orb": -20,
+  "leshrac|obsidian_destroyer_arcane_orb": -20,
+  "lich|obsidian_destroyer_arcane_orb": -20,
+  "life_stealer|obsidian_destroyer_arcane_orb": -20,
+  "lina|obsidian_destroyer_arcane_orb": -20,
+  "lion|obsidian_destroyer_arcane_orb": -20,
+  "lone_druid|obsidian_destroyer_arcane_orb": -20,
+  "luna|obsidian_destroyer_arcane_orb": -20,
+  "lycan|obsidian_destroyer_arcane_orb": -20,
+  "magnataur|obsidian_destroyer_arcane_orb": -20,
+  "marci|obsidian_destroyer_arcane_orb": -20,
+  "mars|obsidian_destroyer_arcane_orb": -20,
+  "medusa|obsidian_destroyer_arcane_orb": -20,
+  "meepo|obsidian_destroyer_arcane_orb": -20,
+  "mirana|obsidian_destroyer_arcane_orb": -20,
+  "monkey_king|obsidian_destroyer_arcane_orb": -20,
+  "morphling|obsidian_destroyer_arcane_orb": -20,
+  "muerta|obsidian_destroyer_arcane_orb": -20,
+  "naga_siren|obsidian_destroyer_arcane_orb": -20,
+  "necrolyte|obsidian_destroyer_arcane_orb": -20,
+  "nevermore|obsidian_destroyer_arcane_orb": -20,
+  "night_stalker|obsidian_destroyer_arcane_orb": -20,
+  "nyx_assassin|obsidian_destroyer_arcane_orb": -20,
+  "obsidian_destroyer_arcane_orb|ogre_magi": -20,
+  "obsidian_destroyer_arcane_orb|omniknight": -20,
+  "obsidian_destroyer_arcane_orb|oracle": -20,
+  "obsidian_destroyer_arcane_orb|pangolier": -20,
+  "obsidian_destroyer_arcane_orb|phantom_assassin": -20,
+  "obsidian_destroyer_arcane_orb|phantom_lancer": -20,
+  "obsidian_destroyer_arcane_orb|phoenix": -20,
+  "obsidian_destroyer_arcane_orb|primal_beast": -20,
+  "obsidian_destroyer_arcane_orb|puck": -20,
+  "obsidian_destroyer_arcane_orb|pudge": -20,
+  "obsidian_destroyer_arcane_orb|pugna": -20,
+  "obsidian_destroyer_arcane_orb|queenofpain": -20,
+  "obsidian_destroyer_arcane_orb|rattletrap": -20,
+  "obsidian_destroyer_arcane_orb|razor": -20,
+  "obsidian_destroyer_arcane_orb|riki": -20,
+  "obsidian_destroyer_arcane_orb|ringmaster": -20,
+  "obsidian_destroyer_arcane_orb|rubick": -20,
+  "obsidian_destroyer_arcane_orb|sand_king": -20,
+  "obsidian_destroyer_arcane_orb|shadow_demon": -20,
+  "obsidian_destroyer_arcane_orb|shadow_shaman": -20,
+  "obsidian_destroyer_arcane_orb|shredder": -20,
+  "obsidian_destroyer_arcane_orb|silencer": -20,
+  "obsidian_destroyer_arcane_orb|skeleton_king": -20,
+  "obsidian_destroyer_arcane_orb|skywrath_mage": -20,
+  "obsidian_destroyer_arcane_orb|slardar": -20,
+  "obsidian_destroyer_arcane_orb|slark": -20,
+  "obsidian_destroyer_arcane_orb|snapfire": -20,
+  "obsidian_destroyer_arcane_orb|sniper": -20,
+  "obsidian_destroyer_arcane_orb|spectre": -20,
+  "obsidian_destroyer_arcane_orb|spirit_breaker": -20,
+  "obsidian_destroyer_arcane_orb|storm_spirit": -20,
+  "obsidian_destroyer_arcane_orb|sven": -20,
+  "obsidian_destroyer_arcane_orb|techies": -20,
+  "obsidian_destroyer_arcane_orb|templar_assassin": -20,
+  "obsidian_destroyer_arcane_orb|terrorblade": -20,
+  "obsidian_destroyer_arcane_orb|tidehunter": -20,
+  "obsidian_destroyer_arcane_orb|tinker": -20,
+  "obsidian_destroyer_arcane_orb|tiny": -20,
+  "obsidian_destroyer_arcane_orb|treant": -20,
+  "obsidian_destroyer_arcane_orb|troll_warlord": -20,
+  "obsidian_destroyer_arcane_orb|tusk": -20,
+  "obsidian_destroyer_arcane_orb|undying": -20,
+  "obsidian_destroyer_arcane_orb|ursa": -20,
+  "obsidian_destroyer_arcane_orb|vengefulspirit": -20,
+  "obsidian_destroyer_arcane_orb|venomancer": -20,
+  "obsidian_destroyer_arcane_orb|viper": -20,
+  "obsidian_destroyer_arcane_orb|visage": -20,
+  "obsidian_destroyer_arcane_orb|void_spirit": -20,
+  "obsidian_destroyer_arcane_orb|warlock": -20,
+  "obsidian_destroyer_arcane_orb|weaver": -20,
+  "obsidian_destroyer_arcane_orb|windrunner": -20,
+  "obsidian_destroyer_arcane_orb|winter_wyvern": -20,
+  "obsidian_destroyer_arcane_orb|wisp": -20,
+  "obsidian_destroyer_arcane_orb|witch_doctor": -20,
+  "obsidian_destroyer_arcane_orb|zuus": -20
+ }
+}

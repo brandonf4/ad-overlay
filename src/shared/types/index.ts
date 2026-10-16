@@ -163,7 +163,7 @@ export interface ScanResult {
 // suggestions produced by core/scoring (see scan-processing-service.ts).
 
 /** One suggested pick for a seat — an ability or a hero model, ranked together like the
- * simulator does. Lower score = better (see core/scoring). */
+ * simulator does. Score is the simulator's shown score: higher = better (see core/scoring). */
 export interface SeatSuggestion {
   name: string
   displayName: string

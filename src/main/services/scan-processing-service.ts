@@ -5,6 +5,7 @@ import { createDraftTracker } from '@core/draft-tracking/draft-tracker'
 import { buildScoreState } from '@core/draft-tracking/score-state'
 import type { SeatSlotRead } from '@core/draft-tracking/seat-pick-tracker'
 import { rankPicksForSeat, pickBlockedFor, SEAT_COUNT } from '@core/scoring/pick-score'
+import { DraftScorer } from '@core/scoring/bot-engine'
 import { rankTopCombos, type ComboItem } from '@core/scoring/top-combos'
 import { seatMenuBox } from '@core/resolution/seat-menu-box'
 import { topCombosBox } from '@core/resolution/top-combos-box'
@@ -20,8 +21,8 @@ import type { InitialScanResults, PickCandidates } from '@shared/types/ml'
 // @DEV-GUIDE: Bridges live ML scans to the overlay. Each scan is folded into a
 // reconstruction of the draft (core/draft-tracking: what every seat holds, what is left
 // in the pool, how many picks were made), then every seat's best remaining abilities
-// are ranked with the ad-simulator's pick score (core/scoring) and sent to the overlay
-// as one menu per seat. The upstream version this replaces read a DraftStore + DB
+// are ranked with the ad-simulator's bot scoring (core/scoring/bot-engine) and sent to
+// the overlay as one menu per seat. The upstream version this replaces read a DraftStore + DB
 // repositories and applied a different scoring system.
 
 const logger = log.scope('scan-processing')
@@ -149,17 +150,13 @@ export function createScanProcessingService(
         const state = buildScoreState(snapshot, abilityData.scoringData)
         const screenWidth = Number(resolution.split('x')[0])
 
+        const scorer = new DraftScorer(abilityData.engineData, state)
         const seatMenus: SeatMenu[] = []
         for (let seat = 0; seat < SEAT_COUNT; seat++) {
           const box = seatMenuBox(layout, seat, screenWidth)
           if (!box) continue
           // Models and abilities compete directly, exactly as in the simulator.
-          const suggestions = rankPicksForSeat(
-            seat,
-            state,
-            abilityData.synergy,
-            SUGGESTIONS_PER_SEAT,
-          ).map((r) => ({
+          const suggestions = rankPicksForSeat(seat, scorer, SUGGESTIONS_PER_SEAT).map((r) => ({
             name: r.item.name,
             displayName: displayNameOf(r.item, abilityData),
             kind: r.item.kind,

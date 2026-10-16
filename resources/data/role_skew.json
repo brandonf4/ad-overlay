@@ -1,0 +1,7216 @@
+{
+ "patch": "7.41f",
+ "description": "Role skew per ability, keyed by heroes_abilities.json ability name. Each role value is a z-score of that role list (list value minus its mean, divided by its std dev), so roles are on one scale. Raw list values are under raw. pos1 = GPM shift; mid = stat formula; offlane = strength pick share; support = K+A shift minus kills shift; all with manual adjustments.",
+ "roles": [
+  "pos1",
+  "mid",
+  "offlane",
+  "support"
+ ],
+ "scale": {
+  "pos1": {
+   "mean": -0.0184,
+   "sd": 0.1956,
+   "n": 513
+  },
+  "mid": {
+   "mean": 0.0859,
+   "sd": 2.2373,
+   "n": 513
+  },
+  "offlane": {
+   "mean": 24.791,
+   "sd": 13.8753,
+   "n": 513
+  },
+  "support": {
+   "mean": 0.0079,
+   "sd": 0.181,
+   "n": 513
+  }
+ },
+ "abilities": {
+  "abaddon_aphotic_shield": {
+   "ability": "Aphotic Shield",
+   "hero": "Abaddon",
+   "pos1": -0.775,
+   "mid": -0.253,
+   "offlane": 0.029,
+   "support": 1.31,
+   "raw": {
+    "pos1": -0.17,
+    "mid": -0.48,
+    "offlane": 25.2,
+    "support": 0.245
+   }
+  },
+  "abaddon_borrowed_time": {
+   "ability": "Borrowed Time",
+   "hero": "Abaddon",
+   "pos1": 1.127,
+   "mid": 1.812,
+   "offlane": 1.781,
+   "support": 0.061,
+   "raw": {
+    "pos1": 0.202,
+    "mid": 4.14,
+    "offlane": 49.5,
+    "support": 0.019
+   }
+  },
+  "abaddon_death_coil": {
+   "ability": "Mist Coil",
+   "hero": "Abaddon",
+   "pos1": -1.215,
+   "mid": 0.029,
+   "offlane": 0.102,
+   "support": 0.592,
+   "raw": {
+    "pos1": -0.256,
+    "mid": 0.15,
+    "offlane": 26.2,
+    "support": 0.115
+   }
+  },
+  "abaddon_frostmourne": {
+   "ability": "Curse of Avernus",
+   "hero": "Abaddon",
+   "pos1": 1.04,
+   "mid": 0.413,
+   "offlane": -0.907,
+   "support": -1.331,
+   "raw": {
+    "pos1": 0.185,
+    "mid": 1.01,
+    "offlane": 12.2,
+    "support": -0.233
+   }
+  },
+  "abyssal_underlord_atrophy_aura": {
+   "ability": "Atrophy Aura",
+   "hero": "Underlord",
+   "pos1": 3.091,
+   "mid": 1.472,
+   "offlane": 0.411,
+   "support": -2.226,
+   "raw": {
+    "pos1": 0.586,
+    "mid": 3.38,
+    "offlane": 30.5,
+    "support": -0.395
+   }
+  },
+  "abyssal_underlord_dark_portal": {
+   "ability": "Fiend's Gate",
+   "hero": "Underlord",
+   "pos1": 0.094,
+   "mid": -1.344,
+   "offlane": 1.002,
+   "support": 0.945,
+   "raw": {
+    "pos1": 0.0,
+    "mid": -2.92,
+    "offlane": 38.7,
+    "support": 0.179
+   }
+  },
+  "abyssal_underlord_firestorm": {
+   "ability": "Firestorm",
+   "hero": "Underlord",
+   "pos1": 0.094,
+   "mid": 2.174,
+   "offlane": 1.471,
+   "support": -0.182,
+   "raw": {
+    "pos1": 0.0,
+    "mid": 4.95,
+    "offlane": 45.2,
+    "support": -0.025
+   }
+  },
+  "abyssal_underlord_pit_of_malice": {
+   "ability": "Pit of Malice",
+   "hero": "Underlord",
+   "pos1": -1.491,
+   "mid": -0.745,
+   "offlane": 1.175,
+   "support": 2.569,
+   "raw": {
+    "pos1": -0.31,
+    "mid": -1.58,
+    "offlane": 41.1,
+    "support": 0.473
+   }
+  },
+  "alchemist_acid_spray": {
+   "ability": "Acid Spray",
+   "hero": "Alchemist",
+   "pos1": 0.514,
+   "mid": -0.204,
+   "offlane": 1.781,
+   "support": 0.293,
+   "raw": {
+    "pos1": 0.082,
+    "mid": -0.37,
+    "offlane": 49.5,
+    "support": 0.061
+   }
+  },
+  "alchemist_chemical_rage": {
+   "ability": "Chemical Rage",
+   "hero": "Alchemist",
+   "pos1": 1.557,
+   "mid": 0.632,
+   "offlane": 0.685,
+   "support": -1.298,
+   "raw": {
+    "pos1": 0.286,
+    "mid": 1.5,
+    "offlane": 34.3,
+    "support": -0.227
+   }
+  },
+  "alchemist_corrosive_weaponry": {
+   "ability": "Corrosive Weaponry",
+   "hero": "Alchemist",
+   "pos1": 0.621,
+   "mid": -0.436,
+   "offlane": -0.525,
+   "support": -1.126,
+   "raw": {
+    "pos1": 0.103,
+    "mid": -0.89,
+    "offlane": 17.5,
+    "support": -0.196
+   }
+  },
+  "alchemist_unstable_concoction": {
+   "ability": "Unstable Concoction",
+   "hero": "Alchemist",
+   "pos1": 0.094,
+   "mid": -0.892,
+   "offlane": 1.017,
+   "support": 0.851,
+   "raw": {
+    "pos1": 0.0,
+    "mid": -1.91,
+    "offlane": 38.9,
+    "support": 0.162
+   }
+  },
+  "ancient_apparition_chilling_touch": {
+   "ability": "Chilling Touch",
+   "hero": "Ancient Apparition",
+   "pos1": 0.304,
+   "mid": 1.575,
+   "offlane": -1.462,
+   "support": -1.248,
+   "raw": {
+    "pos1": 0.041,
+    "mid": 3.61,
+    "offlane": 4.5,
+    "support": -0.218
+   }
+  },
+  "ancient_apparition_cold_feet": {
+   "ability": "Cold Feet",
+   "hero": "Ancient Apparition",
+   "pos1": -1.501,
+   "mid": 0.167,
+   "offlane": -0.626,
+   "support": 1.293,
+   "raw": {
+    "pos1": -0.312,
+    "mid": 0.46,
+    "offlane": 16.1,
+    "support": 0.242
+   }
+  },
+  "ancient_apparition_ice_blast": {
+   "ability": "Ice Blast",
+   "hero": "Ancient Apparition",
+   "pos1": -0.478,
+   "mid": 0.909,
+   "offlane": -0.389,
+   "support": 1.089,
+   "raw": {
+    "pos1": -0.112,
+    "mid": 2.12,
+    "offlane": 19.4,
+    "support": 0.205
+   }
+  },
+  "ancient_apparition_ice_vortex": {
+   "ability": "Ice Vortex",
+   "hero": "Ancient Apparition",
+   "pos1": 0.335,
+   "mid": 0.972,
+   "offlane": -0.706,
+   "support": 0.641,
+   "raw": {
+    "pos1": 0.047,
+    "mid": 2.26,
+    "offlane": 15.0,
+    "support": 0.124
+   }
+  },
+  "antimage_blink": {
+   "ability": "Blink",
+   "hero": "Anti-Mage",
+   "pos1": 0.355,
+   "mid": 0.449,
+   "offlane": 0.231,
+   "support": 0.531,
+   "raw": {
+    "pos1": 0.051,
+    "mid": 1.09,
+    "offlane": 28.0,
+    "support": 0.104
+   }
+  },
+  "antimage_counterspell": {
+   "ability": "Counterspell",
+   "hero": "Anti-Mage",
+   "pos1": 0.565,
+   "mid": -0.052,
+   "offlane": 0.275,
+   "support": -0.364,
+   "raw": {
+    "pos1": 0.092,
+    "mid": -0.03,
+    "offlane": 28.6,
+    "support": -0.058
+   }
+  },
+  "antimage_mana_break": {
+   "ability": "Mana Break",
+   "hero": "Anti-Mage",
+   "pos1": 0.217,
+   "mid": -1.075,
+   "offlane": -1.152,
+   "support": -0.916,
+   "raw": {
+    "pos1": 0.024,
+    "mid": -2.32,
+    "offlane": 8.8,
+    "support": -0.158
+   }
+  },
+  "antimage_mana_void": {
+   "ability": "Mana Void",
+   "hero": "Anti-Mage",
+   "pos1": -0.182,
+   "mid": -1.268,
+   "offlane": -0.98,
+   "support": -1.187,
+   "raw": {
+    "pos1": -0.054,
+    "mid": -2.75,
+    "offlane": 11.2,
+    "support": -0.207
+   }
+  },
+  "arc_warden_flux": {
+   "ability": "Flux",
+   "hero": "Arc Warden",
+   "pos1": -0.596,
+   "mid": -0.816,
+   "offlane": -0.641,
+   "support": 0.177,
+   "raw": {
+    "pos1": -0.135,
+    "mid": -1.74,
+    "offlane": 15.9,
+    "support": 0.04
+   }
+  },
+  "arc_warden_magnetic_field": {
+   "ability": "Magnetic Field",
+   "hero": "Arc Warden",
+   "pos1": -0.305,
+   "mid": -2.533,
+   "offlane": -1.289,
+   "support": -0.314,
+   "raw": {
+    "pos1": -0.078,
+    "mid": -5.58,
+    "offlane": 6.9,
+    "support": -0.049
+   }
+  },
+  "arc_warden_spark_wraith": {
+   "ability": "Spark Wraith",
+   "hero": "Arc Warden",
+   "pos1": -1.706,
+   "mid": -0.897,
+   "offlane": -0.605,
+   "support": 0.669,
+   "raw": {
+    "pos1": -0.352,
+    "mid": -1.92,
+    "offlane": 16.4,
+    "support": 0.129
+   }
+  },
+  "axe_battle_hunger": {
+   "ability": "Battle Hunger",
+   "hero": "Axe",
+   "pos1": -1.332,
+   "mid": -0.365,
+   "offlane": 0.729,
+   "support": 0.868,
+   "raw": {
+    "pos1": -0.279,
+    "mid": -0.73,
+    "offlane": 34.9,
+    "support": 0.165
+   }
+  },
+  "axe_berserkers_call": {
+   "ability": "Berserker's Call",
+   "hero": "Axe",
+   "pos1": -0.182,
+   "mid": -0.092,
+   "offlane": 3.107,
+   "support": 0.614,
+   "raw": {
+    "pos1": -0.054,
+    "mid": -0.12,
+    "offlane": 67.9,
+    "support": 0.119
+   }
+  },
+  "axe_counter_helix": {
+   "ability": "Counter Helix",
+   "hero": "Axe",
+   "pos1": 0.094,
+   "mid": 0.887,
+   "offlane": 3.229,
+   "support": -0.463,
+   "raw": {
+    "pos1": 0.0,
+    "mid": 2.07,
+    "offlane": 69.6,
+    "support": -0.076
+   }
+  },
+  "axe_culling_blade": {
+   "ability": "Culling Blade",
+   "hero": "Axe",
+   "pos1": 0.36,
+   "mid": 0.838,
+   "offlane": 2.17,
+   "support": -2.32,
+   "raw": {
+    "pos1": 0.052,
+    "mid": 1.96,
+    "offlane": 54.9,
+    "support": -0.412
+   }
+  },
+  "bane_brain_sap": {
+   "ability": "Brain Sap",
+   "hero": "Bane",
+   "pos1": 0.002,
+   "mid": 1.267,
+   "offlane": -0.389,
+   "support": -0.342,
+   "raw": {
+    "pos1": -0.018,
+    "mid": 2.92,
+    "offlane": 19.4,
+    "support": -0.054
+   }
+  },
+  "bane_enfeeble": {
+   "ability": "Enfeeble",
+   "hero": "Bane",
+   "pos1": -1.077,
+   "mid": 0.181,
+   "offlane": -0.749,
+   "support": 0.586,
+   "raw": {
+    "pos1": -0.229,
+    "mid": 0.49,
+    "offlane": 14.4,
+    "support": 0.114
+   }
+  },
+  "bane_fiends_grip": {
+   "ability": "Fiend's Grip",
+   "hero": "Bane",
+   "pos1": 0.248,
+   "mid": -0.141,
+   "offlane": -0.468,
+   "support": 1.371,
+   "raw": {
+    "pos1": 0.03,
+    "mid": -0.23,
+    "offlane": 18.3,
+    "support": 0.256
+   }
+  },
+  "bane_nightmare": {
+   "ability": "Nightmare",
+   "hero": "Bane",
+   "pos1": -0.591,
+   "mid": -0.928,
+   "offlane": -0.785,
+   "support": -0.325,
+   "raw": {
+    "pos1": -0.134,
+    "mid": -1.99,
+    "offlane": 13.9,
+    "support": -0.051
+   }
+  },
+  "batrider_firefly": {
+   "ability": "Firefly",
+   "hero": "Batrider",
+   "pos1": 0.094,
+   "mid": 0.435,
+   "offlane": 1.384,
+   "support": -0.032,
+   "raw": {
+    "pos1": 0.0,
+    "mid": 1.06,
+    "offlane": 44.0,
+    "support": 0.002
+   }
+  },
+  "batrider_flamebreak": {
+   "ability": "Flamebreak",
+   "hero": "Batrider",
+   "pos1": -1.312,
+   "mid": -0.579,
+   "offlane": -0.778,
+   "support": 0.702,
+   "raw": {
+    "pos1": -0.275,
+    "mid": -1.21,
+    "offlane": 14.0,
+    "support": 0.135
+   }
+  },
+  "batrider_flaming_lasso": {
+   "ability": "Flaming Lasso",
+   "hero": "Batrider",
+   "pos1": -1.547,
+   "mid": -1.406,
+   "offlane": 0.174,
+   "support": 1.404,
+   "raw": {
+    "pos1": -0.321,
+    "mid": -3.06,
+    "offlane": 27.2,
+    "support": 0.262
+   }
+  },
+  "batrider_sticky_napalm": {
+   "ability": "Sticky Napalm",
+   "hero": "Batrider",
+   "pos1": -0.841,
+   "mid": -0.025,
+   "offlane": -0.547,
+   "support": -0.646,
+   "raw": {
+    "pos1": -0.183,
+    "mid": 0.03,
+    "offlane": 17.2,
+    "support": -0.109
+   }
+  },
+  "beastmaster_primal_roar": {
+   "ability": "Primal Roar",
+   "hero": "Beastmaster",
+   "pos1": 0.396,
+   "mid": 0.337,
+   "offlane": 1.247,
+   "support": 0.216,
+   "raw": {
+    "pos1": 0.059,
+    "mid": 0.84,
+    "offlane": 42.1,
+    "support": 0.047
+   }
+  },
+  "beastmaster_summon_raptor": {
+   "ability": "Summon Raptors",
+   "hero": "Beastmaster",
+   "pos1": -0.494,
+   "mid": -0.356,
+   "offlane": 0.015,
+   "support": -0.265,
+   "raw": {
+    "pos1": -0.115,
+    "mid": -0.71,
+    "offlane": 25.0,
+    "support": -0.04
+   }
+  },
+  "beastmaster_summon_razorback": {
+   "ability": "Summon Razorback",
+   "hero": "Beastmaster",
+   "pos1": -0.223,
+   "mid": -0.445,
+   "offlane": 0.75,
+   "support": -0.441,
+   "raw": {
+    "pos1": -0.062,
+    "mid": -0.91,
+    "offlane": 35.2,
+    "support": -0.072
+   }
+  },
+  "beastmaster_wild_axes": {
+   "ability": "Wild Axes",
+   "hero": "Beastmaster",
+   "pos1": 0.401,
+   "mid": 3.028,
+   "offlane": 0.75,
+   "support": -0.684,
+   "raw": {
+    "pos1": 0.06,
+    "mid": 6.86,
+    "offlane": 35.2,
+    "support": -0.116
+   }
+  },
+  "bloodseeker_blood_bath": {
+   "ability": "Blood Rite",
+   "hero": "Bloodseeker",
+   "pos1": -0.918,
+   "mid": -0.78,
+   "offlane": -0.338,
+   "support": 1.089,
+   "raw": {
+    "pos1": -0.198,
+    "mid": -1.66,
+    "offlane": 20.1,
+    "support": 0.205
+   }
+  },
+  "bloodseeker_bloodrage": {
+   "ability": "Bloodrage",
+   "hero": "Bloodseeker",
+   "pos1": 0.856,
+   "mid": -0.53,
+   "offlane": -0.763,
+   "support": -1.646,
+   "raw": {
+    "pos1": 0.149,
+    "mid": -1.1,
+    "offlane": 14.2,
+    "support": -0.29
+   }
+  },
+  "bloodseeker_rupture": {
+   "ability": "Rupture",
+   "hero": "Bloodseeker",
+   "pos1": -0.637,
+   "mid": -0.253,
+   "offlane": -0.151,
+   "support": 0.327,
+   "raw": {
+    "pos1": -0.143,
+    "mid": -0.48,
+    "offlane": 22.7,
+    "support": 0.067
+   }
+  },
+  "bloodseeker_thirst": {
+   "ability": "Thirst",
+   "hero": "Bloodseeker",
+   "pos1": 0.539,
+   "mid": 0.717,
+   "offlane": 1.5,
+   "support": -0.237,
+   "raw": {
+    "pos1": 0.087,
+    "mid": 1.69,
+    "offlane": 45.6,
+    "support": -0.035
+   }
+  },
+  "bounty_hunter_jinada": {
+   "ability": "Jinada",
+   "hero": "Bounty Hunter",
+   "pos1": 1.117,
+   "mid": -1.125,
+   "offlane": -0.821,
+   "support": -0.756,
+   "raw": {
+    "pos1": 0.2,
+    "mid": -2.43,
+    "offlane": 13.4,
+    "support": -0.129
+   }
+  },
+  "bounty_hunter_shuriken_toss": {
+   "ability": "Shuriken Toss",
+   "hero": "Bounty Hunter",
+   "pos1": -0.928,
+   "mid": -2.054,
+   "offlane": -0.648,
+   "support": 0.327,
+   "raw": {
+    "pos1": -0.2,
+    "mid": -4.51,
+    "offlane": 15.8,
+    "support": 0.067
+   }
+  },
+  "bounty_hunter_track": {
+   "ability": "Track",
+   "hero": "Bounty Hunter",
+   "pos1": 0.094,
+   "mid": -2.434,
+   "offlane": -0.482,
+   "support": 1.818,
+   "raw": {
+    "pos1": 0.0,
+    "mid": -5.36,
+    "offlane": 18.1,
+    "support": 0.337
+   }
+  },
+  "bounty_hunter_wind_walk": {
+   "ability": "Shadow Walk",
+   "hero": "Bounty Hunter",
+   "pos1": 0.094,
+   "mid": -0.36,
+   "offlane": -0.345,
+   "support": 0.581,
+   "raw": {
+    "pos1": 0.0,
+    "mid": -0.72,
+    "offlane": 20.0,
+    "support": 0.113
+   }
+  },
+  "brewmaster_cinder_brew": {
+   "ability": "Cinder Brew",
+   "hero": "Brewmaster",
+   "pos1": -0.622,
+   "mid": 0.386,
+   "offlane": -0.338,
+   "support": 0.47,
+   "raw": {
+    "pos1": -0.14,
+    "mid": 0.95,
+    "offlane": 20.1,
+    "support": 0.093
+   }
+  },
+  "brewmaster_drunken_brawler": {
+   "ability": "Drunken Brawler",
+   "hero": "Brewmaster",
+   "pos1": 1.674,
+   "mid": 0.985,
+   "offlane": 0.938,
+   "support": -1.585,
+   "raw": {
+    "pos1": 0.309,
+    "mid": 2.29,
+    "offlane": 37.8,
+    "support": -0.279
+   }
+  },
+  "brewmaster_primal_split": {
+   "ability": "Primal Split",
+   "hero": "Brewmaster",
+   "pos1": 0.289,
+   "mid": 0.806,
+   "offlane": 1.341,
+   "support": 0.012,
+   "raw": {
+    "pos1": 0.038,
+    "mid": 1.89,
+    "offlane": 43.4,
+    "support": 0.01
+   }
+  },
+  "brewmaster_thunder_clap": {
+   "ability": "Thunder Clap",
+   "hero": "Brewmaster",
+   "pos1": -0.172,
+   "mid": 0.024,
+   "offlane": 0.606,
+   "support": -0.204,
+   "raw": {
+    "pos1": -0.052,
+    "mid": 0.14,
+    "offlane": 33.2,
+    "support": -0.029
+   }
+  },
+  "bristleback_bristleback": {
+   "ability": "Bristleback",
+   "hero": "Bristleback",
+   "pos1": 0.667,
+   "mid": 0.516,
+   "offlane": 2.855,
+   "support": -0.01,
+   "raw": {
+    "pos1": 0.112,
+    "mid": 1.24,
+    "offlane": 64.4,
+    "support": 0.006
+   }
+  },
+  "bristleback_quill_spray": {
+   "ability": "Quill Spray",
+   "hero": "Bristleback",
+   "pos1": 0.764,
+   "mid": 0.252,
+   "offlane": 2.595,
+   "support": -0.347,
+   "raw": {
+    "pos1": 0.131,
+    "mid": 0.65,
+    "offlane": 60.8,
+    "support": -0.055
+   }
+  },
+  "bristleback_viscous_nasal_goo": {
+   "ability": "Viscous Nasal Goo",
+   "hero": "Bristleback",
+   "pos1": -0.473,
+   "mid": -1.317,
+   "offlane": 0.974,
+   "support": -0.392,
+   "raw": {
+    "pos1": -0.111,
+    "mid": -2.86,
+    "offlane": 38.3,
+    "support": -0.063
+   }
+  },
+  "bristleback_warpath": {
+   "ability": "Warpath",
+   "hero": "Bristleback",
+   "pos1": 0.841,
+   "mid": -0.262,
+   "offlane": 1.118,
+   "support": -1.287,
+   "raw": {
+    "pos1": 0.146,
+    "mid": -0.5,
+    "offlane": 40.3,
+    "support": -0.225
+   }
+  },
+  "broodmother_incapacitating_bite": {
+   "ability": "Incapacitating Bite",
+   "hero": "Broodmother",
+   "pos1": 0.524,
+   "mid": -0.307,
+   "offlane": -0.835,
+   "support": -0.955,
+   "raw": {
+    "pos1": 0.084,
+    "mid": -0.6,
+    "offlane": 13.2,
+    "support": -0.165
+   }
+  },
+  "broodmother_insatiable_hunger": {
+   "ability": "Insatiable Hunger",
+   "hero": "Broodmother",
+   "pos1": 1.398,
+   "mid": 0.418,
+   "offlane": -0.403,
+   "support": -1.717,
+   "raw": {
+    "pos1": 0.255,
+    "mid": 1.02,
+    "offlane": 19.2,
+    "support": -0.303
+   }
+  },
+  "broodmother_spawn_spiderlings": {
+   "ability": "Spawn Spiderlings",
+   "hero": "Broodmother",
+   "pos1": -0.105,
+   "mid": -0.293,
+   "offlane": -0.432,
+   "support": -0.657,
+   "raw": {
+    "pos1": -0.039,
+    "mid": -0.57,
+    "offlane": 18.8,
+    "support": -0.111
+   }
+  },
+  "broodmother_spin_web": {
+   "ability": "Spin Web",
+   "hero": "Broodmother",
+   "pos1": 0.284,
+   "mid": 0.65,
+   "offlane": -0.316,
+   "support": -0.353,
+   "raw": {
+    "pos1": 0.037,
+    "mid": 1.54,
+    "offlane": 20.4,
+    "support": -0.056
+   }
+  },
+  "centaur_double_edge": {
+   "ability": "Double Edge",
+   "hero": "Centaur Warrunner",
+   "pos1": 0.641,
+   "mid": 0.525,
+   "offlane": 3.907,
+   "support": -0.983,
+   "raw": {
+    "pos1": 0.107,
+    "mid": 1.26,
+    "offlane": 79.0,
+    "support": -0.17
+   }
+  },
+  "centaur_hoof_stomp": {
+   "ability": "Hoof Stomp",
+   "hero": "Centaur Warrunner",
+   "pos1": -0.887,
+   "mid": -0.293,
+   "offlane": 1.81,
+   "support": 1.222,
+   "raw": {
+    "pos1": -0.192,
+    "mid": -0.57,
+    "offlane": 49.9,
+    "support": 0.229
+   }
+  },
+  "centaur_return": {
+   "ability": "Retaliate",
+   "hero": "Centaur Warrunner",
+   "pos1": 0.529,
+   "mid": -0.119,
+   "offlane": 3.604,
+   "support": 0.299,
+   "raw": {
+    "pos1": 0.085,
+    "mid": -0.18,
+    "offlane": 74.8,
+    "support": 0.062
+   }
+  },
+  "centaur_stampede": {
+   "ability": "Stampede",
+   "hero": "Centaur Warrunner",
+   "pos1": -0.141,
+   "mid": -0.821,
+   "offlane": 1.413,
+   "support": 1.697,
+   "raw": {
+    "pos1": -0.046,
+    "mid": -1.75,
+    "offlane": 44.4,
+    "support": 0.315
+   }
+  },
+  "chaos_knight_chaos_bolt": {
+   "ability": "Chaos Bolt",
+   "hero": "Chaos Knight",
+   "pos1": -1.736,
+   "mid": -0.499,
+   "offlane": 0.505,
+   "support": 1.603,
+   "raw": {
+    "pos1": -0.358,
+    "mid": -1.03,
+    "offlane": 31.8,
+    "support": 0.298
+   }
+  },
+  "chaos_knight_chaos_strike": {
+   "ability": "Chaos Strike",
+   "hero": "Chaos Knight",
+   "pos1": 1.47,
+   "mid": 0.19,
+   "offlane": 0.455,
+   "support": -1.53,
+   "raw": {
+    "pos1": 0.269,
+    "mid": 0.51,
+    "offlane": 31.1,
+    "support": -0.269
+   }
+  },
+  "chaos_knight_phantasm": {
+   "ability": "Phantasm",
+   "hero": "Chaos Knight",
+   "pos1": 1.291,
+   "mid": -0.503,
+   "offlane": 0.029,
+   "support": -1.148,
+   "raw": {
+    "pos1": 0.234,
+    "mid": -1.04,
+    "offlane": 25.2,
+    "support": -0.2
+   }
+  },
+  "chaos_knight_reality_rift": {
+   "ability": "Reality Rift",
+   "hero": "Chaos Knight",
+   "pos1": 0.422,
+   "mid": -0.123,
+   "offlane": 1.802,
+   "support": -1.104,
+   "raw": {
+    "pos1": 0.064,
+    "mid": -0.19,
+    "offlane": 49.8,
+    "support": -0.192
+   }
+  },
+  "chen_divine_favor": {
+   "ability": "Divine Favor",
+   "hero": "Chen",
+   "pos1": -1.133,
+   "mid": -1.531,
+   "offlane": 0.584,
+   "support": 1.553,
+   "raw": {
+    "pos1": -0.24,
+    "mid": -3.34,
+    "offlane": 32.9,
+    "support": 0.289
+   }
+  },
+  "chen_hand_of_god": {
+   "ability": "Hand of God",
+   "hero": "Chen",
+   "pos1": -1.43,
+   "mid": -1.759,
+   "offlane": -0.064,
+   "support": 1.956,
+   "raw": {
+    "pos1": -0.298,
+    "mid": -3.85,
+    "offlane": 23.9,
+    "support": 0.362
+   }
+  },
+  "chen_holy_persuasion": {
+   "ability": "Holy Persuasion",
+   "hero": "Chen",
+   "pos1": -1.424,
+   "mid": -2.55,
+   "offlane": -0.187,
+   "support": 0.078,
+   "raw": {
+    "pos1": -0.297,
+    "mid": -5.62,
+    "offlane": 22.2,
+    "support": 0.022
+   }
+  },
+  "chen_penitence": {
+   "ability": "Penitence",
+   "hero": "Chen",
+   "pos1": -0.064,
+   "mid": -0.445,
+   "offlane": -0.698,
+   "support": -0.574,
+   "raw": {
+    "pos1": -0.031,
+    "mid": -0.91,
+    "offlane": 15.1,
+    "support": -0.096
+   }
+  },
+  "clinkz_death_pact": {
+   "ability": "Death Pact",
+   "hero": "Clinkz",
+   "pos1": 1.557,
+   "mid": -0.423,
+   "offlane": -0.439,
+   "support": -0.563,
+   "raw": {
+    "pos1": 0.286,
+    "mid": -0.86,
+    "offlane": 18.7,
+    "support": -0.094
+   }
+  },
+  "clinkz_searing_arrows": {
+   "ability": "Searing Arrows",
+   "hero": "Clinkz",
+   "pos1": 0.493,
+   "mid": -1.057,
+   "offlane": -1.232,
+   "support": -1.358,
+   "raw": {
+    "pos1": 0.078,
+    "mid": -2.28,
+    "offlane": 7.7,
+    "support": -0.238
+   }
+  },
+  "clinkz_strafe": {
+   "ability": "Strafe",
+   "hero": "Clinkz",
+   "pos1": 0.575,
+   "mid": -0.7,
+   "offlane": -1.008,
+   "support": -1.541,
+   "raw": {
+    "pos1": 0.094,
+    "mid": -1.48,
+    "offlane": 10.8,
+    "support": -0.271
+   }
+  },
+  "clinkz_wind_walk": {
+   "ability": "Skeleton Walk",
+   "hero": "Clinkz",
+   "pos1": 0.882,
+   "mid": 0.19,
+   "offlane": -0.547,
+   "support": -0.336,
+   "raw": {
+    "pos1": 0.154,
+    "mid": 0.51,
+    "offlane": 17.2,
+    "support": -0.053
+   }
+  },
+  "crystal_maiden_crystal_nova": {
+   "ability": "Crystal Nova",
+   "hero": "Crystal Maiden",
+   "pos1": 0.191,
+   "mid": 1.271,
+   "offlane": -0.799,
+   "support": 0.63,
+   "raw": {
+    "pos1": 0.019,
+    "mid": 2.93,
+    "offlane": 13.7,
+    "support": 0.122
+   }
+  },
+  "crystal_maiden_freezing_field": {
+   "ability": "Freezing Field",
+   "hero": "Crystal Maiden",
+   "pos1": -0.064,
+   "mid": 1.128,
+   "offlane": -0.05,
+   "support": 0.172,
+   "raw": {
+    "pos1": -0.031,
+    "mid": 2.61,
+    "offlane": 24.1,
+    "support": 0.039
+   }
+  },
+  "crystal_maiden_frostbite": {
+   "ability": "Frostbite",
+   "hero": "Crystal Maiden",
+   "pos1": -1.184,
+   "mid": 0.686,
+   "offlane": -0.598,
+   "support": 1.31,
+   "raw": {
+    "pos1": -0.25,
+    "mid": 1.62,
+    "offlane": 16.5,
+    "support": 0.245
+   }
+  },
+  "dark_seer_ion_shell": {
+   "ability": "Ion Shell",
+   "hero": "Dark Seer",
+   "pos1": 1.393,
+   "mid": 0.936,
+   "offlane": 1.55,
+   "support": 0.061,
+   "raw": {
+    "pos1": 0.254,
+    "mid": 2.18,
+    "offlane": 46.3,
+    "support": 0.019
+   }
+  },
+  "dark_seer_surge": {
+   "ability": "Surge",
+   "hero": "Dark Seer",
+   "pos1": 0.34,
+   "mid": 0.216,
+   "offlane": -0.194,
+   "support": -0.121,
+   "raw": {
+    "pos1": 0.048,
+    "mid": 0.57,
+    "offlane": 22.1,
+    "support": -0.014
+   }
+  },
+  "dark_seer_vacuum": {
+   "ability": "Vacuum",
+   "hero": "Dark Seer",
+   "pos1": -0.867,
+   "mid": -0.016,
+   "offlane": -0.266,
+   "support": 1.233,
+   "raw": {
+    "pos1": -0.188,
+    "mid": 0.05,
+    "offlane": 21.1,
+    "support": 0.231
+   }
+  },
+  "dark_seer_wall_of_replica": {
+   "ability": "Wall of Replica",
+   "hero": "Dark Seer",
+   "pos1": 0.35,
+   "mid": 0.342,
+   "offlane": -0.583,
+   "support": 0.161,
+   "raw": {
+    "pos1": 0.05,
+    "mid": 0.85,
+    "offlane": 16.7,
+    "support": 0.037
+   }
+  },
+  "dark_willow_bramble_maze": {
+   "ability": "Bramble Maze",
+   "hero": "Dark Willow",
+   "pos1": -1.593,
+   "mid": -0.526,
+   "offlane": -0.497,
+   "support": 2.105,
+   "raw": {
+    "pos1": -0.33,
+    "mid": -1.09,
+    "offlane": 17.9,
+    "support": 0.389
+   }
+  },
+  "dark_willow_cursed_crown": {
+   "ability": "Cursed Crown",
+   "hero": "Dark Willow",
+   "pos1": -1.844,
+   "mid": -1.37,
+   "offlane": -0.612,
+   "support": 1.498,
+   "raw": {
+    "pos1": -0.379,
+    "mid": -2.98,
+    "offlane": 16.3,
+    "support": 0.279
+   }
+  },
+  "dark_willow_shadow_realm": {
+   "ability": "Shadow Realm",
+   "hero": "Dark Willow",
+   "pos1": 1.061,
+   "mid": 2.183,
+   "offlane": -1.47,
+   "support": -1.474,
+   "raw": {
+    "pos1": 0.189,
+    "mid": 4.97,
+    "offlane": 4.4,
+    "support": -0.259
+   }
+  },
+  "dark_willow_terrorize": {
+   "ability": "Terrorize",
+   "hero": "Dark Willow",
+   "pos1": -0.003,
+   "mid": 0.78,
+   "offlane": 0.397,
+   "support": -0.834,
+   "raw": {
+    "pos1": -0.019,
+    "mid": 1.83,
+    "offlane": 30.3,
+    "support": -0.143
+   }
+  },
+  "dawnbreaker_celestial_hammer": {
+   "ability": "Celestial Hammer",
+   "hero": "Dawnbreaker",
+   "pos1": 0.549,
+   "mid": 0.529,
+   "offlane": 1.197,
+   "support": 0.233,
+   "raw": {
+    "pos1": 0.089,
+    "mid": 1.27,
+    "offlane": 41.4,
+    "support": 0.05
+   }
+  },
+  "dawnbreaker_fire_wreath": {
+   "ability": "Starbreaker",
+   "hero": "Dawnbreaker",
+   "pos1": 1.086,
+   "mid": 0.601,
+   "offlane": 2.718,
+   "support": -0.922,
+   "raw": {
+    "pos1": 0.194,
+    "mid": 1.43,
+    "offlane": 62.5,
+    "support": -0.159
+   }
+  },
+  "dawnbreaker_luminosity": {
+   "ability": "Luminosity",
+   "hero": "Dawnbreaker",
+   "pos1": 1.506,
+   "mid": 0.158,
+   "offlane": 0.303,
+   "support": -1.176,
+   "raw": {
+    "pos1": 0.276,
+    "mid": 0.44,
+    "offlane": 29.0,
+    "support": -0.205
+   }
+  },
+  "dawnbreaker_solar_guardian": {
+   "ability": "Solar Guardian",
+   "hero": "Dawnbreaker",
+   "pos1": 0.094,
+   "mid": -0.727,
+   "offlane": 1.233,
+   "support": 1.459,
+   "raw": {
+    "pos1": 0.0,
+    "mid": -1.54,
+    "offlane": 41.9,
+    "support": 0.272
+   }
+  },
+  "dazzle_nothl_projection": {
+   "ability": "Nothl Projection",
+   "hero": "Dazzle",
+   "pos1": -1.097,
+   "mid": -0.87,
+   "offlane": -0.879,
+   "support": -0.193,
+   "raw": {
+    "pos1": -0.233,
+    "mid": -1.86,
+    "offlane": 12.6,
+    "support": -0.027
+   }
+  },
+  "dazzle_poison_touch": {
+   "ability": "Poison Touch",
+   "hero": "Dazzle",
+   "pos1": -0.688,
+   "mid": -0.204,
+   "offlane": -1.044,
+   "support": -0.154,
+   "raw": {
+    "pos1": -0.153,
+    "mid": -0.37,
+    "offlane": 10.3,
+    "support": -0.02
+   }
+  },
+  "dazzle_shadow_wave": {
+   "ability": "Shadow Wave",
+   "hero": "Dazzle",
+   "pos1": 0.278,
+   "mid": 0.029,
+   "offlane": -0.446,
+   "support": 0.564,
+   "raw": {
+    "pos1": 0.036,
+    "mid": 0.15,
+    "offlane": 18.6,
+    "support": 0.11
+   }
+  },
+  "dazzle_shallow_grave": {
+   "ability": "Shallow Grave",
+   "hero": "Dazzle",
+   "pos1": -1.47,
+   "mid": -1.281,
+   "offlane": -0.352,
+   "support": 1.105,
+   "raw": {
+    "pos1": -0.306,
+    "mid": -2.78,
+    "offlane": 19.9,
+    "support": 0.208
+   }
+  },
+  "death_prophet_carrion_swarm": {
+   "ability": "Crypt Swarm",
+   "hero": "Death Prophet",
+   "pos1": 0.094,
+   "mid": 1.7,
+   "offlane": -0.857,
+   "support": -0.358,
+   "raw": {
+    "pos1": 0.0,
+    "mid": 3.89,
+    "offlane": 12.9,
+    "support": -0.057
+   }
+  },
+  "death_prophet_exorcism": {
+   "ability": "Exorcism",
+   "hero": "Death Prophet",
+   "pos1": 0.284,
+   "mid": 0.485,
+   "offlane": 0.303,
+   "support": -0.784,
+   "raw": {
+    "pos1": 0.037,
+    "mid": 1.17,
+    "offlane": 29.0,
+    "support": -0.134
+   }
+  },
+  "death_prophet_silence": {
+   "ability": "Silence",
+   "hero": "Death Prophet",
+   "pos1": -1.307,
+   "mid": -0.91,
+   "offlane": -0.641,
+   "support": 0.89,
+   "raw": {
+    "pos1": -0.274,
+    "mid": -1.95,
+    "offlane": 15.9,
+    "support": 0.169
+   }
+  },
+  "death_prophet_spirit_siphon": {
+   "ability": "Spirit Siphon",
+   "hero": "Death Prophet",
+   "pos1": -0.576,
+   "mid": 1.271,
+   "offlane": 0.685,
+   "support": -0.502,
+   "raw": {
+    "pos1": -0.131,
+    "mid": 2.93,
+    "offlane": 34.3,
+    "support": -0.083
+   }
+  },
+  "disruptor_glimpse": {
+   "ability": "Glimpse",
+   "hero": "Disruptor",
+   "pos1": -1.465,
+   "mid": -0.32,
+   "offlane": -0.583,
+   "support": 2.343,
+   "raw": {
+    "pos1": -0.305,
+    "mid": -0.63,
+    "offlane": 16.7,
+    "support": 0.432
+   }
+  },
+  "disruptor_kinetic_field": {
+   "ability": "Kinetic Field",
+   "hero": "Disruptor",
+   "pos1": -1.327,
+   "mid": -0.758,
+   "offlane": -0.547,
+   "support": 1.52,
+   "raw": {
+    "pos1": -0.278,
+    "mid": -1.61,
+    "offlane": 17.2,
+    "support": 0.283
+   }
+  },
+  "disruptor_static_storm": {
+   "ability": "Static Storm",
+   "hero": "Disruptor",
+   "pos1": -0.744,
+   "mid": -0.271,
+   "offlane": -0.475,
+   "support": 1.288,
+   "raw": {
+    "pos1": -0.164,
+    "mid": -0.52,
+    "offlane": 18.2,
+    "support": 0.241
+   }
+  },
+  "disruptor_thunder_strike": {
+   "ability": "Thunder Strike",
+   "hero": "Disruptor",
+   "pos1": -0.141,
+   "mid": 1.678,
+   "offlane": -0.915,
+   "support": 0.122,
+   "raw": {
+    "pos1": -0.046,
+    "mid": 3.84,
+    "offlane": 12.1,
+    "support": 0.03
+   }
+  },
+  "doom_bringer_devour": {
+   "ability": "Devour",
+   "hero": "Doom",
+   "pos1": 3.981,
+   "mid": -0.092,
+   "offlane": 0.664,
+   "support": -0.585,
+   "raw": {
+    "pos1": 0.76,
+    "mid": -0.12,
+    "offlane": 34.0,
+    "support": -0.098
+   }
+  },
+  "doom_bringer_doom": {
+   "ability": "Doom",
+   "hero": "Doom",
+   "pos1": -0.274,
+   "mid": -0.374,
+   "offlane": 1.168,
+   "support": 0.194,
+   "raw": {
+    "pos1": -0.072,
+    "mid": -0.75,
+    "offlane": 41.0,
+    "support": 0.043
+   }
+  },
+  "doom_bringer_infernal_blade": {
+   "ability": "Infernal Blade",
+   "hero": "Doom",
+   "pos1": -0.09,
+   "mid": 1.186,
+   "offlane": -0.562,
+   "support": -0.977,
+   "raw": {
+    "pos1": -0.036,
+    "mid": 2.74,
+    "offlane": 17.0,
+    "support": -0.169
+   }
+  },
+  "doom_bringer_scorched_earth": {
+   "ability": "Scorched Earth",
+   "hero": "Doom",
+   "pos1": 1.255,
+   "mid": 0.704,
+   "offlane": 2.256,
+   "support": -0.303,
+   "raw": {
+    "pos1": 0.227,
+    "mid": 1.66,
+    "offlane": 56.1,
+    "support": -0.047
+   }
+  },
+  "dragon_knight_breathe_fire": {
+   "ability": "Breathe Fire",
+   "hero": "Dragon Knight",
+   "pos1": 0.207,
+   "mid": 0.047,
+   "offlane": 0.966,
+   "support": -0.287,
+   "raw": {
+    "pos1": 0.022,
+    "mid": 0.19,
+    "offlane": 38.2,
+    "support": -0.044
+   }
+  },
+  "dragon_knight_dragon_tail": {
+   "ability": "Dragon Tail",
+   "hero": "Dragon Knight",
+   "pos1": -0.596,
+   "mid": -0.49,
+   "offlane": 1.348,
+   "support": 0.459,
+   "raw": {
+    "pos1": -0.135,
+    "mid": -1.01,
+    "offlane": 43.5,
+    "support": 0.091
+   }
+  },
+  "dragon_knight_elder_dragon_form": {
+   "ability": "Elder Dragon Form",
+   "hero": "Dragon Knight",
+   "pos1": 1.48,
+   "mid": 0.19,
+   "offlane": -0.273,
+   "support": -0.872,
+   "raw": {
+    "pos1": 0.271,
+    "mid": 0.51,
+    "offlane": 21.0,
+    "support": -0.15
+   }
+  },
+  "dragon_knight_wyrms_wrath": {
+   "ability": "Wyrm's Wrath",
+   "hero": "",
+   "pos1": 0.652,
+   "mid": 0.368,
+   "offlane": 0.729,
+   "support": -0.165,
+   "raw": {
+    "pos1": 0.109,
+    "mid": 0.91,
+    "offlane": 34.9,
+    "support": -0.022
+   }
+  },
+  "drow_ranger_frost_arrows": {
+   "ability": "Frost Arrows",
+   "hero": "Drow Ranger",
+   "pos1": 1.117,
+   "mid": -1.482,
+   "offlane": -1.311,
+   "support": -0.806,
+   "raw": {
+    "pos1": 0.2,
+    "mid": -3.23,
+    "offlane": 6.6,
+    "support": -0.138
+   }
+  },
+  "drow_ranger_marksmanship": {
+   "ability": "Marksmanship",
+   "hero": "Drow Ranger",
+   "pos1": 0.299,
+   "mid": -1.768,
+   "offlane": -1.556,
+   "support": -1.099,
+   "raw": {
+    "pos1": 0.04,
+    "mid": -3.87,
+    "offlane": 3.2,
+    "support": -0.191
+   }
+  },
+  "drow_ranger_multishot": {
+   "ability": "Multishot",
+   "hero": "Drow Ranger",
+   "pos1": -0.33,
+   "mid": -2.859,
+   "offlane": -1.462,
+   "support": -0.392,
+   "raw": {
+    "pos1": -0.083,
+    "mid": -6.31,
+    "offlane": 4.5,
+    "support": -0.063
+   }
+  },
+  "drow_ranger_wave_of_silence": {
+   "ability": "Gust",
+   "hero": "Drow Ranger",
+   "pos1": 0.094,
+   "mid": -2.385,
+   "offlane": -1.124,
+   "support": 0.255,
+   "raw": {
+    "pos1": 0.0,
+    "mid": -5.25,
+    "offlane": 9.2,
+    "support": 0.054
+   }
+  },
+  "earth_spirit_boulder_smash": {
+   "ability": "Boulder Smash",
+   "hero": "Earth Spirit",
+   "pos1": -1.179,
+   "mid": -0.785,
+   "offlane": 2.3,
+   "support": 0.432,
+   "raw": {
+    "pos1": -0.249,
+    "mid": -1.67,
+    "offlane": 56.7,
+    "support": 0.086
+   }
+  },
+  "earth_spirit_geomagnetic_grip": {
+   "ability": "Geomagnetic Grip",
+   "hero": "Earth Spirit",
+   "pos1": -1.777,
+   "mid": -1.393,
+   "offlane": 0.887,
+   "support": 0.581,
+   "raw": {
+    "pos1": -0.366,
+    "mid": -3.03,
+    "offlane": 37.1,
+    "support": 0.113
+   }
+  },
+  "earth_spirit_magnetize": {
+   "ability": "Magnetize",
+   "hero": "Earth Spirit",
+   "pos1": 0.273,
+   "mid": 0.073,
+   "offlane": 1.846,
+   "support": -0.309,
+   "raw": {
+    "pos1": 0.035,
+    "mid": 0.25,
+    "offlane": 50.4,
+    "support": -0.048
+   }
+  },
+  "earth_spirit_rolling_boulder": {
+   "ability": "Rolling Boulder",
+   "hero": "Earth Spirit",
+   "pos1": -0.351,
+   "mid": 0.073,
+   "offlane": 2.552,
+   "support": 0.028,
+   "raw": {
+    "pos1": -0.087,
+    "mid": 0.25,
+    "offlane": 60.2,
+    "support": 0.013
+   }
+  },
+  "earthshaker_aftershock": {
+   "ability": "Aftershock",
+   "hero": "Earthshaker",
+   "pos1": -0.928,
+   "mid": 1.495,
+   "offlane": 2.076,
+   "support": -0.126,
+   "raw": {
+    "pos1": -0.2,
+    "mid": 3.43,
+    "offlane": 53.6,
+    "support": -0.015
+   }
+  },
+  "earthshaker_echo_slam": {
+   "ability": "Echo Slam",
+   "hero": "Earthshaker",
+   "pos1": -0.448,
+   "mid": -0.423,
+   "offlane": 2.184,
+   "support": 0.432,
+   "raw": {
+    "pos1": -0.106,
+    "mid": -0.86,
+    "offlane": 55.1,
+    "support": 0.086
+   }
+  },
+  "earthshaker_enchant_totem": {
+   "ability": "Enchant Totem",
+   "hero": "Earthshaker",
+   "pos1": 0.278,
+   "mid": 0.458,
+   "offlane": 1.723,
+   "support": -2.01,
+   "raw": {
+    "pos1": 0.036,
+    "mid": 1.11,
+    "offlane": 48.7,
+    "support": -0.356
+   }
+  },
+  "earthshaker_fissure": {
+   "ability": "Fissure",
+   "hero": "Earthshaker",
+   "pos1": -1.061,
+   "mid": -0.369,
+   "offlane": 0.606,
+   "support": 2.05,
+   "raw": {
+    "pos1": -0.226,
+    "mid": -0.74,
+    "offlane": 33.2,
+    "support": 0.379
+   }
+  },
+  "elder_titan_ancestral_spirit": {
+   "ability": "Astral Spirit",
+   "hero": "Elder Titan",
+   "pos1": 0.652,
+   "mid": 0.198,
+   "offlane": 0.844,
+   "support": -1.099,
+   "raw": {
+    "pos1": 0.109,
+    "mid": 0.53,
+    "offlane": 36.5,
+    "support": -0.191
+   }
+  },
+  "elder_titan_earth_splitter": {
+   "ability": "Earth Splitter",
+   "hero": "Elder Titan",
+   "pos1": -0.724,
+   "mid": -0.472,
+   "offlane": 0.512,
+   "support": 0.525,
+   "raw": {
+    "pos1": -0.16,
+    "mid": -0.97,
+    "offlane": 31.9,
+    "support": 0.103
+   }
+  },
+  "elder_titan_echo_stomp": {
+   "ability": "Echo Stomp",
+   "hero": "Elder Titan",
+   "pos1": -1.527,
+   "mid": -1.491,
+   "offlane": 1.579,
+   "support": 0.702,
+   "raw": {
+    "pos1": -0.317,
+    "mid": -3.25,
+    "offlane": 46.7,
+    "support": 0.135
+   }
+  },
+  "elder_titan_natural_order": {
+   "ability": "Natural Order",
+   "hero": "Elder Titan",
+   "pos1": 1.322,
+   "mid": 0.909,
+   "offlane": 1.665,
+   "support": -1.264,
+   "raw": {
+    "pos1": 0.24,
+    "mid": 2.12,
+    "offlane": 47.9,
+    "support": -0.221
+   }
+  },
+  "ember_spirit_fire_remnant": {
+   "ability": "Fire Remnant",
+   "hero": "Ember Spirit",
+   "pos1": 0.401,
+   "mid": 1.62,
+   "offlane": -0.432,
+   "support": -0.668,
+   "raw": {
+    "pos1": 0.06,
+    "mid": 3.71,
+    "offlane": 18.8,
+    "support": -0.113
+   }
+  },
+  "ember_spirit_flame_guard": {
+   "ability": "Flame Guard",
+   "hero": "Ember Spirit",
+   "pos1": -0.928,
+   "mid": 1.271,
+   "offlane": 0.13,
+   "support": -0.259,
+   "raw": {
+    "pos1": -0.2,
+    "mid": 2.93,
+    "offlane": 26.6,
+    "support": -0.039
+   }
+  },
+  "ember_spirit_searing_chains": {
+   "ability": "Searing Chains",
+   "hero": "Ember Spirit",
+   "pos1": -0.928,
+   "mid": -1.044,
+   "offlane": 0.138,
+   "support": 0.365,
+   "raw": {
+    "pos1": -0.2,
+    "mid": -2.25,
+    "offlane": 26.7,
+    "support": 0.074
+   }
+  },
+  "ember_spirit_sleight_of_fist": {
+   "ability": "Sleight of Fist",
+   "hero": "Ember Spirit",
+   "pos1": 1.265,
+   "mid": -0.199,
+   "offlane": -0.172,
+   "support": -0.662,
+   "raw": {
+    "pos1": 0.229,
+    "mid": -0.36,
+    "offlane": 22.4,
+    "support": -0.112
+   }
+  },
+  "enchantress_enchant": {
+   "ability": "Enchant",
+   "hero": "Enchantress",
+   "pos1": -0.069,
+   "mid": 0.413,
+   "offlane": -0.598,
+   "support": -0.751,
+   "raw": {
+    "pos1": -0.032,
+    "mid": 1.01,
+    "offlane": 16.5,
+    "support": -0.128
+   }
+  },
+  "enchantress_impetus": {
+   "ability": "Impetus",
+   "hero": "Enchantress",
+   "pos1": 0.094,
+   "mid": 1.508,
+   "offlane": -1.542,
+   "support": -0.154,
+   "raw": {
+    "pos1": 0.0,
+    "mid": 3.46,
+    "offlane": 3.4,
+    "support": -0.02
+   }
+  },
+  "enchantress_natures_attendants": {
+   "ability": "Nature's Attendants",
+   "hero": "Enchantress",
+   "pos1": -0.427,
+   "mid": 0.042,
+   "offlane": -0.107,
+   "support": 0.304,
+   "raw": {
+    "pos1": -0.102,
+    "mid": 0.18,
+    "offlane": 23.3,
+    "support": 0.063
+   }
+  },
+  "enchantress_untouchable": {
+   "ability": "Untouchable",
+   "hero": "Enchantress",
+   "pos1": 0.176,
+   "mid": -0.083,
+   "offlane": -0.021,
+   "support": -0.032,
+   "raw": {
+    "pos1": 0.016,
+    "mid": -0.1,
+    "offlane": 24.5,
+    "support": 0.002
+   }
+  },
+  "enigma_black_hole": {
+   "ability": "Black Hole",
+   "hero": "Enigma",
+   "pos1": -1.092,
+   "mid": -0.409,
+   "offlane": 1.19,
+   "support": 1.636,
+   "raw": {
+    "pos1": -0.232,
+    "mid": -0.83,
+    "offlane": 41.3,
+    "support": 0.304
+   }
+  },
+  "enigma_demonic_conversion": {
+   "ability": "Demonic Summoning",
+   "hero": "Enigma",
+   "pos1": 0.897,
+   "mid": -0.427,
+   "offlane": 0.844,
+   "support": -0.513,
+   "raw": {
+    "pos1": 0.157,
+    "mid": -0.87,
+    "offlane": 36.5,
+    "support": -0.085
+   }
+  },
+  "enigma_malefice": {
+   "ability": "Malefice",
+   "hero": "Enigma",
+   "pos1": -0.478,
+   "mid": 0.02,
+   "offlane": -0.504,
+   "support": 0.481,
+   "raw": {
+    "pos1": -0.112,
+    "mid": 0.13,
+    "offlane": 17.8,
+    "support": 0.095
+   }
+  },
+  "enigma_midnight_pulse": {
+   "ability": "Midnight Pulse",
+   "hero": "Enigma",
+   "pos1": -0.315,
+   "mid": 0.628,
+   "offlane": -0.446,
+   "support": 1.752,
+   "raw": {
+    "pos1": -0.08,
+    "mid": 1.49,
+    "offlane": 18.6,
+    "support": 0.325
+   }
+  },
+  "faceless_void_chronosphere": {
+   "ability": "Chronosphere",
+   "hero": "Faceless Void",
+   "pos1": 0.595,
+   "mid": -0.785,
+   "offlane": -0.59,
+   "support": -0.276,
+   "raw": {
+    "pos1": 0.098,
+    "mid": -1.67,
+    "offlane": 16.6,
+    "support": -0.042
+   }
+  },
+  "faceless_void_time_dilation": {
+   "ability": "Time Dilation",
+   "hero": "Faceless Void",
+   "pos1": 0.064,
+   "mid": -0.682,
+   "offlane": -0.057,
+   "support": 0.188,
+   "raw": {
+    "pos1": -0.006,
+    "mid": -1.44,
+    "offlane": 24.0,
+    "support": 0.042
+   }
+  },
+  "faceless_void_time_lock": {
+   "ability": "Time Lock",
+   "hero": "Faceless Void",
+   "pos1": 0.974,
+   "mid": -0.597,
+   "offlane": -1.059,
+   "support": -1.419,
+   "raw": {
+    "pos1": 0.172,
+    "mid": -1.25,
+    "offlane": 10.1,
+    "support": -0.249
+   }
+  },
+  "faceless_void_time_walk": {
+   "ability": "Time Walk",
+   "hero": "Faceless Void",
+   "pos1": 0.161,
+   "mid": 0.507,
+   "offlane": 0.195,
+   "support": 0.481,
+   "raw": {
+    "pos1": 0.013,
+    "mid": 1.22,
+    "offlane": 27.5,
+    "support": 0.095
+   }
+  },
+  "furion_force_of_nature": {
+   "ability": "Nature's Call",
+   "hero": "Nature's Prophet",
+   "pos1": 0.094,
+   "mid": -1.223,
+   "offlane": -0.807,
+   "support": -0.143,
+   "raw": {
+    "pos1": 0.0,
+    "mid": -2.65,
+    "offlane": 13.6,
+    "support": -0.018
+   }
+  },
+  "furion_sprout": {
+   "ability": "Sprout",
+   "hero": "Nature's Prophet",
+   "pos1": -0.724,
+   "mid": 0.131,
+   "offlane": -0.893,
+   "support": 0.912,
+   "raw": {
+    "pos1": -0.16,
+    "mid": 0.38,
+    "offlane": 12.4,
+    "support": 0.173
+   }
+  },
+  "furion_teleportation": {
+   "ability": "Teleportation",
+   "hero": "Nature's Prophet",
+   "pos1": 0.534,
+   "mid": 0.829,
+   "offlane": -0.432,
+   "support": 0.2,
+   "raw": {
+    "pos1": 0.086,
+    "mid": 1.94,
+    "offlane": 18.8,
+    "support": 0.044
+   }
+  },
+  "furion_wrath_of_nature": {
+   "ability": "Wrath of Nature",
+   "hero": "Nature's Prophet",
+   "pos1": 2.891,
+   "mid": -0.275,
+   "offlane": -0.446,
+   "support": 1.691,
+   "raw": {
+    "pos1": 0.547,
+    "mid": -0.53,
+    "offlane": 18.6,
+    "support": 0.314
+   }
+  },
+  "grimstroke_dark_artistry": {
+   "ability": "Stroke of Fate",
+   "hero": "Grimstroke",
+   "pos1": 0.478,
+   "mid": 1.231,
+   "offlane": -0.943,
+   "support": 0.293,
+   "raw": {
+    "pos1": 0.075,
+    "mid": 2.84,
+    "offlane": 11.7,
+    "support": 0.061
+   }
+  },
+  "grimstroke_ink_creature": {
+   "ability": "Phantom's Embrace",
+   "hero": "Grimstroke",
+   "pos1": -1.302,
+   "mid": 0.552,
+   "offlane": -0.619,
+   "support": 1.117,
+   "raw": {
+    "pos1": -0.273,
+    "mid": 1.32,
+    "offlane": 16.2,
+    "support": 0.21
+   }
+  },
+  "grimstroke_soul_chain": {
+   "ability": "Soulbind",
+   "hero": "Grimstroke",
+   "pos1": -1.143,
+   "mid": -0.257,
+   "offlane": -0.554,
+   "support": 1.547,
+   "raw": {
+    "pos1": -0.242,
+    "mid": -0.49,
+    "offlane": 17.1,
+    "support": 0.288
+   }
+  },
+  "grimstroke_spirit_walk": {
+   "ability": "Ink Swell",
+   "hero": "Grimstroke",
+   "pos1": -0.586,
+   "mid": -0.025,
+   "offlane": 0.541,
+   "support": 0.581,
+   "raw": {
+    "pos1": -0.133,
+    "mid": 0.03,
+    "offlane": 32.3,
+    "support": 0.113
+   }
+  },
+  "gyrocopter_call_down": {
+   "ability": "Call Down",
+   "hero": "Gyrocopter",
+   "pos1": -0.714,
+   "mid": -1.428,
+   "offlane": -0.648,
+   "support": 0.387,
+   "raw": {
+    "pos1": -0.158,
+    "mid": -3.11,
+    "offlane": 15.8,
+    "support": 0.078
+   }
+  },
+  "gyrocopter_flak_cannon": {
+   "ability": "Flak Cannon",
+   "hero": "Gyrocopter",
+   "pos1": 2.032,
+   "mid": -0.999,
+   "offlane": -1.261,
+   "support": -0.414,
+   "raw": {
+    "pos1": 0.379,
+    "mid": -2.15,
+    "offlane": 7.3,
+    "support": -0.067
+   }
+  },
+  "gyrocopter_homing_missile": {
+   "ability": "Homing Missile",
+   "hero": "Gyrocopter",
+   "pos1": -1.542,
+   "mid": -0.383,
+   "offlane": -0.302,
+   "support": 0.84,
+   "raw": {
+    "pos1": -0.32,
+    "mid": -0.77,
+    "offlane": 20.6,
+    "support": 0.16
+   }
+  },
+  "gyrocopter_rocket_barrage": {
+   "ability": "Rocket Barrage",
+   "hero": "Gyrocopter",
+   "pos1": -1.0,
+   "mid": -0.137,
+   "offlane": 0.238,
+   "support": 0.3,
+   "raw": {
+    "pos1": -0.214,
+    "mid": -0.22,
+    "offlane": 28.1,
+    "support": 0.062
+   }
+  },
+  "hoodwink_acorn_shot": {
+   "ability": "Acorn Shot",
+   "hero": "Hoodwink",
+   "pos1": 1.214,
+   "mid": 1.62,
+   "offlane": -0.936,
+   "support": -0.684,
+   "raw": {
+    "pos1": 0.219,
+    "mid": 3.71,
+    "offlane": 11.8,
+    "support": -0.116
+   }
+  },
+  "hoodwink_bushwhack": {
+   "ability": "Bushwhack",
+   "hero": "Hoodwink",
+   "pos1": -1.394,
+   "mid": -1.209,
+   "offlane": -0.626,
+   "support": 1.078,
+   "raw": {
+    "pos1": -0.291,
+    "mid": -2.62,
+    "offlane": 16.1,
+    "support": 0.203
+   }
+  },
+  "hoodwink_scurry": {
+   "ability": "Scurry",
+   "hero": "Hoodwink",
+   "pos1": 0.365,
+   "mid": -1.312,
+   "offlane": -0.936,
+   "support": -0.706,
+   "raw": {
+    "pos1": 0.053,
+    "mid": -2.85,
+    "offlane": 11.8,
+    "support": -0.12
+   }
+  },
+  "hoodwink_sharpshooter": {
+   "ability": "Sharpshooter",
+   "hero": "Hoodwink",
+   "pos1": -0.77,
+   "mid": -0.704,
+   "offlane": -0.698,
+   "support": 0.034,
+   "raw": {
+    "pos1": -0.169,
+    "mid": -1.49,
+    "offlane": 15.1,
+    "support": 0.014
+   }
+  },
+  "huskar_berserkers_blood": {
+   "ability": "Berserker's Blood",
+   "hero": "Huskar",
+   "pos1": 1.664,
+   "mid": 0.914,
+   "offlane": 1.86,
+   "support": -1.878,
+   "raw": {
+    "pos1": 0.307,
+    "mid": 2.13,
+    "offlane": 50.6,
+    "support": -0.332
+   }
+  },
+  "huskar_burning_spear": {
+   "ability": "Burning Spear",
+   "hero": "Huskar",
+   "pos1": 0.365,
+   "mid": 0.677,
+   "offlane": -0.007,
+   "support": -1.933,
+   "raw": {
+    "pos1": 0.053,
+    "mid": 1.6,
+    "offlane": 24.7,
+    "support": -0.342
+   }
+  },
+  "huskar_inner_fire": {
+   "ability": "Inner Fire",
+   "hero": "Huskar",
+   "pos1": -0.192,
+   "mid": -0.758,
+   "offlane": 1.154,
+   "support": 0.106,
+   "raw": {
+    "pos1": -0.056,
+    "mid": -1.61,
+    "offlane": 40.8,
+    "support": 0.027
+   }
+  },
+  "huskar_life_break": {
+   "ability": "Life Break",
+   "hero": "Huskar",
+   "pos1": 0.248,
+   "mid": -0.213,
+   "offlane": 1.867,
+   "support": -0.999,
+   "raw": {
+    "pos1": 0.03,
+    "mid": -0.39,
+    "offlane": 50.7,
+    "support": -0.173
+   }
+  },
+  "invoker_alacrity_ad": {
+   "ability": "Alacrity (AD)",
+   "hero": "Invoker",
+   "pos1": 1.383,
+   "mid": 0.391,
+   "offlane": -0.684,
+   "support": -1.585,
+   "raw": {
+    "pos1": 0.252,
+    "mid": 0.96,
+    "offlane": 15.3,
+    "support": -0.279
+   }
+  },
+  "invoker_chaos_meteor_ad": {
+   "ability": "Chaos Meteor (AD)",
+   "hero": "Invoker",
+   "pos1": -0.049,
+   "mid": 1.066,
+   "offlane": -0.785,
+   "support": 0.078,
+   "raw": {
+    "pos1": -0.028,
+    "mid": 2.47,
+    "offlane": 13.9,
+    "support": 0.022
+   }
+  },
+  "invoker_cold_snap_ad": {
+   "ability": "Cold Snap (AD)",
+   "hero": "Invoker",
+   "pos1": 0.023,
+   "mid": 1.173,
+   "offlane": -0.662,
+   "support": -0.226,
+   "raw": {
+    "pos1": -0.014,
+    "mid": 2.71,
+    "offlane": 15.6,
+    "support": -0.033
+   }
+  },
+  "invoker_deafening_blast_ad": {
+   "ability": "Deafening Blast",
+   "hero": "Invoker",
+   "pos1": -0.238,
+   "mid": 0.346,
+   "offlane": -0.807,
+   "support": 0.222,
+   "raw": {
+    "pos1": -0.065,
+    "mid": 0.86,
+    "offlane": 13.6,
+    "support": 0.048
+   }
+  },
+  "invoker_emp_ad": {
+   "ability": "E.M.P. (AD)",
+   "hero": "Invoker",
+   "pos1": -0.458,
+   "mid": 0.413,
+   "offlane": -0.576,
+   "support": 1.299,
+   "raw": {
+    "pos1": -0.108,
+    "mid": 1.01,
+    "offlane": 16.8,
+    "support": 0.243
+   }
+  },
+  "invoker_forge_spirit_ad": {
+   "ability": "Forge Spirit (AD)",
+   "hero": "Invoker",
+   "pos1": -0.928,
+   "mid": 1.441,
+   "offlane": -0.54,
+   "support": -0.519,
+   "raw": {
+    "pos1": -0.2,
+    "mid": 3.31,
+    "offlane": 17.3,
+    "support": -0.086
+   }
+  },
+  "invoker_ghost_walk_ad": {
+   "ability": "Ghost Walk (AD)",
+   "hero": "Invoker",
+   "pos1": -0.141,
+   "mid": 0.274,
+   "offlane": -0.345,
+   "support": 0.244,
+   "raw": {
+    "pos1": -0.046,
+    "mid": 0.7,
+    "offlane": 20.0,
+    "support": 0.052
+   }
+  },
+  "invoker_ice_wall_ad": {
+   "ability": "Ice Wall (AD)",
+   "hero": "Invoker",
+   "pos1": -0.054,
+   "mid": 0.167,
+   "offlane": -0.338,
+   "support": 0.813,
+   "raw": {
+    "pos1": -0.029,
+    "mid": 0.46,
+    "offlane": 20.1,
+    "support": 0.155
+   }
+  },
+  "invoker_sun_strike_ad": {
+   "ability": "Sun Strike (AD)",
+   "hero": "Invoker",
+   "pos1": -0.714,
+   "mid": 1.45,
+   "offlane": -0.489,
+   "support": -0.209,
+   "raw": {
+    "pos1": -0.158,
+    "mid": 3.33,
+    "offlane": 18.0,
+    "support": -0.03
+   }
+  },
+  "invoker_tornado_ad": {
+   "ability": "Tornado (AD)",
+   "hero": "Invoker",
+   "pos1": 0.202,
+   "mid": 0.645,
+   "offlane": -0.713,
+   "support": 1.023,
+   "raw": {
+    "pos1": 0.021,
+    "mid": 1.53,
+    "offlane": 14.9,
+    "support": 0.193
+   }
+  },
+  "jakiro_dual_breath": {
+   "ability": "Dual Breath",
+   "hero": "Jakiro",
+   "pos1": -0.591,
+   "mid": 0.485,
+   "offlane": -0.771,
+   "support": 0.735,
+   "raw": {
+    "pos1": -0.134,
+    "mid": 1.17,
+    "offlane": 14.1,
+    "support": 0.141
+   }
+  },
+  "jakiro_ice_path": {
+   "ability": "Ice Path",
+   "hero": "Jakiro",
+   "pos1": -1.593,
+   "mid": -0.615,
+   "offlane": -0.511,
+   "support": 2.348,
+   "raw": {
+    "pos1": -0.33,
+    "mid": -1.29,
+    "offlane": 17.7,
+    "support": 0.433
+   }
+  },
+  "jakiro_liquid_fire": {
+   "ability": "Liquid Fire",
+   "hero": "Jakiro",
+   "pos1": -0.095,
+   "mid": -0.065,
+   "offlane": -0.828,
+   "support": 0.122,
+   "raw": {
+    "pos1": -0.037,
+    "mid": -0.06,
+    "offlane": 13.3,
+    "support": 0.03
+   }
+  },
+  "jakiro_liquid_ice": {
+   "ability": "Liquid Frost",
+   "hero": "Jakiro",
+   "pos1": -0.095,
+   "mid": 0.735,
+   "offlane": -0.814,
+   "support": -0.988,
+   "raw": {
+    "pos1": -0.037,
+    "mid": 1.73,
+    "offlane": 13.5,
+    "support": -0.171
+   }
+  },
+  "jakiro_macropyre": {
+   "ability": "Macropyre",
+   "hero": "Jakiro",
+   "pos1": -0.586,
+   "mid": 0.176,
+   "offlane": -0.482,
+   "support": 1.001,
+   "raw": {
+    "pos1": -0.133,
+    "mid": 0.48,
+    "offlane": 18.1,
+    "support": 0.189
+   }
+  },
+  "juggernaut_blade_dance": {
+   "ability": "Blade Dance",
+   "hero": "Juggernaut",
+   "pos1": 0.948,
+   "mid": -0.932,
+   "offlane": -0.727,
+   "support": -1.358,
+   "raw": {
+    "pos1": 0.167,
+    "mid": -2.0,
+    "offlane": 14.7,
+    "support": -0.238
+   }
+  },
+  "juggernaut_blade_fury": {
+   "ability": "Blade Fury",
+   "hero": "Juggernaut",
+   "pos1": 0.278,
+   "mid": 0.806,
+   "offlane": 0.786,
+   "support": -0.06,
+   "raw": {
+    "pos1": 0.036,
+    "mid": 1.89,
+    "offlane": 35.7,
+    "support": -0.003
+   }
+  },
+  "juggernaut_healing_ward": {
+   "ability": "Healing Ward",
+   "hero": "Juggernaut",
+   "pos1": -0.816,
+   "mid": -1.871,
+   "offlane": -0.381,
+   "support": 0.757,
+   "raw": {
+    "pos1": -0.178,
+    "mid": -4.1,
+    "offlane": 19.5,
+    "support": 0.145
+   }
+  },
+  "juggernaut_omni_slash": {
+   "ability": "Omnislash",
+   "hero": "Juggernaut",
+   "pos1": 0.795,
+   "mid": -0.919,
+   "offlane": -0.749,
+   "support": -1.27,
+   "raw": {
+    "pos1": 0.137,
+    "mid": -1.97,
+    "offlane": 14.4,
+    "support": -0.222
+   }
+  },
+  "keeper_of_the_light_blinding_light": {
+   "ability": "Blinding Light",
+   "hero": "Keeper of the Light",
+   "pos1": -0.908,
+   "mid": -0.324,
+   "offlane": -0.749,
+   "support": 0.277,
+   "raw": {
+    "pos1": -0.196,
+    "mid": -0.64,
+    "offlane": 14.4,
+    "support": 0.058
+   }
+  },
+  "keeper_of_the_light_chakra_magic": {
+   "ability": "Chakra Magic",
+   "hero": "Keeper of the Light",
+   "pos1": -0.31,
+   "mid": 0.797,
+   "offlane": -0.554,
+   "support": 0.824,
+   "raw": {
+    "pos1": -0.079,
+    "mid": 1.87,
+    "offlane": 17.1,
+    "support": 0.157
+   }
+  },
+  "keeper_of_the_light_illuminate": {
+   "ability": "Illuminate",
+   "hero": "Keeper of the Light",
+   "pos1": 0.376,
+   "mid": 0.896,
+   "offlane": -0.792,
+   "support": 0.111,
+   "raw": {
+    "pos1": 0.055,
+    "mid": 2.09,
+    "offlane": 13.8,
+    "support": 0.028
+   }
+  },
+  "keeper_of_the_light_spirit_form": {
+   "ability": "Spirit Form",
+   "hero": "Keeper of the Light",
+   "pos1": -0.698,
+   "mid": -0.092,
+   "offlane": -0.619,
+   "support": 0.708,
+   "raw": {
+    "pos1": -0.155,
+    "mid": -0.12,
+    "offlane": 16.2,
+    "support": 0.136
+   }
+  },
+  "kez_echo_slash": {
+   "ability": "Echo Slash",
+   "hero": "Kez",
+   "pos1": 1.005,
+   "mid": -0.597,
+   "offlane": -0.086,
+   "support": -1.104,
+   "raw": {
+    "pos1": 0.178,
+    "mid": -1.25,
+    "offlane": 23.6,
+    "support": -0.192
+   }
+  },
+  "kez_falcon_rush_ad": {
+   "ability": "Falcon Rush",
+   "hero": "Kez",
+   "pos1": 0.35,
+   "mid": -0.816,
+   "offlane": -0.662,
+   "support": -1.695,
+   "raw": {
+    "pos1": 0.05,
+    "mid": -1.74,
+    "offlane": 15.6,
+    "support": -0.299
+   }
+  },
+  "kez_grappling_claw": {
+   "ability": "Grappling Claw",
+   "hero": "Kez",
+   "pos1": 0.202,
+   "mid": -0.669,
+   "offlane": 0.145,
+   "support": -0.762,
+   "raw": {
+    "pos1": 0.021,
+    "mid": -1.41,
+    "offlane": 26.8,
+    "support": -0.13
+   }
+  },
+  "kez_kazurai_katana": {
+   "ability": "Kazurai Katana",
+   "hero": "Kez",
+   "pos1": 1.245,
+   "mid": -0.061,
+   "offlane": -0.871,
+   "support": -1.414,
+   "raw": {
+    "pos1": 0.225,
+    "mid": -0.05,
+    "offlane": 12.7,
+    "support": -0.248
+   }
+  },
+  "kez_raptor_dance": {
+   "ability": "Raptor Dance",
+   "hero": "Kez",
+   "pos1": 0.309,
+   "mid": -1.04,
+   "offlane": -0.014,
+   "support": -0.679,
+   "raw": {
+    "pos1": 0.042,
+    "mid": -2.24,
+    "offlane": 24.6,
+    "support": -0.115
+   }
+  },
+  "kez_ravens_veil_ad": {
+   "ability": "Ravens Veil",
+   "hero": "Kez",
+   "pos1": 0.611,
+   "mid": -0.642,
+   "offlane": -0.727,
+   "support": -0.546,
+   "raw": {
+    "pos1": 0.101,
+    "mid": -1.35,
+    "offlane": 14.7,
+    "support": -0.091
+   }
+  },
+  "kez_shodo_sai_ad": {
+   "ability": "Shodo Sai",
+   "hero": "Kez",
+   "pos1": 0.611,
+   "mid": -1.08,
+   "offlane": -0.85,
+   "support": -1.066,
+   "raw": {
+    "pos1": 0.101,
+    "mid": -2.33,
+    "offlane": 13.0,
+    "support": -0.185
+   }
+  },
+  "kez_talon_toss_ad": {
+   "ability": "Talon Toss",
+   "hero": "Kez",
+   "pos1": -0.811,
+   "mid": -0.897,
+   "offlane": -0.396,
+   "support": -0.005,
+   "raw": {
+    "pos1": -0.177,
+    "mid": -1.92,
+    "offlane": 19.3,
+    "support": 0.007
+   }
+  },
+  "kunkka_ghostship": {
+   "ability": "Ghostship",
+   "hero": "Kunkka",
+   "pos1": -0.611,
+   "mid": -0.678,
+   "offlane": 0.938,
+   "support": 0.807,
+   "raw": {
+    "pos1": -0.138,
+    "mid": -1.43,
+    "offlane": 37.8,
+    "support": 0.154
+   }
+  },
+  "kunkka_tidebringer": {
+   "ability": "Tidebringer",
+   "hero": "Kunkka",
+   "pos1": 0.401,
+   "mid": 1.62,
+   "offlane": 3.15,
+   "support": -1.485,
+   "raw": {
+    "pos1": 0.06,
+    "mid": 3.71,
+    "offlane": 68.5,
+    "support": -0.261
+   }
+  },
+  "kunkka_torrent": {
+   "ability": "Torrent",
+   "hero": "Kunkka",
+   "pos1": -1.184,
+   "mid": -0.19,
+   "offlane": 0.707,
+   "support": 1.603,
+   "raw": {
+    "pos1": -0.25,
+    "mid": -0.34,
+    "offlane": 34.6,
+    "support": 0.298
+   }
+  },
+  "kunkka_x_marks_the_spot": {
+   "ability": "X Marks the Spot",
+   "hero": "Kunkka",
+   "pos1": -1.036,
+   "mid": -1.147,
+   "offlane": 0.829,
+   "support": 0.57,
+   "raw": {
+    "pos1": -0.221,
+    "mid": -2.48,
+    "offlane": 36.3,
+    "support": 0.111
+   }
+  },
+  "largo_amphibian_rhapsody": {
+   "ability": "Amphibian Rhapsody",
+   "hero": "Largo",
+   "pos1": -2.11,
+   "mid": -1.996,
+   "offlane": 2.019,
+   "support": 1.719,
+   "raw": {
+    "pos1": -0.431,
+    "mid": -4.38,
+    "offlane": 52.8,
+    "support": 0.319
+   }
+  },
+  "largo_catchy_lick": {
+   "ability": "Catchy Lick",
+   "hero": "Largo",
+   "pos1": -0.985,
+   "mid": 0.856,
+   "offlane": 0.102,
+   "support": 0.327,
+   "raw": {
+    "pos1": -0.211,
+    "mid": 2.0,
+    "offlane": 26.2,
+    "support": 0.067
+   }
+  },
+  "largo_croak_of_genius": {
+   "ability": "Croak of Genius",
+   "hero": "Largo",
+   "pos1": 0.181,
+   "mid": 0.923,
+   "offlane": 0.829,
+   "support": -0.248,
+   "raw": {
+    "pos1": 0.017,
+    "mid": 2.15,
+    "offlane": 36.3,
+    "support": -0.037
+   }
+  },
+  "largo_frogstomp": {
+   "ability": "Frogstomp",
+   "hero": "Largo",
+   "pos1": -0.432,
+   "mid": -0.079,
+   "offlane": 0.844,
+   "support": 1.249,
+   "raw": {
+    "pos1": -0.103,
+    "mid": -0.09,
+    "offlane": 36.5,
+    "support": 0.234
+   }
+  },
+  "legion_commander_duel": {
+   "ability": "Duel",
+   "hero": "Legion Commander",
+   "pos1": 0.468,
+   "mid": 0.315,
+   "offlane": 2.487,
+   "support": -1.016,
+   "raw": {
+    "pos1": 0.073,
+    "mid": 0.79,
+    "offlane": 59.3,
+    "support": -0.176
+   }
+  },
+  "legion_commander_moment_of_courage": {
+   "ability": "Moment of Courage",
+   "hero": "Legion Commander",
+   "pos1": 1.015,
+   "mid": 0.002,
+   "offlane": 1.529,
+   "support": -1.242,
+   "raw": {
+    "pos1": 0.18,
+    "mid": 0.09,
+    "offlane": 46.0,
+    "support": -0.217
+   }
+  },
+  "legion_commander_overwhelming_odds": {
+   "ability": "Overwhelming Odds",
+   "hero": "Legion Commander",
+   "pos1": 0.672,
+   "mid": 0.346,
+   "offlane": 1.536,
+   "support": -0.927,
+   "raw": {
+    "pos1": 0.113,
+    "mid": 0.86,
+    "offlane": 46.1,
+    "support": -0.16
+   }
+  },
+  "legion_commander_press_the_attack": {
+   "ability": "Press The Attack",
+   "hero": "Legion Commander",
+   "pos1": -0.964,
+   "mid": -0.892,
+   "offlane": 0.887,
+   "support": 1.21,
+   "raw": {
+    "pos1": -0.207,
+    "mid": -1.91,
+    "offlane": 37.1,
+    "support": 0.227
+   }
+  },
+  "leshrac_diabolic_edict": {
+   "ability": "Diabolic Edict",
+   "hero": "Leshrac",
+   "pos1": -0.166,
+   "mid": 0.377,
+   "offlane": 0.058,
+   "support": -0.718,
+   "raw": {
+    "pos1": -0.051,
+    "mid": 0.93,
+    "offlane": 25.6,
+    "support": -0.122
+   }
+  },
+  "leshrac_lightning_storm": {
+   "ability": "Lightning Storm",
+   "hero": "Leshrac",
+   "pos1": 0.289,
+   "mid": 1.088,
+   "offlane": -0.778,
+   "support": -0.248,
+   "raw": {
+    "pos1": 0.038,
+    "mid": 2.52,
+    "offlane": 14.0,
+    "support": -0.037
+   }
+  },
+  "leshrac_pulse_nova": {
+   "ability": "Pulse Nova",
+   "hero": "Leshrac",
+   "pos1": 1.726,
+   "mid": 2.161,
+   "offlane": -0.093,
+   "support": -1.115,
+   "raw": {
+    "pos1": 0.319,
+    "mid": 4.92,
+    "offlane": 23.5,
+    "support": -0.194
+   }
+  },
+  "leshrac_split_earth": {
+   "ability": "Split Earth",
+   "hero": "Leshrac",
+   "pos1": -1.235,
+   "mid": -0.338,
+   "offlane": -0.583,
+   "support": 1.371,
+   "raw": {
+    "pos1": -0.26,
+    "mid": -0.67,
+    "offlane": 16.7,
+    "support": 0.256
+   }
+  },
+  "lich_chain_frost": {
+   "ability": "Chain Frost",
+   "hero": "Lich",
+   "pos1": -0.069,
+   "mid": 1.325,
+   "offlane": -0.59,
+   "support": 0.316,
+   "raw": {
+    "pos1": -0.032,
+    "mid": 3.05,
+    "offlane": 16.6,
+    "support": 0.065
+   }
+  },
+  "lich_frost_nova": {
+   "ability": "Frost Blast",
+   "hero": "Lich",
+   "pos1": -0.08,
+   "mid": 1.611,
+   "offlane": -0.929,
+   "support": 0.233,
+   "raw": {
+    "pos1": -0.034,
+    "mid": 3.69,
+    "offlane": 11.9,
+    "support": 0.05
+   }
+  },
+  "lich_frost_shield": {
+   "ability": "Frost Shield",
+   "hero": "Lich",
+   "pos1": -0.197,
+   "mid": -0.208,
+   "offlane": 0.469,
+   "support": 0.84,
+   "raw": {
+    "pos1": -0.057,
+    "mid": -0.38,
+    "offlane": 31.3,
+    "support": 0.16
+   }
+  },
+  "lich_sinister_gaze": {
+   "ability": "Sinister Gaze",
+   "hero": "Lich",
+   "pos1": -1.128,
+   "mid": -0.307,
+   "offlane": -0.316,
+   "support": 1.813,
+   "raw": {
+    "pos1": -0.239,
+    "mid": -0.6,
+    "offlane": 20.4,
+    "support": 0.336
+   }
+  },
+  "life_stealer_feast": {
+   "ability": "Feast",
+   "hero": "Lifestealer",
+   "pos1": 2.528,
+   "mid": 0.426,
+   "offlane": 0.491,
+   "support": -1.623,
+   "raw": {
+    "pos1": 0.476,
+    "mid": 1.04,
+    "offlane": 31.6,
+    "support": -0.286
+   }
+  },
+  "life_stealer_infest": {
+   "ability": "Infest",
+   "hero": "Lifestealer",
+   "pos1": -0.289,
+   "mid": -0.137,
+   "offlane": 1.168,
+   "support": 0.548,
+   "raw": {
+    "pos1": -0.075,
+    "mid": -0.22,
+    "offlane": 41.0,
+    "support": 0.107
+   }
+  },
+  "life_stealer_open_wounds": {
+   "ability": "Open Wounds",
+   "hero": "Lifestealer",
+   "pos1": -0.34,
+   "mid": -1.214,
+   "offlane": 1.053,
+   "support": -0.601,
+   "raw": {
+    "pos1": -0.085,
+    "mid": -2.63,
+    "offlane": 39.4,
+    "support": -0.101
+   }
+  },
+  "life_stealer_rage": {
+   "ability": "Rage",
+   "hero": "Lifestealer",
+   "pos1": 0.831,
+   "mid": 0.672,
+   "offlane": 0.909,
+   "support": -0.646,
+   "raw": {
+    "pos1": 0.144,
+    "mid": 1.59,
+    "offlane": 37.4,
+    "support": -0.109
+   }
+  },
+  "lina_dragon_slave": {
+   "ability": "Dragon Slave",
+   "hero": "Lina",
+   "pos1": -0.299,
+   "mid": 0.02,
+   "offlane": -1.023,
+   "support": -0.231,
+   "raw": {
+    "pos1": -0.077,
+    "mid": 0.13,
+    "offlane": 10.6,
+    "support": -0.034
+   }
+  },
+  "lina_fiery_soul": {
+   "ability": "Fiery Soul",
+   "hero": "Lina",
+   "pos1": 1.894,
+   "mid": 0.239,
+   "offlane": -0.446,
+   "support": -1.69,
+   "raw": {
+    "pos1": 0.352,
+    "mid": 0.62,
+    "offlane": 18.6,
+    "support": -0.298
+   }
+  },
+  "lina_laguna_blade": {
+   "ability": "Laguna Blade",
+   "hero": "Lina",
+   "pos1": -0.673,
+   "mid": 0.409,
+   "offlane": -0.843,
+   "support": -0.834,
+   "raw": {
+    "pos1": -0.15,
+    "mid": 1.0,
+    "offlane": 13.1,
+    "support": -0.143
+   }
+  },
+  "lina_light_strike_array": {
+   "ability": "Light Strike Array",
+   "hero": "Lina",
+   "pos1": -1.307,
+   "mid": -0.365,
+   "offlane": -0.475,
+   "support": 1.354,
+   "raw": {
+    "pos1": -0.274,
+    "mid": -0.73,
+    "offlane": 18.2,
+    "support": 0.253
+   }
+  },
+  "lion_finger_of_death": {
+   "ability": "Finger of Death",
+   "hero": "Lion",
+   "pos1": 0.508,
+   "mid": 2.0,
+   "offlane": -0.136,
+   "support": -2.552,
+   "raw": {
+    "pos1": 0.081,
+    "mid": 4.56,
+    "offlane": 22.9,
+    "support": -0.454
+   }
+  },
+  "lion_impale": {
+   "ability": "Earth Spike",
+   "hero": "Lion",
+   "pos1": 0.094,
+   "mid": 0.757,
+   "offlane": -0.626,
+   "support": 1.956,
+   "raw": {
+    "pos1": 0.0,
+    "mid": 1.78,
+    "offlane": 16.1,
+    "support": 0.362
+   }
+  },
+  "lion_mana_drain": {
+   "ability": "Mana Drain",
+   "hero": "Lion",
+   "pos1": -1.47,
+   "mid": -0.816,
+   "offlane": -0.324,
+   "support": 0.785,
+   "raw": {
+    "pos1": -0.306,
+    "mid": -1.74,
+    "offlane": 20.3,
+    "support": 0.15
+   }
+  },
+  "lion_voodoo": {
+   "ability": "Hex",
+   "hero": "Lion",
+   "pos1": 0.094,
+   "mid": -0.365,
+   "offlane": -0.59,
+   "support": 0.691,
+   "raw": {
+    "pos1": 0.0,
+    "mid": -0.73,
+    "offlane": 16.6,
+    "support": 0.133
+   }
+  },
+  "lone_druid_entangle": {
+   "ability": "Entangle",
+   "hero": "Lone Druid",
+   "pos1": 0.007,
+   "mid": -0.423,
+   "offlane": -0.936,
+   "support": -0.563,
+   "raw": {
+    "pos1": -0.017,
+    "mid": -0.86,
+    "offlane": 11.8,
+    "support": -0.094
+   }
+  },
+  "lone_druid_savage_roar": {
+   "ability": "Savage Roar",
+   "hero": "Lone Druid",
+   "pos1": -0.161,
+   "mid": -0.396,
+   "offlane": -0.533,
+   "support": -0.231,
+   "raw": {
+    "pos1": -0.05,
+    "mid": -0.8,
+    "offlane": 17.4,
+    "support": -0.034
+   }
+  },
+  "lone_druid_spirit_link": {
+   "ability": "Spirit Link",
+   "hero": "Lone Druid",
+   "pos1": 0.78,
+   "mid": 0.31,
+   "offlane": 0.332,
+   "support": -0.695,
+   "raw": {
+    "pos1": 0.134,
+    "mid": 0.78,
+    "offlane": 29.4,
+    "support": -0.118
+   }
+  },
+  "lone_druid_true_form": {
+   "ability": "True Form",
+   "hero": "Lone Druid",
+   "pos1": 0.902,
+   "mid": 0.306,
+   "offlane": 0.959,
+   "support": -1.06,
+   "raw": {
+    "pos1": 0.158,
+    "mid": 0.77,
+    "offlane": 38.1,
+    "support": -0.184
+   }
+  },
+  "luna_eclipse": {
+   "ability": "Eclipse",
+   "hero": "Luna",
+   "pos1": -1.619,
+   "mid": -1.062,
+   "offlane": -0.562,
+   "support": 0.017,
+   "raw": {
+    "pos1": -0.335,
+    "mid": -2.29,
+    "offlane": 17.0,
+    "support": 0.011
+   }
+  },
+  "luna_lucent_beam": {
+   "ability": "Lucent Beam",
+   "hero": "Luna",
+   "pos1": -1.603,
+   "mid": -0.83,
+   "offlane": -0.598,
+   "support": -0.044,
+   "raw": {
+    "pos1": -0.332,
+    "mid": -1.77,
+    "offlane": 16.5,
+    "support": 0.0
+   }
+  },
+  "luna_lunar_orbit": {
+   "ability": "Lunar Orbit",
+   "hero": "Luna",
+   "pos1": 0.969,
+   "mid": -0.476,
+   "offlane": 0.491,
+   "support": -0.9,
+   "raw": {
+    "pos1": 0.171,
+    "mid": -0.98,
+    "offlane": 31.6,
+    "support": -0.155
+   }
+  },
+  "luna_moon_glaive": {
+   "ability": "Moon Glaives",
+   "hero": "Luna",
+   "pos1": 3.101,
+   "mid": -0.803,
+   "offlane": -1.152,
+   "support": -0.701,
+   "raw": {
+    "pos1": 0.588,
+    "mid": -1.71,
+    "offlane": 8.8,
+    "support": -0.119
+   }
+  },
+  "lycan_feral_impulse": {
+   "ability": "Feral Impulse",
+   "hero": "Lycan",
+   "pos1": 1.72,
+   "mid": 0.815,
+   "offlane": -0.252,
+   "support": -1.496,
+   "raw": {
+    "pos1": 0.318,
+    "mid": 1.91,
+    "offlane": 21.3,
+    "support": -0.263
+   }
+  },
+  "lycan_howl": {
+   "ability": "Howl",
+   "hero": "Lycan",
+   "pos1": 0.457,
+   "mid": -0.888,
+   "offlane": -0.244,
+   "support": -0.044,
+   "raw": {
+    "pos1": 0.071,
+    "mid": -1.9,
+    "offlane": 21.4,
+    "support": 0.0
+   }
+  },
+  "lycan_shapeshift": {
+   "ability": "Shapeshift",
+   "hero": "Lycan",
+   "pos1": 1.066,
+   "mid": 0.99,
+   "offlane": 0.21,
+   "support": -1.43,
+   "raw": {
+    "pos1": 0.19,
+    "mid": 2.3,
+    "offlane": 27.7,
+    "support": -0.251
+   }
+  },
+  "lycan_summon_wolves": {
+   "ability": "Summon Wolves",
+   "hero": "Lycan",
+   "pos1": -1.082,
+   "mid": -1.151,
+   "offlane": 0.887,
+   "support": -0.209,
+   "raw": {
+    "pos1": -0.23,
+    "mid": -2.49,
+    "offlane": 37.1,
+    "support": -0.03
+   }
+  },
+  "magnataur_empower": {
+   "ability": "Empower",
+   "hero": "Magnus",
+   "pos1": 4.364,
+   "mid": 2.277,
+   "offlane": 0.361,
+   "support": -2.148,
+   "raw": {
+    "pos1": 0.835,
+    "mid": 5.18,
+    "offlane": 29.8,
+    "support": -0.381
+   }
+  },
+  "magnataur_reverse_polarity": {
+   "ability": "Reverse Polarity",
+   "hero": "Magnus",
+   "pos1": 0.094,
+   "mid": -0.342,
+   "offlane": 0.224,
+   "support": 1.144,
+   "raw": {
+    "pos1": 0.0,
+    "mid": -0.68,
+    "offlane": 27.9,
+    "support": 0.215
+   }
+  },
+  "magnataur_shockwave": {
+   "ability": "Shockwave",
+   "hero": "Magnus",
+   "pos1": 0.007,
+   "mid": 0.744,
+   "offlane": -0.54,
+   "support": 0.647,
+   "raw": {
+    "pos1": -0.017,
+    "mid": 1.75,
+    "offlane": 17.3,
+    "support": 0.125
+   }
+  },
+  "magnataur_skewer": {
+   "ability": "Skewer",
+   "hero": "Magnus",
+   "pos1": -1.639,
+   "mid": -0.114,
+   "offlane": -0.107,
+   "support": 1.244,
+   "raw": {
+    "pos1": -0.339,
+    "mid": -0.17,
+    "offlane": 23.3,
+    "support": 0.233
+   }
+  },
+  "marci_bodyguard": {
+   "ability": "Bodyguard",
+   "hero": "Marci",
+   "pos1": 2.303,
+   "mid": 1.155,
+   "offlane": -0.511,
+   "support": -1.552,
+   "raw": {
+    "pos1": 0.432,
+    "mid": 2.67,
+    "offlane": 17.7,
+    "support": -0.273
+   }
+  },
+  "marci_companion_run": {
+   "ability": "Rebound",
+   "hero": "Marci",
+   "pos1": -0.453,
+   "mid": 1.066,
+   "offlane": 0.195,
+   "support": 0.266,
+   "raw": {
+    "pos1": -0.107,
+    "mid": 2.47,
+    "offlane": 27.5,
+    "support": 0.056
+   }
+  },
+  "marci_grapple": {
+   "ability": "Dispose",
+   "hero": "Marci",
+   "pos1": -1.031,
+   "mid": -0.655,
+   "offlane": 0.52,
+   "support": 0.47,
+   "raw": {
+    "pos1": -0.22,
+    "mid": -1.38,
+    "offlane": 32.0,
+    "support": 0.093
+   }
+  },
+  "marci_unleash": {
+   "ability": "Unleash",
+   "hero": "Marci",
+   "pos1": 1.122,
+   "mid": 1.262,
+   "offlane": -0.871,
+   "support": -2.088,
+   "raw": {
+    "pos1": 0.201,
+    "mid": 2.91,
+    "offlane": 12.7,
+    "support": -0.37
+   }
+  },
+  "mars_arena_of_blood": {
+   "ability": "Arena Of Blood",
+   "hero": "Mars",
+   "pos1": -0.453,
+   "mid": -0.937,
+   "offlane": 1.341,
+   "support": 1.514,
+   "raw": {
+    "pos1": -0.107,
+    "mid": -2.01,
+    "offlane": 43.4,
+    "support": 0.282
+   }
+  },
+  "mars_bulwark": {
+   "ability": "Bulwark",
+   "hero": "Mars",
+   "pos1": 0.427,
+   "mid": -0.414,
+   "offlane": 1.514,
+   "support": -0.231,
+   "raw": {
+    "pos1": 0.065,
+    "mid": -0.84,
+    "offlane": 45.8,
+    "support": -0.034
+   }
+  },
+  "mars_gods_rebuke": {
+   "ability": "God's Rebuke",
+   "hero": "Mars",
+   "pos1": 1.572,
+   "mid": 1.11,
+   "offlane": 2.84,
+   "support": -1.662,
+   "raw": {
+    "pos1": 0.289,
+    "mid": 2.57,
+    "offlane": 64.2,
+    "support": -0.293
+   }
+  },
+  "mars_spear": {
+   "ability": "Spear of Mars",
+   "hero": "Mars",
+   "pos1": -0.688,
+   "mid": -0.222,
+   "offlane": 0.829,
+   "support": 1.603,
+   "raw": {
+    "pos1": -0.153,
+    "mid": -0.41,
+    "offlane": 36.3,
+    "support": 0.298
+   }
+  },
+  "medusa_gorgon_grasp": {
+   "ability": "Gorgon's Grasp",
+   "hero": "Medusa",
+   "pos1": -0.99,
+   "mid": -1.956,
+   "offlane": -0.857,
+   "support": 0.443,
+   "raw": {
+    "pos1": -0.212,
+    "mid": -4.29,
+    "offlane": 12.9,
+    "support": 0.088
+   }
+  },
+  "medusa_mystic_snake": {
+   "ability": "Mystic Snake",
+   "hero": "Medusa",
+   "pos1": 0.048,
+   "mid": -0.946,
+   "offlane": -0.763,
+   "support": 0.282,
+   "raw": {
+    "pos1": -0.009,
+    "mid": -2.03,
+    "offlane": 14.2,
+    "support": 0.059
+   }
+  },
+  "medusa_split_shot": {
+   "ability": "Split Shot",
+   "hero": "Medusa",
+   "pos1": 2.17,
+   "mid": -1.415,
+   "offlane": -1.398,
+   "support": -0.817,
+   "raw": {
+    "pos1": 0.406,
+    "mid": -3.08,
+    "offlane": 5.4,
+    "support": -0.14
+   }
+  },
+  "medusa_stone_gaze": {
+   "ability": "Stone Gaze",
+   "hero": "Medusa",
+   "pos1": 0.079,
+   "mid": -2.086,
+   "offlane": -0.785,
+   "support": -0.115,
+   "raw": {
+    "pos1": -0.003,
+    "mid": -4.58,
+    "offlane": 13.9,
+    "support": -0.013
+   }
+  },
+  "meepo_earthbind": {
+   "ability": "Earthbind",
+   "hero": "Meepo",
+   "pos1": -1.711,
+   "mid": -2.135,
+   "offlane": -0.158,
+   "support": 0.459,
+   "raw": {
+    "pos1": -0.353,
+    "mid": -4.69,
+    "offlane": 22.6,
+    "support": 0.091
+   }
+  },
+  "meepo_poof": {
+   "ability": "Poof",
+   "hero": "Meepo",
+   "pos1": -0.964,
+   "mid": -1.741,
+   "offlane": 0.188,
+   "support": -0.276,
+   "raw": {
+    "pos1": -0.207,
+    "mid": -3.81,
+    "offlane": 27.4,
+    "support": -0.042
+   }
+  },
+  "meepo_ransack": {
+   "ability": "Ransack",
+   "hero": "Meepo",
+   "pos1": 0.892,
+   "mid": -0.535,
+   "offlane": -0.807,
+   "support": -1.441,
+   "raw": {
+    "pos1": 0.156,
+    "mid": -1.11,
+    "offlane": 13.6,
+    "support": -0.253
+   }
+  },
+  "mirana_arrow": {
+   "ability": "Sacred Arrow",
+   "hero": "Mirana",
+   "pos1": -0.729,
+   "mid": 0.1,
+   "offlane": -0.518,
+   "support": 1.487,
+   "raw": {
+    "pos1": -0.161,
+    "mid": 0.31,
+    "offlane": 17.6,
+    "support": 0.277
+   }
+  },
+  "mirana_invis": {
+   "ability": "Moonlight Shadow",
+   "hero": "Mirana",
+   "pos1": -0.34,
+   "mid": -0.847,
+   "offlane": -0.807,
+   "support": 1.47,
+   "raw": {
+    "pos1": -0.085,
+    "mid": -1.81,
+    "offlane": 13.6,
+    "support": 0.274
+   }
+  },
+  "mirana_leap": {
+   "ability": "Leap",
+   "hero": "Mirana",
+   "pos1": 0.79,
+   "mid": 1.137,
+   "offlane": -0.749,
+   "support": -0.789,
+   "raw": {
+    "pos1": 0.136,
+    "mid": 2.63,
+    "offlane": 14.4,
+    "support": -0.135
+   }
+  },
+  "mirana_starfall": {
+   "ability": "Starstorm",
+   "hero": "Mirana",
+   "pos1": -0.059,
+   "mid": 0.391,
+   "offlane": -0.425,
+   "support": 0.481,
+   "raw": {
+    "pos1": -0.03,
+    "mid": 0.96,
+    "offlane": 18.9,
+    "support": 0.095
+   }
+  },
+  "monkey_king_boundless_strike": {
+   "ability": "Boundless Strike",
+   "hero": "Monkey King",
+   "pos1": 0.468,
+   "mid": 1.11,
+   "offlane": 0.001,
+   "support": -0.248,
+   "raw": {
+    "pos1": 0.073,
+    "mid": 2.57,
+    "offlane": 24.8,
+    "support": -0.037
+   }
+  },
+  "monkey_king_jingu_mastery": {
+   "ability": "Jingu Mastery",
+   "hero": "Monkey King",
+   "pos1": 0.35,
+   "mid": -1.496,
+   "offlane": -0.915,
+   "support": -1.38,
+   "raw": {
+    "pos1": 0.05,
+    "mid": -3.26,
+    "offlane": 12.1,
+    "support": -0.242
+   }
+  },
+  "monkey_king_tree_dance": {
+   "ability": "Tree Dance",
+   "hero": "Monkey King",
+   "pos1": -1.823,
+   "mid": -2.188,
+   "offlane": -0.432,
+   "support": -0.01,
+   "raw": {
+    "pos1": -0.375,
+    "mid": -4.81,
+    "offlane": 18.8,
+    "support": 0.006
+   }
+  },
+  "monkey_king_wukongs_command": {
+   "ability": "Wukong's Command",
+   "hero": "Monkey King",
+   "pos1": 1.449,
+   "mid": 0.65,
+   "offlane": -1.426,
+   "support": -1.242,
+   "raw": {
+    "pos1": 0.265,
+    "mid": 1.54,
+    "offlane": 5.0,
+    "support": -0.217
+   }
+  },
+  "morphling_adaptive_strike_agi": {
+   "ability": "Adaptive Strike",
+   "hero": "Morphling",
+   "pos1": -0.755,
+   "mid": -2.519,
+   "offlane": -0.662,
+   "support": -0.016,
+   "raw": {
+    "pos1": -0.166,
+    "mid": -5.55,
+    "offlane": 15.6,
+    "support": 0.005
+   }
+  },
+  "morphling_waveform": {
+   "ability": "Waveform",
+   "hero": "Morphling",
+   "pos1": -0.034,
+   "mid": 1.419,
+   "offlane": -0.273,
+   "support": -0.253,
+   "raw": {
+    "pos1": -0.025,
+    "mid": 3.26,
+    "offlane": 21.0,
+    "support": -0.038
+   }
+  },
+  "muerta_dead_shot": {
+   "ability": "Dead Shot",
+   "hero": "Muerta",
+   "pos1": -0.172,
+   "mid": 0.672,
+   "offlane": -0.648,
+   "support": 0.68,
+   "raw": {
+    "pos1": -0.052,
+    "mid": 1.59,
+    "offlane": 15.8,
+    "support": 0.131
+   }
+  },
+  "muerta_gunslinger": {
+   "ability": "Gunslinger",
+   "hero": "Muerta",
+   "pos1": 1.649,
+   "mid": 0.52,
+   "offlane": -1.203,
+   "support": -1.292,
+   "raw": {
+    "pos1": 0.304,
+    "mid": 1.25,
+    "offlane": 8.1,
+    "support": -0.226
+   }
+  },
+  "muerta_pierce_the_veil": {
+   "ability": "Pierce the Veil",
+   "hero": "Muerta",
+   "pos1": 1.015,
+   "mid": 1.271,
+   "offlane": -1.181,
+   "support": -1.651,
+   "raw": {
+    "pos1": 0.18,
+    "mid": 2.93,
+    "offlane": 8.4,
+    "support": -0.291
+   }
+  },
+  "muerta_the_calling": {
+   "ability": "The Calling",
+   "hero": "Muerta",
+   "pos1": -0.734,
+   "mid": 0.087,
+   "offlane": -0.706,
+   "support": 1.105,
+   "raw": {
+    "pos1": -0.162,
+    "mid": 0.28,
+    "offlane": 15.0,
+    "support": 0.208
+   }
+  },
+  "naga_siren_ensnare": {
+   "ability": "Ensnare",
+   "hero": "Naga Siren",
+   "pos1": -1.291,
+   "mid": -1.308,
+   "offlane": -0.352,
+   "support": 0.89,
+   "raw": {
+    "pos1": -0.271,
+    "mid": -2.84,
+    "offlane": 19.9,
+    "support": 0.169
+   }
+  },
+  "naga_siren_mirror_image": {
+   "ability": "Mirror Image",
+   "hero": "Naga Siren",
+   "pos1": 2.017,
+   "mid": -1.017,
+   "offlane": -1.008,
+   "support": -0.878,
+   "raw": {
+    "pos1": 0.376,
+    "mid": -2.19,
+    "offlane": 10.8,
+    "support": -0.151
+   }
+  },
+  "naga_siren_rip_tide": {
+   "ability": "Rip Tide",
+   "hero": "Naga Siren",
+   "pos1": 1.802,
+   "mid": -1.169,
+   "offlane": -0.72,
+   "support": -1.126,
+   "raw": {
+    "pos1": 0.334,
+    "mid": -2.53,
+    "offlane": 14.8,
+    "support": -0.196
+   }
+  },
+  "naga_siren_song_of_the_siren": {
+   "ability": "Song of the Siren",
+   "hero": "Naga Siren",
+   "pos1": -0.468,
+   "mid": -1.683,
+   "offlane": -0.461,
+   "support": 0.233,
+   "raw": {
+    "pos1": -0.11,
+    "mid": -3.68,
+    "offlane": 18.4,
+    "support": 0.05
+   }
+  },
+  "necrolyte_death_pulse": {
+   "ability": "Death Pulse",
+   "hero": "Necrophos",
+   "pos1": 0.273,
+   "mid": 1.043,
+   "offlane": -0.403,
+   "support": 0.072,
+   "raw": {
+    "pos1": 0.035,
+    "mid": 2.42,
+    "offlane": 19.2,
+    "support": 0.021
+   }
+  },
+  "necrolyte_ghost_shroud": {
+   "ability": "Ghost Shroud",
+   "hero": "Necrophos",
+   "pos1": -0.023,
+   "mid": 0.918,
+   "offlane": -0.122,
+   "support": 0.31,
+   "raw": {
+    "pos1": -0.023,
+    "mid": 2.14,
+    "offlane": 23.1,
+    "support": 0.064
+   }
+  },
+  "necrolyte_heartstopper_aura": {
+   "ability": "Heartstopper Aura",
+   "hero": "Necrophos",
+   "pos1": 1.454,
+   "mid": 1.861,
+   "offlane": 0.974,
+   "support": 0.227,
+   "raw": {
+    "pos1": 0.266,
+    "mid": 4.25,
+    "offlane": 38.3,
+    "support": 0.049
+   }
+  },
+  "necrolyte_reapers_scythe": {
+   "ability": "Reaper's Scythe",
+   "hero": "Necrophos",
+   "pos1": 0.043,
+   "mid": 1.893,
+   "offlane": -0.057,
+   "support": -2.458,
+   "raw": {
+    "pos1": -0.01,
+    "mid": 4.32,
+    "offlane": 24.0,
+    "support": -0.437
+   }
+  },
+  "nevermore_dark_lord": {
+   "ability": "Presence of the Dark Lord",
+   "hero": "Shadow Fiend",
+   "pos1": 1.143,
+   "mid": -0.798,
+   "offlane": -0.497,
+   "support": -0.95,
+   "raw": {
+    "pos1": 0.205,
+    "mid": -1.7,
+    "offlane": 17.9,
+    "support": -0.164
+   }
+  },
+  "nevermore_frenzy": {
+   "ability": "Feast of Souls",
+   "hero": "Shadow Fiend",
+   "pos1": 0.053,
+   "mid": -2.166,
+   "offlane": -1.116,
+   "support": -0.999,
+   "raw": {
+    "pos1": -0.008,
+    "mid": -4.76,
+    "offlane": 9.3,
+    "support": -0.173
+   }
+  },
+  "nevermore_requiem": {
+   "ability": "Requiem of Souls",
+   "hero": "Shadow Fiend",
+   "pos1": -0.683,
+   "mid": -4.106,
+   "offlane": -1.39,
+   "support": 0.398,
+   "raw": {
+    "pos1": -0.152,
+    "mid": -9.1,
+    "offlane": 5.5,
+    "support": 0.08
+   }
+  },
+  "nevermore_shadowraze2": {
+   "ability": "Shadowraze",
+   "hero": "Shadow Fiend",
+   "pos1": -0.489,
+   "mid": -0.718,
+   "offlane": -0.489,
+   "support": -0.447,
+   "raw": {
+    "pos1": -0.114,
+    "mid": -1.52,
+    "offlane": 18.0,
+    "support": -0.073
+   }
+  },
+  "night_stalker_crippling_fear": {
+   "ability": "Crippling Fear",
+   "hero": "Night Stalker",
+   "pos1": -0.33,
+   "mid": -0.119,
+   "offlane": 2.516,
+   "support": 0.056,
+   "raw": {
+    "pos1": -0.083,
+    "mid": -0.18,
+    "offlane": 59.7,
+    "support": 0.018
+   }
+  },
+  "night_stalker_darkness": {
+   "ability": "Dark Ascension",
+   "hero": "Night Stalker",
+   "pos1": 0.488,
+   "mid": -0.105,
+   "offlane": 1.219,
+   "support": -1.148,
+   "raw": {
+    "pos1": 0.077,
+    "mid": -0.15,
+    "offlane": 41.7,
+    "support": -0.2
+   }
+  },
+  "night_stalker_midnight_feast": {
+   "ability": "Midnight Feast",
+   "hero": "",
+   "pos1": 0.815,
+   "mid": -0.405,
+   "offlane": 0.7,
+   "support": -0.789,
+   "raw": {
+    "pos1": 0.141,
+    "mid": -0.82,
+    "offlane": 34.5,
+    "support": -0.135
+   }
+  },
+  "night_stalker_void": {
+   "ability": "Void",
+   "hero": "Night Stalker",
+   "pos1": -0.714,
+   "mid": -0.4,
+   "offlane": 1.536,
+   "support": 0.045,
+   "raw": {
+    "pos1": -0.158,
+    "mid": -0.81,
+    "offlane": 46.1,
+    "support": 0.016
+   }
+  },
+  "nyx_assassin_impale": {
+   "ability": "Impale",
+   "hero": "Nyx Assassin",
+   "pos1": -1.056,
+   "mid": 0.123,
+   "offlane": -0.302,
+   "support": 1.426,
+   "raw": {
+    "pos1": -0.225,
+    "mid": 0.36,
+    "offlane": 20.6,
+    "support": 0.266
+   }
+  },
+  "nyx_assassin_jolt": {
+   "ability": "Mind Flare",
+   "hero": "Nyx Assassin",
+   "pos1": -0.749,
+   "mid": 1.566,
+   "offlane": -0.713,
+   "support": -0.668,
+   "raw": {
+    "pos1": -0.165,
+    "mid": 3.59,
+    "offlane": 14.9,
+    "support": -0.113
+   }
+  },
+  "nyx_assassin_spiked_carapace": {
+   "ability": "Spiked Carapace",
+   "hero": "Nyx Assassin",
+   "pos1": 0.34,
+   "mid": 0.681,
+   "offlane": 0.138,
+   "support": 0.503,
+   "raw": {
+    "pos1": 0.048,
+    "mid": 1.61,
+    "offlane": 26.7,
+    "support": 0.099
+   }
+  },
+  "nyx_assassin_vendetta": {
+   "ability": "Vendetta",
+   "hero": "Nyx Assassin",
+   "pos1": 0.094,
+   "mid": 1.222,
+   "offlane": -0.223,
+   "support": -0.839,
+   "raw": {
+    "pos1": 0.0,
+    "mid": 2.82,
+    "offlane": 21.7,
+    "support": -0.144
+   }
+  },
+  "obsidian_destroyer_arcane_orb": {
+   "ability": "Arcane Orb",
+   "hero": "Outworld Devourer",
+   "pos1": 0.094,
+   "mid": 1.303,
+   "offlane": -1.354,
+   "support": -0.878,
+   "raw": {
+    "pos1": 0.0,
+    "mid": 3.0,
+    "offlane": 6.0,
+    "support": -0.151
+   }
+  },
+  "obsidian_destroyer_astral_imprisonment": {
+   "ability": "Astral Imprisonment",
+   "hero": "Outworld Devourer",
+   "pos1": -2.079,
+   "mid": -0.655,
+   "offlane": -0.706,
+   "support": 1.177,
+   "raw": {
+    "pos1": -0.425,
+    "mid": -1.38,
+    "offlane": 15.0,
+    "support": 0.221
+   }
+  },
+  "obsidian_destroyer_objurgation": {
+   "ability": "Objurgation",
+   "hero": "",
+   "pos1": 0.309,
+   "mid": 0.896,
+   "offlane": -0.727,
+   "support": -0.408,
+   "raw": {
+    "pos1": 0.042,
+    "mid": 2.09,
+    "offlane": 14.7,
+    "support": -0.066
+   }
+  },
+  "obsidian_destroyer_sanity_eclipse": {
+   "ability": "Sanity's Eclipse",
+   "hero": "Outworld Devourer",
+   "pos1": -0.806,
+   "mid": 0.762,
+   "offlane": -1.434,
+   "support": -0.469,
+   "raw": {
+    "pos1": -0.176,
+    "mid": 1.79,
+    "offlane": 4.9,
+    "support": -0.077
+   }
+  },
+  "ogre_magi_bloodlust": {
+   "ability": "Bloodlust",
+   "hero": "Ogre Magi",
+   "pos1": 0.974,
+   "mid": -0.302,
+   "offlane": 0.26,
+   "support": 0.177,
+   "raw": {
+    "pos1": 0.172,
+    "mid": -0.59,
+    "offlane": 28.4,
+    "support": 0.04
+   }
+  },
+  "ogre_magi_fireblast": {
+   "ability": "Fireblast",
+   "hero": "Ogre Magi",
+   "pos1": -1.348,
+   "mid": -0.722,
+   "offlane": 1.968,
+   "support": 0.686,
+   "raw": {
+    "pos1": -0.282,
+    "mid": -1.53,
+    "offlane": 52.1,
+    "support": 0.132
+   }
+  },
+  "ogre_magi_ignite": {
+   "ability": "Ignite",
+   "hero": "Ogre Magi",
+   "pos1": -1.399,
+   "mid": -0.324,
+   "offlane": 0.57,
+   "support": 0.818,
+   "raw": {
+    "pos1": -0.292,
+    "mid": -0.64,
+    "offlane": 32.7,
+    "support": 0.156
+   }
+  },
+  "omniknight_guardian_angel": {
+   "ability": "Guardian Angel",
+   "hero": "Omniknight",
+   "pos1": -0.903,
+   "mid": -1.469,
+   "offlane": 0.548,
+   "support": 0.564,
+   "raw": {
+    "pos1": -0.195,
+    "mid": -3.2,
+    "offlane": 32.4,
+    "support": 0.11
+   }
+  },
+  "omniknight_hammer_of_purity": {
+   "ability": "Hammer of Purity",
+   "hero": "Omniknight",
+   "pos1": 0.606,
+   "mid": 1.066,
+   "offlane": 0.721,
+   "support": -1.353,
+   "raw": {
+    "pos1": 0.1,
+    "mid": 2.47,
+    "offlane": 34.8,
+    "support": -0.237
+   }
+  },
+  "omniknight_martyr": {
+   "ability": "Repel",
+   "hero": "Omniknight",
+   "pos1": -0.166,
+   "mid": -0.45,
+   "offlane": 0.642,
+   "support": 0.166,
+   "raw": {
+    "pos1": -0.051,
+    "mid": -0.92,
+    "offlane": 33.7,
+    "support": 0.038
+   }
+  },
+  "omniknight_purification": {
+   "ability": "Purification",
+   "hero": "Omniknight",
+   "pos1": -0.795,
+   "mid": -0.289,
+   "offlane": 1.673,
+   "support": 0.702,
+   "raw": {
+    "pos1": -0.174,
+    "mid": -0.56,
+    "offlane": 48.0,
+    "support": 0.135
+   }
+  },
+  "oracle_false_promise": {
+   "ability": "False Promise",
+   "hero": "Oracle",
+   "pos1": -0.131,
+   "mid": -0.199,
+   "offlane": -0.489,
+   "support": 0.531,
+   "raw": {
+    "pos1": -0.044,
+    "mid": -0.36,
+    "offlane": 18.0,
+    "support": 0.104
+   }
+  },
+  "oracle_fates_edict": {
+   "ability": "Fate's Edict",
+   "hero": "Oracle",
+   "pos1": -1.01,
+   "mid": -1.057,
+   "offlane": -0.143,
+   "support": 0.885,
+   "raw": {
+    "pos1": -0.216,
+    "mid": -2.28,
+    "offlane": 22.8,
+    "support": 0.168
+   }
+  },
+  "oracle_fortunes_end": {
+   "ability": "Fortune's End",
+   "hero": "Oracle",
+   "pos1": -0.714,
+   "mid": 1.11,
+   "offlane": -0.662,
+   "support": 1.343,
+   "raw": {
+    "pos1": -0.158,
+    "mid": 2.57,
+    "offlane": 15.6,
+    "support": 0.251
+   }
+  },
+  "oracle_purifying_flames": {
+   "ability": "Purifying Flames",
+   "hero": "Oracle",
+   "pos1": -1.092,
+   "mid": 0.44,
+   "offlane": -0.302,
+   "support": -0.154,
+   "raw": {
+    "pos1": -0.232,
+    "mid": 1.07,
+    "offlane": 20.6,
+    "support": -0.02
+   }
+  },
+  "pangolier_gyroshell": {
+   "ability": "Rolling Thunder",
+   "hero": "Pangolier",
+   "pos1": -0.453,
+   "mid": -0.029,
+   "offlane": 0.347,
+   "support": 1.034,
+   "raw": {
+    "pos1": -0.107,
+    "mid": 0.02,
+    "offlane": 29.6,
+    "support": 0.195
+   }
+  },
+  "pangolier_lucky_shot": {
+   "ability": "Lucky Shot",
+   "hero": "Pangolier",
+   "pos1": 0.14,
+   "mid": -0.356,
+   "offlane": -0.36,
+   "support": 0.072,
+   "raw": {
+    "pos1": 0.009,
+    "mid": -0.71,
+    "offlane": 19.8,
+    "support": 0.021
+   }
+  },
+  "pangolier_shield_crash": {
+   "ability": "Shield Crash",
+   "hero": "Pangolier",
+   "pos1": 0.094,
+   "mid": 1.151,
+   "offlane": 0.001,
+   "support": -0.32,
+   "raw": {
+    "pos1": 0.0,
+    "mid": 2.66,
+    "offlane": 24.8,
+    "support": -0.05
+   }
+  },
+  "pangolier_swashbuckle": {
+   "ability": "Swashbuckle",
+   "hero": "Pangolier",
+   "pos1": 1.48,
+   "mid": 1.468,
+   "offlane": 0.772,
+   "support": -0.811,
+   "raw": {
+    "pos1": 0.271,
+    "mid": 3.37,
+    "offlane": 35.5,
+    "support": -0.139
+   }
+  },
+  "phantom_assassin_coup_de_grace": {
+   "ability": "Coup de Grace",
+   "hero": "Phantom Assassin",
+   "pos1": 1.051,
+   "mid": -0.794,
+   "offlane": -0.727,
+   "support": -1.469,
+   "raw": {
+    "pos1": 0.187,
+    "mid": -1.69,
+    "offlane": 14.7,
+    "support": -0.258
+   }
+  },
+  "phantom_assassin_immaterial": {
+   "ability": "Immaterial",
+   "hero": "Phantom Assassin",
+   "pos1": 0.831,
+   "mid": -0.392,
+   "offlane": -0.381,
+   "support": -0.679,
+   "raw": {
+    "pos1": 0.144,
+    "mid": -0.79,
+    "offlane": 19.5,
+    "support": -0.115
+   }
+  },
+  "phantom_assassin_phantom_strike": {
+   "ability": "Phantom Strike",
+   "hero": "Phantom Assassin",
+   "pos1": 1.112,
+   "mid": 0.283,
+   "offlane": 0.13,
+   "support": -1.983,
+   "raw": {
+    "pos1": 0.199,
+    "mid": 0.72,
+    "offlane": 26.6,
+    "support": -0.351
+   }
+  },
+  "phantom_assassin_stifling_dagger": {
+   "ability": "Stifling Dagger",
+   "hero": "Phantom Assassin",
+   "pos1": 0.094,
+   "mid": -0.852,
+   "offlane": -0.367,
+   "support": 0.36,
+   "raw": {
+    "pos1": 0.0,
+    "mid": -1.82,
+    "offlane": 19.7,
+    "support": 0.073
+   }
+  },
+  "phantom_lancer_doppelwalk": {
+   "ability": "Doppelganger",
+   "hero": "Phantom Lancer",
+   "pos1": 0.575,
+   "mid": -0.302,
+   "offlane": -0.67,
+   "support": -0.292,
+   "raw": {
+    "pos1": 0.094,
+    "mid": -0.59,
+    "offlane": 15.5,
+    "support": -0.045
+   }
+  },
+  "phantom_lancer_juxtapose": {
+   "ability": "Juxtapose",
+   "hero": "Phantom Lancer",
+   "pos1": 0.918,
+   "mid": -1.214,
+   "offlane": -1.189,
+   "support": -0.795,
+   "raw": {
+    "pos1": 0.161,
+    "mid": -2.63,
+    "offlane": 8.3,
+    "support": -0.136
+   }
+  },
+  "phantom_lancer_phantom_edge": {
+   "ability": "Phantom Rush",
+   "hero": "Phantom Lancer",
+   "pos1": 0.416,
+   "mid": -1.531,
+   "offlane": -0.324,
+   "support": -1.143,
+   "raw": {
+    "pos1": 0.063,
+    "mid": -3.34,
+    "offlane": 20.3,
+    "support": -0.199
+   }
+  },
+  "phantom_lancer_spirit_lance": {
+   "ability": "Spirit Lance",
+   "hero": "Phantom Lancer",
+   "pos1": -0.524,
+   "mid": -1.013,
+   "offlane": -0.864,
+   "support": -0.32,
+   "raw": {
+    "pos1": -0.121,
+    "mid": -2.18,
+    "offlane": 12.8,
+    "support": -0.05
+   }
+  },
+  "phoenix_fire_spirits": {
+   "ability": "Fire Spirits",
+   "hero": "Phoenix",
+   "pos1": -0.207,
+   "mid": 0.203,
+   "offlane": -0.461,
+   "support": 0.161,
+   "raw": {
+    "pos1": -0.059,
+    "mid": 0.54,
+    "offlane": 18.4,
+    "support": 0.037
+   }
+  },
+  "phoenix_icarus_dive": {
+   "ability": "Icarus Dive",
+   "hero": "Phoenix",
+   "pos1": -0.524,
+   "mid": -0.047,
+   "offlane": -0.41,
+   "support": 0.553,
+   "raw": {
+    "pos1": -0.121,
+    "mid": -0.02,
+    "offlane": 19.1,
+    "support": 0.108
+   }
+  },
+  "phoenix_sun_ray": {
+   "ability": "Sun Ray",
+   "hero": "Phoenix",
+   "pos1": -1.839,
+   "mid": -1.125,
+   "offlane": -0.417,
+   "support": 1.249,
+   "raw": {
+    "pos1": -0.378,
+    "mid": -2.43,
+    "offlane": 19.0,
+    "support": 0.234
+   }
+  },
+  "phoenix_supernova": {
+   "ability": "Supernova",
+   "hero": "Phoenix",
+   "pos1": -0.463,
+   "mid": -0.266,
+   "offlane": -0.151,
+   "support": 1.465,
+   "raw": {
+    "pos1": -0.109,
+    "mid": -0.51,
+    "offlane": 22.7,
+    "support": 0.273
+   }
+  },
+  "primal_beast_onslaught": {
+   "ability": "Onslaught",
+   "hero": "Primal Beast",
+   "pos1": -0.509,
+   "mid": -0.602,
+   "offlane": 1.644,
+   "support": 0.106,
+   "raw": {
+    "pos1": -0.118,
+    "mid": -1.26,
+    "offlane": 47.6,
+    "support": 0.027
+   }
+  },
+  "primal_beast_pulverize": {
+   "ability": "Pulverize",
+   "hero": "Primal Beast",
+   "pos1": -0.703,
+   "mid": -0.669,
+   "offlane": 2.011,
+   "support": 0.846,
+   "raw": {
+    "pos1": -0.156,
+    "mid": -1.41,
+    "offlane": 52.7,
+    "support": 0.161
+   }
+  },
+  "primal_beast_trample": {
+   "ability": "Trample",
+   "hero": "Primal Beast",
+   "pos1": 0.002,
+   "mid": 0.489,
+   "offlane": 2.992,
+   "support": -0.469,
+   "raw": {
+    "pos1": -0.018,
+    "mid": 1.18,
+    "offlane": 66.3,
+    "support": -0.077
+   }
+  },
+  "primal_beast_uproar": {
+   "ability": "Uproar",
+   "hero": "Primal Beast",
+   "pos1": 0.514,
+   "mid": 0.386,
+   "offlane": 2.602,
+   "support": -0.104,
+   "raw": {
+    "pos1": 0.082,
+    "mid": 0.95,
+    "offlane": 60.9,
+    "support": -0.011
+   }
+  },
+  "puck_dream_coil": {
+   "ability": "Dream Coil",
+   "hero": "Puck",
+   "pos1": 0.918,
+   "mid": 0.99,
+   "offlane": -0.756,
+   "support": -0.861,
+   "raw": {
+    "pos1": 0.161,
+    "mid": 2.3,
+    "offlane": 14.3,
+    "support": -0.148
+   }
+  },
+  "puck_illusory_orb": {
+   "ability": "Illusory Orb",
+   "hero": "Puck",
+   "pos1": 0.662,
+   "mid": 1.128,
+   "offlane": -0.691,
+   "support": -0.298,
+   "raw": {
+    "pos1": 0.111,
+    "mid": 2.61,
+    "offlane": 15.2,
+    "support": -0.046
+   }
+  },
+  "puck_phase_shift": {
+   "ability": "Phase Shift",
+   "hero": "Puck",
+   "pos1": 1.163,
+   "mid": 1.186,
+   "offlane": -0.771,
+   "support": -0.491,
+   "raw": {
+    "pos1": 0.209,
+    "mid": 2.74,
+    "offlane": 14.1,
+    "support": -0.081
+   }
+  },
+  "puck_waning_rift": {
+   "ability": "Waning Rift",
+   "hero": "Puck",
+   "pos1": 0.053,
+   "mid": 0.525,
+   "offlane": -0.187,
+   "support": -0.215,
+   "raw": {
+    "pos1": -0.008,
+    "mid": 1.26,
+    "offlane": 22.2,
+    "support": -0.031
+   }
+  },
+  "pudge_dismember": {
+   "ability": "Dismember",
+   "hero": "Pudge",
+   "pos1": -1.302,
+   "mid": -1.098,
+   "offlane": 2.523,
+   "support": 1.155,
+   "raw": {
+    "pos1": -0.273,
+    "mid": -2.37,
+    "offlane": 59.8,
+    "support": 0.217
+   }
+  },
+  "pudge_flesh_heap": {
+   "ability": "Meat Shield",
+   "hero": "Pudge",
+   "pos1": 0.202,
+   "mid": -0.324,
+   "offlane": 2.545,
+   "support": -0.265,
+   "raw": {
+    "pos1": 0.021,
+    "mid": -0.64,
+    "offlane": 60.1,
+    "support": -0.04
+   }
+  },
+  "pudge_meat_hook": {
+   "ability": "Meat Hook",
+   "hero": "Pudge",
+   "pos1": -2.181,
+   "mid": -0.597,
+   "offlane": -0.331,
+   "support": 2.172,
+   "raw": {
+    "pos1": -0.445,
+    "mid": -1.25,
+    "offlane": 20.2,
+    "support": 0.401
+   }
+  },
+  "pudge_rot": {
+   "ability": "Rot",
+   "hero": "Pudge",
+   "pos1": 1.148,
+   "mid": 1.043,
+   "offlane": 3.078,
+   "support": -0.635,
+   "raw": {
+    "pos1": 0.206,
+    "mid": 2.42,
+    "offlane": 67.5,
+    "support": -0.107
+   }
+  },
+  "pugna_decrepify": {
+   "ability": "Decrepify",
+   "hero": "Pugna",
+   "pos1": -1.251,
+   "mid": 0.44,
+   "offlane": -0.626,
+   "support": -0.226,
+   "raw": {
+    "pos1": -0.263,
+    "mid": 1.07,
+    "offlane": 16.1,
+    "support": -0.033
+   }
+  },
+  "pugna_life_drain": {
+   "ability": "Life Drain",
+   "hero": "Pugna",
+   "pos1": -1.588,
+   "mid": -0.213,
+   "offlane": -0.316,
+   "support": 0.404,
+   "raw": {
+    "pos1": -0.329,
+    "mid": -0.39,
+    "offlane": 20.4,
+    "support": 0.081
+   }
+  },
+  "pugna_nether_blast": {
+   "ability": "Nether Blast",
+   "hero": "Pugna",
+   "pos1": -0.003,
+   "mid": 0.342,
+   "offlane": -0.749,
+   "support": -0.132,
+   "raw": {
+    "pos1": -0.019,
+    "mid": 0.85,
+    "offlane": 14.4,
+    "support": -0.016
+   }
+  },
+  "pugna_nether_ward": {
+   "ability": "Nether Ward",
+   "hero": "Pugna",
+   "pos1": -1.102,
+   "mid": 0.288,
+   "offlane": -0.583,
+   "support": 1.658,
+   "raw": {
+    "pos1": -0.234,
+    "mid": 0.73,
+    "offlane": 16.7,
+    "support": 0.308
+   }
+  },
+  "queenofpain_blink": {
+   "ability": "Blink",
+   "hero": "Queen of Pain",
+   "pos1": 0.355,
+   "mid": 1.732,
+   "offlane": -0.035,
+   "support": 0.625,
+   "raw": {
+    "pos1": 0.051,
+    "mid": 3.96,
+    "offlane": 24.3,
+    "support": 0.121
+   }
+  },
+  "queenofpain_scream_of_pain": {
+   "ability": "Scream Of Pain",
+   "hero": "Queen of Pain",
+   "pos1": 0.437,
+   "mid": 1.186,
+   "offlane": -0.389,
+   "support": -0.259,
+   "raw": {
+    "pos1": 0.067,
+    "mid": 2.74,
+    "offlane": 19.4,
+    "support": -0.039
+   }
+  },
+  "queenofpain_shadow_strike": {
+   "ability": "Shadow Strike",
+   "hero": "Queen of Pain",
+   "pos1": -0.785,
+   "mid": 0.292,
+   "offlane": -0.641,
+   "support": 0.327,
+   "raw": {
+    "pos1": -0.172,
+    "mid": 0.74,
+    "offlane": 15.9,
+    "support": 0.067
+   }
+  },
+  "queenofpain_sonic_wave": {
+   "ability": "Sonic Wave",
+   "hero": "Queen of Pain",
+   "pos1": -0.714,
+   "mid": 0.337,
+   "offlane": -0.742,
+   "support": 0.111,
+   "raw": {
+    "pos1": -0.158,
+    "mid": 0.84,
+    "offlane": 14.5,
+    "support": 0.028
+   }
+  },
+  "rattletrap_battery_assault": {
+   "ability": "Battery Assault",
+   "hero": "Clockwerk",
+   "pos1": -0.243,
+   "mid": 0.82,
+   "offlane": 0.476,
+   "support": 0.233,
+   "raw": {
+    "pos1": -0.066,
+    "mid": 1.92,
+    "offlane": 31.4,
+    "support": 0.05
+   }
+  },
+  "rattletrap_hookshot": {
+   "ability": "Hookshot",
+   "hero": "Clockwerk",
+   "pos1": -0.345,
+   "mid": -0.248,
+   "offlane": 0.318,
+   "support": 0.034,
+   "raw": {
+    "pos1": -0.086,
+    "mid": -0.47,
+    "offlane": 29.2,
+    "support": 0.014
+   }
+  },
+  "rattletrap_power_cogs": {
+   "ability": "Power Cogs",
+   "hero": "Clockwerk",
+   "pos1": -1.23,
+   "mid": -0.673,
+   "offlane": 0.152,
+   "support": 0.785,
+   "raw": {
+    "pos1": -0.259,
+    "mid": -1.42,
+    "offlane": 26.9,
+    "support": 0.15
+   }
+  },
+  "rattletrap_rocket_flare": {
+   "ability": "Rocket Flare",
+   "hero": "Clockwerk",
+   "pos1": -0.074,
+   "mid": 0.328,
+   "offlane": -0.821,
+   "support": 1.238,
+   "raw": {
+    "pos1": -0.033,
+    "mid": 0.82,
+    "offlane": 13.4,
+    "support": 0.232
+   }
+  },
+  "razor_eye_of_the_storm": {
+   "ability": "Eye of the Storm",
+   "hero": "Razor",
+   "pos1": 0.094,
+   "mid": -0.973,
+   "offlane": 0.512,
+   "support": -0.723,
+   "raw": {
+    "pos1": 0.0,
+    "mid": -2.09,
+    "offlane": 31.9,
+    "support": -0.123
+   }
+  },
+  "razor_plasma_field": {
+   "ability": "Plasma Field",
+   "hero": "Razor",
+   "pos1": -0.018,
+   "mid": 1.62,
+   "offlane": -0.562,
+   "support": 0.885,
+   "raw": {
+    "pos1": -0.022,
+    "mid": 3.71,
+    "offlane": 17.0,
+    "support": 0.168
+   }
+  },
+  "razor_static_link": {
+   "ability": "Static Link",
+   "hero": "Razor",
+   "pos1": -0.417,
+   "mid": -1.42,
+   "offlane": -0.461,
+   "support": -1.568,
+   "raw": {
+    "pos1": -0.1,
+    "mid": -3.09,
+    "offlane": 18.4,
+    "support": -0.276
+   }
+  },
+  "razor_storm_surge": {
+   "ability": "Storm Surge",
+   "hero": "Razor",
+   "pos1": 0.094,
+   "mid": -1.008,
+   "offlane": 0.275,
+   "support": -0.071,
+   "raw": {
+    "pos1": 0.0,
+    "mid": -2.17,
+    "offlane": 28.6,
+    "support": -0.005
+   }
+  },
+  "riki_backstab": {
+   "ability": "Cloak and Dagger",
+   "hero": "Riki",
+   "pos1": 0.094,
+   "mid": 1.316,
+   "offlane": -0.216,
+   "support": 1.652,
+   "raw": {
+    "pos1": 0.0,
+    "mid": 3.03,
+    "offlane": 21.8,
+    "support": 0.307
+   }
+  },
+  "riki_blink_strike": {
+   "ability": "Blink Strike",
+   "hero": "Riki",
+   "pos1": 0.12,
+   "mid": -0.566,
+   "offlane": 0.275,
+   "support": -0.822,
+   "raw": {
+    "pos1": 0.005,
+    "mid": -1.18,
+    "offlane": 28.6,
+    "support": -0.141
+   }
+  },
+  "riki_smoke_screen": {
+   "ability": "Smoke Screen",
+   "hero": "Riki",
+   "pos1": -1.251,
+   "mid": -1.406,
+   "offlane": -0.237,
+   "support": 1.857,
+   "raw": {
+    "pos1": -0.263,
+    "mid": -3.06,
+    "offlane": 21.5,
+    "support": 0.344
+   }
+  },
+  "riki_tricks_of_the_trade": {
+   "ability": "Tricks of the Trade",
+   "hero": "Riki",
+   "pos1": 0.319,
+   "mid": -1.236,
+   "offlane": -0.547,
+   "support": -0.458,
+   "raw": {
+    "pos1": 0.044,
+    "mid": -2.68,
+    "offlane": 17.2,
+    "support": -0.075
+   }
+  },
+  "ringmaster_impalement": {
+   "ability": "Impalement Arts",
+   "hero": "Ringmaster",
+   "pos1": -1.005,
+   "mid": 0.78,
+   "offlane": -0.525,
+   "support": 0.144,
+   "raw": {
+    "pos1": -0.215,
+    "mid": 1.83,
+    "offlane": 17.5,
+    "support": 0.034
+   }
+  },
+  "ringmaster_tame_the_beasts": {
+   "ability": "Tame the Beasts",
+   "hero": "Ringmaster",
+   "pos1": -0.443,
+   "mid": 0.94,
+   "offlane": -0.72,
+   "support": 0.387,
+   "raw": {
+    "pos1": -0.105,
+    "mid": 2.19,
+    "offlane": 14.8,
+    "support": 0.078
+   }
+  },
+  "ringmaster_the_box": {
+   "ability": "Escape Act",
+   "hero": "Ringmaster",
+   "pos1": -1.184,
+   "mid": -0.418,
+   "offlane": -0.309,
+   "support": 0.879,
+   "raw": {
+    "pos1": -0.25,
+    "mid": -0.85,
+    "offlane": 20.5,
+    "support": 0.167
+   }
+  },
+  "ringmaster_wheel": {
+   "ability": "Wheel of Wonder",
+   "hero": "Ringmaster",
+   "pos1": -0.56,
+   "mid": 0.167,
+   "offlane": -0.511,
+   "support": 0.752,
+   "raw": {
+    "pos1": -0.128,
+    "mid": 0.46,
+    "offlane": 17.7,
+    "support": 0.144
+   }
+  },
+  "rubick_arcane_supremacy": {
+   "ability": "Arcane Supremacy",
+   "hero": "Rubick",
+   "pos1": -0.928,
+   "mid": 1.937,
+   "offlane": -0.771,
+   "support": -0.226,
+   "raw": {
+    "pos1": -0.2,
+    "mid": 4.42,
+    "offlane": 14.1,
+    "support": -0.033
+   }
+  },
+  "rubick_fade_bolt": {
+   "ability": "Fade Bolt",
+   "hero": "Rubick",
+   "pos1": 0.13,
+   "mid": 1.405,
+   "offlane": -0.994,
+   "support": -0.11,
+   "raw": {
+    "pos1": 0.007,
+    "mid": 3.23,
+    "offlane": 11.0,
+    "support": -0.012
+   }
+  },
+  "rubick_telekinesis": {
+   "ability": "Telekinesis",
+   "hero": "Rubick",
+   "pos1": -1.118,
+   "mid": -0.539,
+   "offlane": -0.72,
+   "support": 1.072,
+   "raw": {
+    "pos1": -0.237,
+    "mid": -1.12,
+    "offlane": 14.8,
+    "support": 0.202
+   }
+  },
+  "sandking_burrowstrike": {
+   "ability": "Burrowstrike",
+   "hero": "Sand King",
+   "pos1": -0.749,
+   "mid": 0.426,
+   "offlane": 0.159,
+   "support": 1.111,
+   "raw": {
+    "pos1": -0.165,
+    "mid": 1.04,
+    "offlane": 27.0,
+    "support": 0.209
+   }
+  },
+  "sandking_epicenter": {
+   "ability": "Epicenter",
+   "hero": "Sand King",
+   "pos1": 0.416,
+   "mid": 0.641,
+   "offlane": 0.231,
+   "support": -0.292,
+   "raw": {
+    "pos1": 0.063,
+    "mid": 1.52,
+    "offlane": 28.0,
+    "support": -0.045
+   }
+  },
+  "sandking_sand_storm": {
+   "ability": "Sand Storm",
+   "hero": "Sand King",
+   "pos1": 1.316,
+   "mid": 1.602,
+   "offlane": 1.284,
+   "support": 0.222,
+   "raw": {
+    "pos1": 0.239,
+    "mid": 3.67,
+    "offlane": 42.6,
+    "support": 0.048
+   }
+  },
+  "sandking_scorpion_strike": {
+   "ability": "Stinger",
+   "hero": "Sand King",
+   "pos1": 1.322,
+   "mid": 0.73,
+   "offlane": 0.411,
+   "support": -1.375,
+   "raw": {
+    "pos1": 0.24,
+    "mid": 1.72,
+    "offlane": 30.5,
+    "support": -0.241
+   }
+  },
+  "shadow_demon_demonic_purge": {
+   "ability": "Demonic Purge",
+   "hero": "Shadow Demon",
+   "pos1": -0.586,
+   "mid": 0.055,
+   "offlane": -0.403,
+   "support": 0.437,
+   "raw": {
+    "pos1": -0.133,
+    "mid": 0.21,
+    "offlane": 19.2,
+    "support": 0.087
+   }
+  },
+  "shadow_demon_disruption": {
+   "ability": "Disruption",
+   "hero": "Shadow Demon",
+   "pos1": -1.348,
+   "mid": 0.015,
+   "offlane": -0.489,
+   "support": 1.492,
+   "raw": {
+    "pos1": -0.282,
+    "mid": 0.12,
+    "offlane": 18.0,
+    "support": 0.278
+   }
+  },
+  "shadow_demon_disseminate": {
+   "ability": "Disseminate",
+   "hero": "Shadow Demon",
+   "pos1": -0.1,
+   "mid": 0.359,
+   "offlane": 0.469,
+   "support": 0.072,
+   "raw": {
+    "pos1": -0.038,
+    "mid": 0.89,
+    "offlane": 31.3,
+    "support": 0.021
+   }
+  },
+  "shadow_demon_shadow_poison": {
+   "ability": "Shadow Poison",
+   "hero": "Shadow Demon",
+   "pos1": -1.015,
+   "mid": -0.231,
+   "offlane": -0.461,
+   "support": 0.2,
+   "raw": {
+    "pos1": -0.217,
+    "mid": -0.43,
+    "offlane": 18.4,
+    "support": 0.044
+   }
+  },
+  "shadow_shaman_ether_shock": {
+   "ability": "Ether Shock",
+   "hero": "Shadow Shaman",
+   "pos1": -0.161,
+   "mid": 0.69,
+   "offlane": -0.857,
+   "support": 0.393,
+   "raw": {
+    "pos1": -0.05,
+    "mid": 1.63,
+    "offlane": 12.9,
+    "support": 0.079
+   }
+  },
+  "shadow_shaman_mass_serpent_ward": {
+   "ability": "Mass Serpent Ward",
+   "hero": "Shadow Shaman",
+   "pos1": 0.176,
+   "mid": -0.235,
+   "offlane": -0.518,
+   "support": 0.36,
+   "raw": {
+    "pos1": 0.016,
+    "mid": -0.44,
+    "offlane": 17.6,
+    "support": 0.073
+   }
+  },
+  "shadow_shaman_shackles": {
+   "ability": "Shackles",
+   "hero": "Shadow Shaman",
+   "pos1": -1.706,
+   "mid": -0.521,
+   "offlane": -0.677,
+   "support": 2.177,
+   "raw": {
+    "pos1": -0.352,
+    "mid": -1.08,
+    "offlane": 15.4,
+    "support": 0.402
+   }
+  },
+  "shadow_shaman_voodoo": {
+   "ability": "Hex",
+   "hero": "Shadow Shaman",
+   "pos1": 0.094,
+   "mid": -0.678,
+   "offlane": -0.619,
+   "support": 0.835,
+   "raw": {
+    "pos1": 0.0,
+    "mid": -1.43,
+    "offlane": 16.2,
+    "support": 0.159
+   }
+  },
+  "shredder_chakram": {
+   "ability": "Chakram",
+   "hero": "Timbersaw",
+   "pos1": 0.483,
+   "mid": 1.303,
+   "offlane": 0.102,
+   "support": -0.381,
+   "raw": {
+    "pos1": 0.076,
+    "mid": 3.0,
+    "offlane": 26.2,
+    "support": -0.061
+   }
+  },
+  "shredder_reactive_armor": {
+   "ability": "Reactive Armor",
+   "hero": "Timbersaw",
+   "pos1": 0.733,
+   "mid": 0.833,
+   "offlane": 0.981,
+   "support": 0.155,
+   "raw": {
+    "pos1": 0.125,
+    "mid": 1.95,
+    "offlane": 38.4,
+    "support": 0.036
+   }
+  },
+  "shredder_timber_chain": {
+   "ability": "Timber Chain",
+   "hero": "Timbersaw",
+   "pos1": -0.09,
+   "mid": 0.856,
+   "offlane": -0.014,
+   "support": -0.491,
+   "raw": {
+    "pos1": -0.036,
+    "mid": 2.0,
+    "offlane": 24.6,
+    "support": -0.081
+   }
+  },
+  "shredder_whirling_death": {
+   "ability": "Whirling Death",
+   "hero": "Timbersaw",
+   "pos1": 0.309,
+   "mid": 1.343,
+   "offlane": 0.57,
+   "support": -0.977,
+   "raw": {
+    "pos1": 0.042,
+    "mid": 3.09,
+    "offlane": 32.7,
+    "support": -0.169
+   }
+  },
+  "silencer_curse_of_the_silent": {
+   "ability": "Arcane Curse",
+   "hero": "Silencer",
+   "pos1": -1.23,
+   "mid": 0.163,
+   "offlane": -0.915,
+   "support": 1.492,
+   "raw": {
+    "pos1": -0.259,
+    "mid": 0.45,
+    "offlane": 12.1,
+    "support": 0.278
+   }
+  },
+  "silencer_glaives_of_wisdom": {
+   "ability": "Glaives of Wisdom",
+   "hero": "Silencer",
+   "pos1": 1.506,
+   "mid": 2.465,
+   "offlane": -1.534,
+   "support": -1.911,
+   "raw": {
+    "pos1": 0.276,
+    "mid": 5.6,
+    "offlane": 3.5,
+    "support": -0.338
+   }
+  },
+  "silencer_global_silence": {
+   "ability": "Global Silence",
+   "hero": "Silencer",
+   "pos1": -1.225,
+   "mid": -0.946,
+   "offlane": -0.814,
+   "support": 2.459,
+   "raw": {
+    "pos1": -0.258,
+    "mid": -2.03,
+    "offlane": 13.5,
+    "support": 0.453
+   }
+  },
+  "silencer_last_word": {
+   "ability": "Last Word",
+   "hero": "Silencer",
+   "pos1": -1.22,
+   "mid": 0.418,
+   "offlane": -1.225,
+   "support": 0.415,
+   "raw": {
+    "pos1": -0.257,
+    "mid": 1.02,
+    "offlane": 7.8,
+    "support": 0.083
+   }
+  },
+  "skeleton_king_bone_guard": {
+   "ability": "Bone Guard",
+   "hero": "Wraith King",
+   "pos1": 1.219,
+   "mid": -0.459,
+   "offlane": 1.204,
+   "support": -0.563,
+   "raw": {
+    "pos1": 0.22,
+    "mid": -0.94,
+    "offlane": 41.5,
+    "support": -0.094
+   }
+  },
+  "skeleton_king_hellfire_blast": {
+   "ability": "Wraithfire Blast",
+   "hero": "Wraith King",
+   "pos1": -1.537,
+   "mid": -0.423,
+   "offlane": 0.606,
+   "support": 1.072,
+   "raw": {
+    "pos1": -0.319,
+    "mid": -0.86,
+    "offlane": 33.2,
+    "support": 0.202
+   }
+  },
+  "skeleton_king_mortal_strike": {
+   "ability": "Mortal Strike",
+   "hero": "Wraith King",
+   "pos1": 1.086,
+   "mid": 0.735,
+   "offlane": 0.909,
+   "support": -1.817,
+   "raw": {
+    "pos1": 0.194,
+    "mid": 1.73,
+    "offlane": 37.4,
+    "support": -0.321
+   }
+  },
+  "skeleton_king_reincarnation": {
+   "ability": "Reincarnation",
+   "hero": "Wraith King",
+   "pos1": 1.02,
+   "mid": 0.945,
+   "offlane": 1.428,
+   "support": 0.625,
+   "raw": {
+    "pos1": 0.181,
+    "mid": 2.2,
+    "offlane": 44.6,
+    "support": 0.121
+   }
+  },
+  "skywrath_mage_ancient_seal": {
+   "ability": "Ancient Seal",
+   "hero": "Skywrath Mage",
+   "pos1": -0.928,
+   "mid": 0.292,
+   "offlane": -0.749,
+   "support": 0.211,
+   "raw": {
+    "pos1": -0.2,
+    "mid": 0.74,
+    "offlane": 14.4,
+    "support": 0.046
+   }
+  },
+  "skywrath_mage_arcane_bolt": {
+   "ability": "Arcane Bolt",
+   "hero": "Skywrath Mage",
+   "pos1": 0.084,
+   "mid": 2.053,
+   "offlane": -1.181,
+   "support": -0.9,
+   "raw": {
+    "pos1": -0.002,
+    "mid": 4.68,
+    "offlane": 8.4,
+    "support": -0.155
+   }
+  },
+  "skywrath_mage_concussive_shot": {
+   "ability": "Concussive Shot",
+   "hero": "Skywrath Mage",
+   "pos1": -0.345,
+   "mid": 1.146,
+   "offlane": -0.713,
+   "support": 0.94,
+   "raw": {
+    "pos1": -0.086,
+    "mid": 2.65,
+    "offlane": 14.9,
+    "support": 0.178
+   }
+  },
+  "skywrath_mage_mystic_flare": {
+   "ability": "Mystic Flare",
+   "hero": "Skywrath Mage",
+   "pos1": -0.729,
+   "mid": 1.606,
+   "offlane": -0.922,
+   "support": -0.469,
+   "raw": {
+    "pos1": -0.161,
+    "mid": 3.68,
+    "offlane": 12.0,
+    "support": -0.077
+   }
+  },
+  "slardar_amplify_damage": {
+   "ability": "Corrosive Haze",
+   "hero": "Slardar",
+   "pos1": 0.35,
+   "mid": -0.834,
+   "offlane": 0.7,
+   "support": -0.093,
+   "raw": {
+    "pos1": 0.05,
+    "mid": -1.78,
+    "offlane": 34.5,
+    "support": -0.009
+   }
+  },
+  "slardar_bash": {
+   "ability": "Bash of the Deep",
+   "hero": "Slardar",
+   "pos1": 0.851,
+   "mid": -0.07,
+   "offlane": -0.598,
+   "support": -1.38,
+   "raw": {
+    "pos1": 0.148,
+    "mid": -0.07,
+    "offlane": 16.5,
+    "support": -0.242
+   }
+  },
+  "slardar_slithereen_crush": {
+   "ability": "Slithereen Crush",
+   "hero": "Slardar",
+   "pos1": -0.601,
+   "mid": -0.481,
+   "offlane": 2.617,
+   "support": 0.57,
+   "raw": {
+    "pos1": -0.136,
+    "mid": -0.99,
+    "offlane": 61.1,
+    "support": 0.111
+   }
+  },
+  "slardar_sprint": {
+   "ability": "Guardian Sprint",
+   "hero": "Slardar",
+   "pos1": 0.82,
+   "mid": 0.091,
+   "offlane": 0.21,
+   "support": -1.049,
+   "raw": {
+    "pos1": 0.142,
+    "mid": 0.29,
+    "offlane": 27.7,
+    "support": -0.182
+   }
+  },
+  "slark_dark_pact": {
+   "ability": "Dark Pact",
+   "hero": "Slark",
+   "pos1": 0.524,
+   "mid": -0.512,
+   "offlane": 0.138,
+   "support": -0.546,
+   "raw": {
+    "pos1": 0.084,
+    "mid": -1.06,
+    "offlane": 26.7,
+    "support": -0.091
+   }
+  },
+  "slark_pounce": {
+   "ability": "Pounce",
+   "hero": "Slark",
+   "pos1": -0.253,
+   "mid": -1.285,
+   "offlane": -0.208,
+   "support": -0.099,
+   "raw": {
+    "pos1": -0.068,
+    "mid": -2.79,
+    "offlane": 21.9,
+    "support": -0.01
+   }
+  },
+  "slark_saltwater_shiv": {
+   "ability": "Saltwater Shiv",
+   "hero": "Slark",
+   "pos1": -0.09,
+   "mid": -1.303,
+   "offlane": -0.843,
+   "support": -0.259,
+   "raw": {
+    "pos1": -0.036,
+    "mid": -2.83,
+    "offlane": 13.1,
+    "support": -0.039
+   }
+  },
+  "slark_shadow_dance": {
+   "ability": "Shadow Dance",
+   "hero": "Slark",
+   "pos1": 1.383,
+   "mid": 0.856,
+   "offlane": -0.079,
+   "support": 0.8,
+   "raw": {
+    "pos1": 0.252,
+    "mid": 2.0,
+    "offlane": 23.7,
+    "support": 0.153
+   }
+  },
+  "snapfire_firesnap_cookie": {
+   "ability": "Firesnap Cookie",
+   "hero": "Snapfire",
+   "pos1": -0.795,
+   "mid": -0.204,
+   "offlane": -0.273,
+   "support": 0.918,
+   "raw": {
+    "pos1": -0.174,
+    "mid": -0.37,
+    "offlane": 21.0,
+    "support": 0.174
+   }
+  },
+  "snapfire_lil_shredder": {
+   "ability": "Lil' Shredder",
+   "hero": "Snapfire",
+   "pos1": -0.381,
+   "mid": -0.114,
+   "offlane": -1.225,
+   "support": -0.911,
+   "raw": {
+    "pos1": -0.093,
+    "mid": -0.17,
+    "offlane": 7.8,
+    "support": -0.157
+   }
+  },
+  "snapfire_mortimer_kisses": {
+   "ability": "Mortimer Kisses",
+   "hero": "Snapfire",
+   "pos1": -0.478,
+   "mid": 0.619,
+   "offlane": -0.576,
+   "support": 0.625,
+   "raw": {
+    "pos1": -0.112,
+    "mid": 1.47,
+    "offlane": 16.8,
+    "support": 0.121
+   }
+  },
+  "snapfire_scatterblast": {
+   "ability": "Scatterblast",
+   "hero": "Snapfire",
+   "pos1": -0.182,
+   "mid": 0.024,
+   "offlane": -0.511,
+   "support": 0.155,
+   "raw": {
+    "pos1": -0.054,
+    "mid": 0.14,
+    "offlane": 17.7,
+    "support": 0.036
+   }
+  },
+  "sniper_assassinate": {
+   "ability": "Assassinate",
+   "hero": "Sniper",
+   "pos1": -1.123,
+   "mid": 0.06,
+   "offlane": -0.259,
+   "support": 1.017,
+   "raw": {
+    "pos1": -0.238,
+    "mid": 0.22,
+    "offlane": 21.2,
+    "support": 0.192
+   }
+  },
+  "sniper_headshot": {
+   "ability": "Headshot",
+   "hero": "Sniper",
+   "pos1": 0.672,
+   "mid": -1.178,
+   "offlane": -1.152,
+   "support": -1.193,
+   "raw": {
+    "pos1": 0.113,
+    "mid": -2.55,
+    "offlane": 8.8,
+    "support": -0.208
+   }
+  },
+  "sniper_shrapnel": {
+   "ability": "Shrapnel",
+   "hero": "Sniper",
+   "pos1": 0.432,
+   "mid": -0.168,
+   "offlane": -0.583,
+   "support": 0.995,
+   "raw": {
+    "pos1": 0.066,
+    "mid": -0.29,
+    "offlane": 16.7,
+    "support": 0.188
+   }
+  },
+  "sniper_take_aim": {
+   "ability": "Take Aim",
+   "hero": "Sniper",
+   "pos1": 1.03,
+   "mid": 1.11,
+   "offlane": -1.347,
+   "support": -0.911,
+   "raw": {
+    "pos1": 0.183,
+    "mid": 2.57,
+    "offlane": 6.1,
+    "support": -0.157
+   }
+  },
+  "spectre_dispersion": {
+   "ability": "Dispersion",
+   "hero": "Spectre",
+   "pos1": 1.654,
+   "mid": 0.735,
+   "offlane": 1.442,
+   "support": 0.525,
+   "raw": {
+    "pos1": 0.305,
+    "mid": 1.73,
+    "offlane": 44.8,
+    "support": 0.103
+   }
+  },
+  "spectre_haunt": {
+   "ability": "Haunt",
+   "hero": "Spectre",
+   "pos1": 1.378,
+   "mid": -0.132,
+   "offlane": -0.691,
+   "support": -0.375,
+   "raw": {
+    "pos1": 0.251,
+    "mid": -0.21,
+    "offlane": 15.2,
+    "support": -0.06
+   }
+  },
+  "spectre_shadow_step": {
+   "ability": "Shadow Step",
+   "hero": "Spectre",
+   "pos1": -0.049,
+   "mid": -1.782,
+   "offlane": -0.886,
+   "support": -0.27,
+   "raw": {
+    "pos1": -0.028,
+    "mid": -3.9,
+    "offlane": 12.5,
+    "support": -0.041
+   }
+  },
+  "spectre_spectral_dagger": {
+   "ability": "Spectral Dagger",
+   "hero": "Spectre",
+   "pos1": 0.457,
+   "mid": -0.164,
+   "offlane": -0.698,
+   "support": 0.244,
+   "raw": {
+    "pos1": 0.071,
+    "mid": -0.28,
+    "offlane": 15.1,
+    "support": 0.052
+   }
+  },
+  "spirit_breaker_bulldoze": {
+   "ability": "Bulldoze",
+   "hero": "Spirit Breaker",
+   "pos1": 0.882,
+   "mid": 0.033,
+   "offlane": 0.613,
+   "support": -0.59,
+   "raw": {
+    "pos1": 0.154,
+    "mid": 0.16,
+    "offlane": 33.3,
+    "support": -0.099
+   }
+  },
+  "spirit_breaker_charge_of_darkness": {
+   "ability": "Charge of Darkness",
+   "hero": "Spirit Breaker",
+   "pos1": -0.785,
+   "mid": -0.611,
+   "offlane": 2.343,
+   "support": 1.846,
+   "raw": {
+    "pos1": -0.172,
+    "mid": -1.28,
+    "offlane": 57.3,
+    "support": 0.342
+   }
+  },
+  "spirit_breaker_greater_bash": {
+   "ability": "Greater Bash",
+   "hero": "Spirit Breaker",
+   "pos1": -0.141,
+   "mid": -0.709,
+   "offlane": 0.765,
+   "support": -0.104,
+   "raw": {
+    "pos1": -0.046,
+    "mid": -1.5,
+    "offlane": 35.4,
+    "support": -0.011
+   }
+  },
+  "spirit_breaker_nether_strike": {
+   "ability": "Nether Strike",
+   "hero": "Spirit Breaker",
+   "pos1": -0.775,
+   "mid": -1.513,
+   "offlane": 1.255,
+   "support": -0.154,
+   "raw": {
+    "pos1": -0.17,
+    "mid": -3.3,
+    "offlane": 42.2,
+    "support": -0.02
+   }
+  },
+  "storm_spirit_ball_lightning": {
+   "ability": "Ball Lightning",
+   "hero": "Storm Spirit",
+   "pos1": 0.943,
+   "mid": 2.505,
+   "offlane": -0.929,
+   "support": -0.635,
+   "raw": {
+    "pos1": 0.166,
+    "mid": 5.69,
+    "offlane": 11.9,
+    "support": -0.107
+   }
+  },
+  "storm_spirit_electric_vortex": {
+   "ability": "Electric Vortex",
+   "hero": "Storm Spirit",
+   "pos1": -1.026,
+   "mid": -0.785,
+   "offlane": 0.109,
+   "support": 0.923,
+   "raw": {
+    "pos1": -0.219,
+    "mid": -1.67,
+    "offlane": 26.3,
+    "support": 0.175
+   }
+  },
+  "storm_spirit_overload": {
+   "ability": "Overload",
+   "hero": "Storm Spirit",
+   "pos1": 0.764,
+   "mid": 1.392,
+   "offlane": -0.907,
+   "support": -1.043,
+   "raw": {
+    "pos1": 0.131,
+    "mid": 3.2,
+    "offlane": 12.2,
+    "support": -0.181
+   }
+  },
+  "storm_spirit_static_remnant": {
+   "ability": "Static Remnant",
+   "hero": "Storm Spirit",
+   "pos1": 0.57,
+   "mid": 1.419,
+   "offlane": -0.641,
+   "support": -0.822,
+   "raw": {
+    "pos1": 0.093,
+    "mid": 3.26,
+    "offlane": 15.9,
+    "support": -0.141
+   }
+  },
+  "sven_gods_strength": {
+   "ability": "God's Strength",
+   "hero": "Sven",
+   "pos1": 1.362,
+   "mid": 0.14,
+   "offlane": 1.017,
+   "support": -2.076,
+   "raw": {
+    "pos1": 0.248,
+    "mid": 0.4,
+    "offlane": 38.9,
+    "support": -0.368
+   }
+  },
+  "sven_great_cleave": {
+   "ability": "Great Cleave",
+   "hero": "Sven",
+   "pos1": 3.014,
+   "mid": 0.721,
+   "offlane": 0.195,
+   "support": -1.48,
+   "raw": {
+    "pos1": 0.571,
+    "mid": 1.7,
+    "offlane": 27.5,
+    "support": -0.26
+   }
+  },
+  "sven_storm_bolt": {
+   "ability": "Storm Hammer",
+   "hero": "Sven",
+   "pos1": 0.094,
+   "mid": -0.101,
+   "offlane": 0.779,
+   "support": 1.592,
+   "raw": {
+    "pos1": 0.0,
+    "mid": -0.14,
+    "offlane": 35.6,
+    "support": 0.296
+   }
+  },
+  "sven_warcry": {
+   "ability": "Warcry",
+   "hero": "Sven",
+   "pos1": 0.074,
+   "mid": -0.682,
+   "offlane": 1.24,
+   "support": -0.187,
+   "raw": {
+    "pos1": -0.004,
+    "mid": -1.44,
+    "offlane": 42.0,
+    "support": -0.026
+   }
+  },
+  "techies_land_mines": {
+   "ability": "Proximity Mines",
+   "hero": "Techies",
+   "pos1": 0.094,
+   "mid": 1.048,
+   "offlane": -0.23,
+   "support": -0.082,
+   "raw": {
+    "pos1": 0.0,
+    "mid": 2.43,
+    "offlane": 21.6,
+    "support": -0.007
+   }
+  },
+  "techies_reactive_tazer": {
+   "ability": "Reactive Tazer",
+   "hero": "Techies",
+   "pos1": 0.805,
+   "mid": 0.489,
+   "offlane": -0.367,
+   "support": -0.132,
+   "raw": {
+    "pos1": 0.139,
+    "mid": 1.18,
+    "offlane": 19.7,
+    "support": -0.016
+   }
+  },
+  "techies_sticky_bomb": {
+   "ability": "Sticky Bomb",
+   "hero": "Techies",
+   "pos1": -0.555,
+   "mid": 0.4,
+   "offlane": -0.857,
+   "support": 0.365,
+   "raw": {
+    "pos1": -0.127,
+    "mid": 0.98,
+    "offlane": 12.9,
+    "support": 0.074
+   }
+  },
+  "techies_suicide": {
+   "ability": "Blast Off!",
+   "hero": "Techies",
+   "pos1": -1.159,
+   "mid": -0.602,
+   "offlane": 0.455,
+   "support": 0.542,
+   "raw": {
+    "pos1": -0.245,
+    "mid": -1.26,
+    "offlane": 31.1,
+    "support": 0.106
+   }
+  },
+  "templar_assassin_meld": {
+   "ability": "Meld",
+   "hero": "Templar Assassin",
+   "pos1": 0.473,
+   "mid": -0.485,
+   "offlane": -1.131,
+   "support": -1.215,
+   "raw": {
+    "pos1": 0.074,
+    "mid": -1.0,
+    "offlane": 9.1,
+    "support": -0.212
+   }
+  },
+  "templar_assassin_psi_blades": {
+   "ability": "Psi Blades",
+   "hero": "Templar Assassin",
+   "pos1": 2.758,
+   "mid": 0.167,
+   "offlane": -1.261,
+   "support": -1.06,
+   "raw": {
+    "pos1": 0.521,
+    "mid": 0.46,
+    "offlane": 7.3,
+    "support": -0.184
+   }
+  },
+  "templar_assassin_psionic_trap": {
+   "ability": "Psionic Trap",
+   "hero": "Templar Assassin",
+   "pos1": 0.248,
+   "mid": -1.335,
+   "offlane": -0.605,
+   "support": -0.463,
+   "raw": {
+    "pos1": 0.03,
+    "mid": -2.9,
+    "offlane": 16.4,
+    "support": -0.076
+   }
+  },
+  "templar_assassin_refraction": {
+   "ability": "Refraction",
+   "hero": "Templar Assassin",
+   "pos1": 1.276,
+   "mid": 0.462,
+   "offlane": -0.511,
+   "support": -1.115,
+   "raw": {
+    "pos1": 0.231,
+    "mid": 1.12,
+    "offlane": 17.7,
+    "support": -0.194
+   }
+  },
+  "terrorblade_conjure_image": {
+   "ability": "Conjure Image",
+   "hero": "Terrorblade",
+   "pos1": 0.989,
+   "mid": -2.077,
+   "offlane": -1.073,
+   "support": -0.662,
+   "raw": {
+    "pos1": 0.175,
+    "mid": -4.56,
+    "offlane": 9.9,
+    "support": -0.112
+   }
+  },
+  "terrorblade_metamorphosis": {
+   "ability": "Metamorphosis",
+   "hero": "Terrorblade",
+   "pos1": 0.621,
+   "mid": -1.022,
+   "offlane": -1.044,
+   "support": -1.253,
+   "raw": {
+    "pos1": 0.103,
+    "mid": -2.2,
+    "offlane": 10.3,
+    "support": -0.219
+   }
+  },
+  "terrorblade_reflection": {
+   "ability": "Reflection",
+   "hero": "Terrorblade",
+   "pos1": -1.225,
+   "mid": -0.673,
+   "offlane": -0.28,
+   "support": 0.962,
+   "raw": {
+    "pos1": -0.258,
+    "mid": -1.42,
+    "offlane": 20.9,
+    "support": 0.182
+   }
+  },
+  "terrorblade_sunder": {
+   "ability": "Sunder",
+   "hero": "Terrorblade",
+   "pos1": 0.2,
+   "mid": -1.558,
+   "offlane": -0.223,
+   "support": -0.1,
+   "raw": {
+    "pos1": 0.021,
+    "mid": -3.4,
+    "offlane": 21.7,
+    "support": -0.01
+   }
+  },
+  "tidehunter_anchor_smash": {
+   "ability": "Anchor Smash",
+   "hero": "Tidehunter",
+   "pos1": 3.955,
+   "mid": 2.112,
+   "offlane": -0.886,
+   "support": -1.386,
+   "raw": {
+    "pos1": 0.755,
+    "mid": 4.81,
+    "offlane": 12.5,
+    "support": -0.243
+   }
+  },
+  "tidehunter_gush": {
+   "ability": "Gush",
+   "hero": "Tidehunter",
+   "pos1": -0.402,
+   "mid": 0.453,
+   "offlane": 0.779,
+   "support": 1.128,
+   "raw": {
+    "pos1": -0.097,
+    "mid": 1.1,
+    "offlane": 35.6,
+    "support": 0.212
+   }
+  },
+  "tidehunter_kraken_shell": {
+   "ability": "Kraken Shell",
+   "hero": "Tidehunter",
+   "pos1": 1.567,
+   "mid": 1.271,
+   "offlane": 2.04,
+   "support": -0.182,
+   "raw": {
+    "pos1": 0.288,
+    "mid": 2.93,
+    "offlane": 53.1,
+    "support": -0.025
+   }
+  },
+  "tidehunter_ravage": {
+   "ability": "Ravage",
+   "hero": "Tidehunter",
+   "pos1": -0.647,
+   "mid": -0.628,
+   "offlane": 1.082,
+   "support": 1.57,
+   "raw": {
+    "pos1": -0.145,
+    "mid": -1.32,
+    "offlane": 39.8,
+    "support": 0.292
+   }
+  },
+  "tinker_deploy_turrets": {
+   "ability": "Deploy Turrets",
+   "hero": "",
+   "pos1": -0.995,
+   "mid": 0.288,
+   "offlane": -0.727,
+   "support": -0.066,
+   "raw": {
+    "pos1": -0.213,
+    "mid": 0.73,
+    "offlane": 14.7,
+    "support": -0.004
+   }
+  },
+  "tinker_laser": {
+   "ability": "Laser",
+   "hero": "Tinker",
+   "pos1": -0.693,
+   "mid": 0.757,
+   "offlane": -0.691,
+   "support": -0.546,
+   "raw": {
+    "pos1": -0.154,
+    "mid": 1.78,
+    "offlane": 15.2,
+    "support": -0.091
+   }
+  },
+  "tinker_march_of_the_machines": {
+   "ability": "March of the Machines",
+   "hero": "Tinker",
+   "pos1": 0.8,
+   "mid": 0.668,
+   "offlane": -0.799,
+   "support": 0.249,
+   "raw": {
+    "pos1": 0.138,
+    "mid": 1.58,
+    "offlane": 13.7,
+    "support": 0.053
+   }
+  },
+  "tinker_rearm": {
+   "ability": "Rearm",
+   "hero": "Tinker",
+   "pos1": 0.0,
+   "mid": 0.985,
+   "offlane": -0.843,
+   "support": 0.603,
+   "raw": {
+    "pos1": -0.018,
+    "mid": 2.29,
+    "offlane": 13.1,
+    "support": 0.117
+   }
+  },
+  "tiny_avalanche": {
+   "ability": "Avalanche",
+   "hero": "Tiny",
+   "pos1": -0.642,
+   "mid": 0.462,
+   "offlane": 0.873,
+   "support": 1.741,
+   "raw": {
+    "pos1": -0.144,
+    "mid": 1.12,
+    "offlane": 36.9,
+    "support": 0.323
+   }
+  },
+  "tiny_grow": {
+   "ability": "Grow",
+   "hero": "Tiny",
+   "pos1": 1.649,
+   "mid": 0.619,
+   "offlane": 1.226,
+   "support": -1.607,
+   "raw": {
+    "pos1": 0.304,
+    "mid": 1.47,
+    "offlane": 41.8,
+    "support": -0.283
+   }
+  },
+  "tiny_toss": {
+   "ability": "Toss",
+   "hero": "Tiny",
+   "pos1": -0.698,
+   "mid": 1.066,
+   "offlane": 1.449,
+   "support": 0.354,
+   "raw": {
+    "pos1": -0.155,
+    "mid": 2.47,
+    "offlane": 44.9,
+    "support": 0.072
+   }
+  },
+  "tiny_tree_grab": {
+   "ability": "Tree Grab",
+   "hero": "Tiny",
+   "pos1": 2.441,
+   "mid": 1.106,
+   "offlane": -0.143,
+   "support": -1.844,
+   "raw": {
+    "pos1": 0.459,
+    "mid": 2.56,
+    "offlane": 22.8,
+    "support": -0.326
+   }
+  },
+  "treant_leech_seed": {
+   "ability": "Leech Seed",
+   "hero": "Treant Protector",
+   "pos1": -0.095,
+   "mid": -0.226,
+   "offlane": 0.145,
+   "support": 0.084,
+   "raw": {
+    "pos1": -0.037,
+    "mid": -0.42,
+    "offlane": 26.8,
+    "support": 0.023
+   }
+  },
+  "treant_living_armor": {
+   "ability": "Living Armor",
+   "hero": "Treant Protector",
+   "pos1": -1.885,
+   "mid": -1.741,
+   "offlane": -0.143,
+   "support": 1.691,
+   "raw": {
+    "pos1": -0.387,
+    "mid": -3.81,
+    "offlane": 22.8,
+    "support": 0.314
+   }
+  },
+  "treant_natures_grasp": {
+   "ability": "Nature's Grasp",
+   "hero": "Treant Protector",
+   "pos1": -0.437,
+   "mid": -0.101,
+   "offlane": 0.851,
+   "support": 1.045,
+   "raw": {
+    "pos1": -0.104,
+    "mid": -0.14,
+    "offlane": 36.6,
+    "support": 0.197
+   }
+  },
+  "treant_overgrowth": {
+   "ability": "Overgrowth",
+   "hero": "Treant Protector",
+   "pos1": 0.396,
+   "mid": 0.279,
+   "offlane": 1.954,
+   "support": 0.459,
+   "raw": {
+    "pos1": 0.059,
+    "mid": 0.71,
+    "offlane": 51.9,
+    "support": 0.091
+   }
+  },
+  "troll_warlord_battle_trance": {
+   "ability": "Battle Trance",
+   "hero": "Troll Warlord",
+   "pos1": 0.764,
+   "mid": -0.95,
+   "offlane": -0.734,
+   "support": -1.242,
+   "raw": {
+    "pos1": 0.131,
+    "mid": -2.04,
+    "offlane": 14.6,
+    "support": -0.217
+   }
+  },
+  "troll_warlord_berserkers_rage": {
+   "ability": "Berserker's Rage",
+   "hero": "Troll Warlord",
+   "pos1": 0.595,
+   "mid": -1.361,
+   "offlane": -0.511,
+   "support": -0.95,
+   "raw": {
+    "pos1": 0.098,
+    "mid": -2.96,
+    "offlane": 17.7,
+    "support": -0.164
+   }
+  },
+  "troll_warlord_fervor": {
+   "ability": "Fervor",
+   "hero": "Troll Warlord",
+   "pos1": 0.365,
+   "mid": -1.764,
+   "offlane": -0.828,
+   "support": -1.259,
+   "raw": {
+    "pos1": 0.053,
+    "mid": -3.86,
+    "offlane": 13.3,
+    "support": -0.22
+   }
+  },
+  "troll_warlord_whirling_axes_melee": {
+   "ability": "Whirling Axes (Melee)",
+   "hero": "Troll Warlord",
+   "pos1": 0.514,
+   "mid": -0.494,
+   "offlane": 0.62,
+   "support": -0.32,
+   "raw": {
+    "pos1": 0.082,
+    "mid": -1.02,
+    "offlane": 33.4,
+    "support": -0.05
+   }
+  },
+  "troll_warlord_whirling_axes_ranged": {
+   "ability": "Whirling Axes (Ranged)",
+   "hero": "Troll Warlord",
+   "pos1": -0.233,
+   "mid": -1.545,
+   "offlane": -0.569,
+   "support": 0.017,
+   "raw": {
+    "pos1": -0.064,
+    "mid": -3.37,
+    "offlane": 16.9,
+    "support": 0.011
+   }
+  },
+  "tusk_ice_shards": {
+   "ability": "Ice Shards",
+   "hero": "Tusk",
+   "pos1": -0.801,
+   "mid": -0.499,
+   "offlane": 0.678,
+   "support": 0.78,
+   "raw": {
+    "pos1": -0.175,
+    "mid": -1.03,
+    "offlane": 34.2,
+    "support": 0.149
+   }
+  },
+  "tusk_snowball": {
+   "ability": "Snowball",
+   "hero": "Tusk",
+   "pos1": -0.739,
+   "mid": 1.043,
+   "offlane": 1.889,
+   "support": 0.664,
+   "raw": {
+    "pos1": -0.163,
+    "mid": 2.42,
+    "offlane": 51.0,
+    "support": 0.128
+   }
+  },
+  "tusk_tag_team": {
+   "ability": "Tag Team",
+   "hero": "Tusk",
+   "pos1": -0.018,
+   "mid": -0.762,
+   "offlane": -0.194,
+   "support": -0.85,
+   "raw": {
+    "pos1": -0.022,
+    "mid": -1.62,
+    "offlane": 22.1,
+    "support": -0.146
+   }
+  },
+  "tusk_walrus_punch": {
+   "ability": "Walrus PUNCH!",
+   "hero": "Tusk",
+   "pos1": 0.094,
+   "mid": -0.15,
+   "offlane": 1.723,
+   "support": -1.005,
+   "raw": {
+    "pos1": 0.0,
+    "mid": -0.25,
+    "offlane": 48.7,
+    "support": -0.174
+   }
+  },
+  "undying_decay": {
+   "ability": "Decay",
+   "hero": "Undying",
+   "pos1": 0.805,
+   "mid": 0.856,
+   "offlane": 2.516,
+   "support": -0.242,
+   "raw": {
+    "pos1": 0.139,
+    "mid": 2.0,
+    "offlane": 59.7,
+    "support": -0.036
+   }
+  },
+  "undying_flesh_golem": {
+   "ability": "Flesh Golem",
+   "hero": "Undying",
+   "pos1": 1.373,
+   "mid": 0.632,
+   "offlane": 0.959,
+   "support": -1.021,
+   "raw": {
+    "pos1": 0.25,
+    "mid": 1.5,
+    "offlane": 38.1,
+    "support": -0.177
+   }
+  },
+  "undying_soul_rip": {
+   "ability": "Soul Rip",
+   "hero": "Undying",
+   "pos1": -1.23,
+   "mid": -0.548,
+   "offlane": -0.107,
+   "support": 0.492,
+   "raw": {
+    "pos1": -0.259,
+    "mid": -1.14,
+    "offlane": 23.3,
+    "support": 0.097
+   }
+  },
+  "undying_tombstone": {
+   "ability": "Tombstone",
+   "hero": "Undying",
+   "pos1": -1.261,
+   "mid": -0.575,
+   "offlane": 0.152,
+   "support": 2.232,
+   "raw": {
+    "pos1": -0.265,
+    "mid": -1.2,
+    "offlane": 26.9,
+    "support": 0.412
+   }
+  },
+  "ursa_earthshock": {
+   "ability": "Earthshock",
+   "hero": "Ursa",
+   "pos1": 0.601,
+   "mid": -0.338,
+   "offlane": 0.462,
+   "support": -0.955,
+   "raw": {
+    "pos1": 0.099,
+    "mid": -0.67,
+    "offlane": 31.2,
+    "support": -0.165
+   }
+  },
+  "ursa_enrage": {
+   "ability": "Enrage",
+   "hero": "Ursa",
+   "pos1": 1.337,
+   "mid": 0.373,
+   "offlane": -0.079,
+   "support": -0.856,
+   "raw": {
+    "pos1": 0.243,
+    "mid": 0.92,
+    "offlane": 23.7,
+    "support": -0.147
+   }
+  },
+  "ursa_fury_swipes": {
+   "ability": "Fury Swipes",
+   "hero": "Ursa",
+   "pos1": 2.257,
+   "mid": 0.426,
+   "offlane": -1.152,
+   "support": -2.767,
+   "raw": {
+    "pos1": 0.423,
+    "mid": 1.04,
+    "offlane": 8.8,
+    "support": -0.493
+   }
+  },
+  "ursa_overpower": {
+   "ability": "Overpower",
+   "hero": "Ursa",
+   "pos1": 0.217,
+   "mid": -0.548,
+   "offlane": -0.533,
+   "support": -1.728,
+   "raw": {
+    "pos1": 0.024,
+    "mid": -1.14,
+    "offlane": 17.4,
+    "support": -0.305
+   }
+  },
+  "vengefulspirit_command_aura": {
+   "ability": "Vengeance Aura",
+   "hero": "Vengeful Spirit",
+   "pos1": 0.923,
+   "mid": 0.118,
+   "offlane": -0.151,
+   "support": -0.2,
+   "raw": {
+    "pos1": 0.162,
+    "mid": 0.35,
+    "offlane": 22.7,
+    "support": -0.028
+   }
+  },
+  "vengefulspirit_magic_missile": {
+   "ability": "Magic Missile",
+   "hero": "Vengeful Spirit",
+   "pos1": -1.772,
+   "mid": -0.266,
+   "offlane": -0.316,
+   "support": 2.083,
+   "raw": {
+    "pos1": -0.365,
+    "mid": -0.51,
+    "offlane": 20.4,
+    "support": 0.385
+   }
+  },
+  "vengefulspirit_nether_swap": {
+   "ability": "Nether Swap",
+   "hero": "Vengeful Spirit",
+   "pos1": -0.893,
+   "mid": -0.816,
+   "offlane": -0.252,
+   "support": 1.282,
+   "raw": {
+    "pos1": -0.193,
+    "mid": -1.74,
+    "offlane": 21.3,
+    "support": 0.24
+   }
+  },
+  "vengefulspirit_wave_of_terror": {
+   "ability": "Wave of Terror",
+   "hero": "Vengeful Spirit",
+   "pos1": 0.381,
+   "mid": 0.091,
+   "offlane": -0.98,
+   "support": 0.128,
+   "raw": {
+    "pos1": 0.056,
+    "mid": 0.29,
+    "offlane": 11.2,
+    "support": 0.031
+   }
+  },
+  "venomancer_noxious_plague": {
+   "ability": "Noxious Plague",
+   "hero": "Venomancer",
+   "pos1": -0.57,
+   "mid": 0.31,
+   "offlane": -0.475,
+   "support": 1.006,
+   "raw": {
+    "pos1": -0.13,
+    "mid": 0.78,
+    "offlane": 18.2,
+    "support": 0.19
+   }
+  },
+  "venomancer_plague_ward": {
+   "ability": "Plague Ward",
+   "hero": "Venomancer",
+   "pos1": -0.386,
+   "mid": -1.004,
+   "offlane": -0.857,
+   "support": 1.094,
+   "raw": {
+    "pos1": -0.094,
+    "mid": -2.16,
+    "offlane": 12.9,
+    "support": 0.206
+   }
+  },
+  "venomancer_snakebite": {
+   "ability": "Snakebite",
+   "hero": "",
+   "pos1": -0.836,
+   "mid": -0.012,
+   "offlane": -0.626,
+   "support": -0.071,
+   "raw": {
+    "pos1": -0.182,
+    "mid": 0.06,
+    "offlane": 16.1,
+    "support": -0.005
+   }
+  },
+  "venomancer_venomous_gale": {
+   "ability": "Venomous Gale",
+   "hero": "Venomancer",
+   "pos1": -0.831,
+   "mid": -0.208,
+   "offlane": -0.648,
+   "support": 0.901,
+   "raw": {
+    "pos1": -0.181,
+    "mid": -0.38,
+    "offlane": 15.8,
+    "support": 0.171
+   }
+  },
+  "viper_corrosive_skin": {
+   "ability": "Corrosive Skin",
+   "hero": "Viper",
+   "pos1": 0.5,
+   "mid": 0.368,
+   "offlane": 1.356,
+   "support": 0.973,
+   "raw": {
+    "pos1": 0.079,
+    "mid": 0.91,
+    "offlane": 43.6,
+    "support": 0.184
+   }
+  },
+  "viper_nethertoxin": {
+   "ability": "Nethertoxin",
+   "hero": "Viper",
+   "pos1": 0.933,
+   "mid": -0.293,
+   "offlane": -0.158,
+   "support": -0.044,
+   "raw": {
+    "pos1": 0.164,
+    "mid": -0.57,
+    "offlane": 22.6,
+    "support": 0.0
+   }
+  },
+  "viper_poison_attack": {
+   "ability": "Poison Attack",
+   "hero": "Viper",
+   "pos1": -0.192,
+   "mid": 0.735,
+   "offlane": -1.34,
+   "support": -0.966,
+   "raw": {
+    "pos1": -0.056,
+    "mid": 1.73,
+    "offlane": 6.2,
+    "support": -0.167
+   }
+  },
+  "viper_viper_strike": {
+   "ability": "Viper Strike",
+   "hero": "Viper",
+   "pos1": -0.386,
+   "mid": -0.369,
+   "offlane": -0.252,
+   "support": 0.266,
+   "raw": {
+    "pos1": -0.094,
+    "mid": -0.74,
+    "offlane": 21.3,
+    "support": 0.056
+   }
+  },
+  "visage_grave_chill": {
+   "ability": "Grave Chill",
+   "hero": "Visage",
+   "pos1": 0.217,
+   "mid": -0.762,
+   "offlane": -0.713,
+   "support": -0.938,
+   "raw": {
+    "pos1": 0.024,
+    "mid": -1.62,
+    "offlane": 14.9,
+    "support": -0.162
+   }
+  },
+  "visage_gravekeepers_cloak": {
+   "ability": "Gravekeeper's Cloak",
+   "hero": "Visage",
+   "pos1": 0.744,
+   "mid": 0.377,
+   "offlane": 0.426,
+   "support": -0.182,
+   "raw": {
+    "pos1": 0.127,
+    "mid": 0.93,
+    "offlane": 30.7,
+    "support": -0.025
+   }
+  },
+  "visage_soul_assumption": {
+   "ability": "Soul Assumption",
+   "hero": "Visage",
+   "pos1": -1.245,
+   "mid": 0.824,
+   "offlane": -0.634,
+   "support": 0.122,
+   "raw": {
+    "pos1": -0.262,
+    "mid": 1.93,
+    "offlane": 16.0,
+    "support": 0.03
+   }
+  },
+  "visage_summon_familiars": {
+   "ability": "Summon Familiars",
+   "hero": "Visage",
+   "pos1": -0.177,
+   "mid": -1.04,
+   "offlane": 0.844,
+   "support": -0.64,
+   "raw": {
+    "pos1": -0.053,
+    "mid": -2.24,
+    "offlane": 36.5,
+    "support": -0.108
+   }
+  },
+  "void_spirit_aether_remnant": {
+   "ability": "Aether Remnant",
+   "hero": "Void Spirit",
+   "pos1": -0.2,
+   "mid": 0.735,
+   "offlane": -0.2,
+   "support": 1.249,
+   "raw": {
+    "pos1": -0.058,
+    "mid": 1.73,
+    "offlane": 22.016,
+    "support": 0.234
+   }
+  },
+  "void_spirit_astral_step": {
+   "ability": "Astral Step",
+   "hero": "Void Spirit",
+   "pos1": 1.189,
+   "mid": 2.545,
+   "offlane": -0.064,
+   "support": -1.104,
+   "raw": {
+    "pos1": 0.214,
+    "mid": 5.78,
+    "offlane": 23.9,
+    "support": -0.192
+   }
+  },
+  "void_spirit_dissimilate": {
+   "ability": "Dissimilate",
+   "hero": "Void Spirit",
+   "pos1": -0.023,
+   "mid": 0.735,
+   "offlane": -0.562,
+   "support": -0.303,
+   "raw": {
+    "pos1": -0.023,
+    "mid": 1.73,
+    "offlane": 17.0,
+    "support": -0.047
+   }
+  },
+  "void_spirit_resonant_pulse": {
+   "ability": "Resonant Pulse",
+   "hero": "Void Spirit",
+   "pos1": 0.094,
+   "mid": 0.48,
+   "offlane": 0.174,
+   "support": -0.143,
+   "raw": {
+    "pos1": 0.0,
+    "mid": 1.16,
+    "offlane": 27.2,
+    "support": -0.018
+   }
+  },
+  "warlock_fatal_bonds": {
+   "ability": "Fatal Bonds",
+   "hero": "Warlock",
+   "pos1": -0.397,
+   "mid": 0.342,
+   "offlane": -0.662,
+   "support": 0.851,
+   "raw": {
+    "pos1": -0.096,
+    "mid": 0.85,
+    "offlane": 15.6,
+    "support": 0.162
+   }
+  },
+  "warlock_rain_of_chaos": {
+   "ability": "Chaotic Offering",
+   "hero": "Warlock",
+   "pos1": 0.038,
+   "mid": 0.306,
+   "offlane": -0.518,
+   "support": 0.575,
+   "raw": {
+    "pos1": -0.011,
+    "mid": 0.77,
+    "offlane": 17.6,
+    "support": 0.112
+   }
+  },
+  "warlock_shadow_word": {
+   "ability": "Shadow Word",
+   "hero": "Warlock",
+   "pos1": -1.133,
+   "mid": -0.333,
+   "offlane": -0.324,
+   "support": 0.791,
+   "raw": {
+    "pos1": -0.24,
+    "mid": -0.66,
+    "offlane": 20.3,
+    "support": 0.151
+   }
+  },
+  "warlock_upheaval": {
+   "ability": "Upheaval",
+   "hero": "Warlock",
+   "pos1": -1.66,
+   "mid": -0.275,
+   "offlane": -0.843,
+   "support": 1.597,
+   "raw": {
+    "pos1": -0.343,
+    "mid": -0.53,
+    "offlane": 13.1,
+    "support": 0.297
+   }
+  },
+  "weaver_geminate_attack": {
+   "ability": "Geminate Attack",
+   "hero": "Weaver",
+   "pos1": 0.979,
+   "mid": -0.646,
+   "offlane": -0.785,
+   "support": -1.358,
+   "raw": {
+    "pos1": 0.173,
+    "mid": -1.36,
+    "offlane": 13.9,
+    "support": -0.238
+   }
+  },
+  "weaver_shukuchi": {
+   "ability": "Shukuchi",
+   "hero": "Weaver",
+   "pos1": 0.82,
+   "mid": 1.642,
+   "offlane": 0.217,
+   "support": 0.028,
+   "raw": {
+    "pos1": 0.142,
+    "mid": 3.76,
+    "offlane": 27.8,
+    "support": 0.013
+   }
+  },
+  "weaver_the_swarm": {
+   "ability": "The Swarm",
+   "hero": "Weaver",
+   "pos1": -0.31,
+   "mid": -0.682,
+   "offlane": -0.432,
+   "support": 0.901,
+   "raw": {
+    "pos1": -0.079,
+    "mid": -1.44,
+    "offlane": 18.8,
+    "support": 0.171
+   }
+  },
+  "weaver_time_lapse": {
+   "ability": "Time Lapse",
+   "hero": "Weaver",
+   "pos1": 0.841,
+   "mid": -0.356,
+   "offlane": -0.417,
+   "support": 0.072,
+   "raw": {
+    "pos1": 0.146,
+    "mid": -0.71,
+    "offlane": 19.0,
+    "support": 0.021
+   }
+  },
+  "windrunner_focusfire": {
+   "ability": "Focus Fire Facet",
+   "hero": "Windranger",
+   "pos1": 0.35,
+   "mid": -0.329,
+   "offlane": -1.181,
+   "support": -1.773,
+   "raw": {
+    "pos1": 0.05,
+    "mid": -0.65,
+    "offlane": 8.4,
+    "support": -0.313
+   }
+  },
+  "windrunner_powershot": {
+   "ability": "Powershot",
+   "hero": "Windranger",
+   "pos1": -0.202,
+   "mid": 0.628,
+   "offlane": -0.807,
+   "support": 0.586,
+   "raw": {
+    "pos1": -0.058,
+    "mid": 1.49,
+    "offlane": 13.6,
+    "support": 0.114
+   }
+  },
+  "windrunner_shackleshot": {
+   "ability": "Shackleshot",
+   "hero": "Windranger",
+   "pos1": -1.01,
+   "mid": -0.861,
+   "offlane": -0.864,
+   "support": 0.702,
+   "raw": {
+    "pos1": -0.216,
+    "mid": -1.84,
+    "offlane": 12.8,
+    "support": 0.135
+   }
+  },
+  "windrunner_windrun": {
+   "ability": "Windrun",
+   "hero": "Windranger",
+   "pos1": 0.5,
+   "mid": 0.6,
+   "offlane": 0.5,
+   "support": 0.5,
+   "raw": {
+    "pos1": 0.079,
+    "mid": 1.428,
+    "offlane": 31.729,
+    "support": 0.098
+   }
+  },
+  "winter_wyvern_arctic_burn": {
+   "ability": "Arctic Burn",
+   "hero": "Winter Wyvern",
+   "pos1": 1.158,
+   "mid": 2.411,
+   "offlane": -1.405,
+   "support": -0.392,
+   "raw": {
+    "pos1": 0.208,
+    "mid": 5.48,
+    "offlane": 5.3,
+    "support": -0.063
+   }
+  },
+  "winter_wyvern_cold_embrace": {
+   "ability": "Cold Embrace",
+   "hero": "Winter Wyvern",
+   "pos1": -1.614,
+   "mid": -1.196,
+   "offlane": -0.086,
+   "support": 1.315,
+   "raw": {
+    "pos1": -0.334,
+    "mid": -2.59,
+    "offlane": 23.6,
+    "support": 0.246
+   }
+  },
+  "winter_wyvern_splinter_blast": {
+   "ability": "Splinter Blast",
+   "hero": "Winter Wyvern",
+   "pos1": -0.652,
+   "mid": 0.038,
+   "offlane": -0.915,
+   "support": 0.498,
+   "raw": {
+    "pos1": -0.146,
+    "mid": 0.17,
+    "offlane": 12.1,
+    "support": 0.098
+   }
+  },
+  "winter_wyvern_winters_curse": {
+   "ability": "Winter's Curse",
+   "hero": "Winter Wyvern",
+   "pos1": 0.094,
+   "mid": 0.444,
+   "offlane": -0.432,
+   "support": 0.188,
+   "raw": {
+    "pos1": 0.0,
+    "mid": 1.08,
+    "offlane": 18.8,
+    "support": 0.042
+   }
+  },
+  "wisp_overcharge": {
+   "ability": "Overcharge",
+   "hero": "Io",
+   "pos1": 0.181,
+   "mid": -0.566,
+   "offlane": -0.734,
+   "support": -0.845,
+   "raw": {
+    "pos1": 0.017,
+    "mid": -1.18,
+    "offlane": 14.6,
+    "support": -0.145
+   }
+  },
+  "wisp_relocate": {
+   "ability": "Relocate",
+   "hero": "Io",
+   "pos1": -0.013,
+   "mid": -0.57,
+   "offlane": -0.677,
+   "support": -0.519,
+   "raw": {
+    "pos1": -0.021,
+    "mid": -1.19,
+    "offlane": 15.4,
+    "support": -0.086
+   }
+  },
+  "wisp_spirits": {
+   "ability": "Spirits",
+   "hero": "Io",
+   "pos1": 1.097,
+   "mid": 1.325,
+   "offlane": 0.267,
+   "support": -0.231,
+   "raw": {
+    "pos1": 0.196,
+    "mid": 3.05,
+    "offlane": 28.5,
+    "support": -0.034
+   }
+  },
+  "wisp_tether": {
+   "ability": "Tether",
+   "hero": "Io",
+   "pos1": -2.815,
+   "mid": -2.184,
+   "offlane": -0.172,
+   "support": 3.304,
+   "raw": {
+    "pos1": -0.569,
+    "mid": -4.8,
+    "offlane": 22.4,
+    "support": 0.606
+   }
+  },
+  "witch_doctor_death_ward": {
+   "ability": "Death Ward",
+   "hero": "Witch Doctor",
+   "pos1": -0.698,
+   "mid": 0.914,
+   "offlane": -0.352,
+   "support": 0.006,
+   "raw": {
+    "pos1": -0.155,
+    "mid": 2.13,
+    "offlane": 19.9,
+    "support": 0.009
+   }
+  },
+  "witch_doctor_maledict": {
+   "ability": "Maledict",
+   "hero": "Witch Doctor",
+   "pos1": -0.714,
+   "mid": 1.843,
+   "offlane": -0.576,
+   "support": 0.233,
+   "raw": {
+    "pos1": -0.158,
+    "mid": 4.21,
+    "offlane": 16.8,
+    "support": 0.05
+   }
+  },
+  "witch_doctor_paralyzing_cask": {
+   "ability": "Paralyzing Cask",
+   "hero": "Witch Doctor",
+   "pos1": -0.852,
+   "mid": 0.239,
+   "offlane": -0.547,
+   "support": 1.481,
+   "raw": {
+    "pos1": -0.185,
+    "mid": 0.62,
+    "offlane": 17.2,
+    "support": 0.276
+   }
+  },
+  "witch_doctor_voodoo_restoration": {
+   "ability": "Voodoo Restoration",
+   "hero": "Witch Doctor",
+   "pos1": -1.118,
+   "mid": -0.602,
+   "offlane": 0.231,
+   "support": 2.431,
+   "raw": {
+    "pos1": -0.237,
+    "mid": -1.26,
+    "offlane": 28.0,
+    "support": 0.448
+   }
+  },
+  "zuus_arc_lightning": {
+   "ability": "Arc Lightning",
+   "hero": "Zeus",
+   "pos1": 0.861,
+   "mid": 1.942,
+   "offlane": -1.181,
+   "support": -1.607,
+   "raw": {
+    "pos1": 0.15,
+    "mid": 4.43,
+    "offlane": 8.4,
+    "support": -0.283
+   }
+  },
+  "zuus_heavenly_jump": {
+   "ability": "Heavenly Jump",
+   "hero": "Zeus",
+   "pos1": 0.851,
+   "mid": 0.793,
+   "offlane": -0.727,
+   "support": -0.474,
+   "raw": {
+    "pos1": 0.148,
+    "mid": 1.86,
+    "offlane": 14.7,
+    "support": -0.078
+   }
+  },
+  "zuus_lightning_bolt": {
+   "ability": "Lightning Bolt",
+   "hero": "Zeus",
+   "pos1": -0.657,
+   "mid": 1.785,
+   "offlane": -0.785,
+   "support": 1.144,
+   "raw": {
+    "pos1": -0.147,
+    "mid": 4.08,
+    "offlane": 13.9,
+    "support": 0.215
+   }
+  },
+  "zuus_thundergods_wrath": {
+   "ability": "Thundergod's Wrath",
+   "hero": "Zeus",
+   "pos1": -0.207,
+   "mid": 1.709,
+   "offlane": -0.799,
+   "support": -0.044,
+   "raw": {
+    "pos1": -0.059,
+    "mid": 3.91,
+    "offlane": 13.7,
+    "support": 0.0
+   }
+  }
+ }
+}

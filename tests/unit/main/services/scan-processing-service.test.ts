@@ -128,7 +128,8 @@ describe('scan processing (real data, real layout)', () => {
       expect(menu.suggestions.length).toBeGreaterThan(0)
       expect(menu.suggestions.length).toBeLessThanOrEqual(5)
       const scores = menu.suggestions.map((s) => s.score)
-      expect(scores).toEqual([...scores].sort((a, b) => a - b))
+      // Shown score, higher = better (no category is deferred on the first pick).
+      expect(scores).toEqual([...scores].sort((a, b) => b - a))
       expect(menu.suggestions.every((s) => s.displayName.length > 0)).toBe(true)
     }
     const seat0 = payload.seatMenus.find((m) => m.seat === 0)!
@@ -258,8 +259,8 @@ describe('top combos panel', () => {
           (c.a.name === COMBO_A && c.b.name === COMBO_B) || (c.a.name === COMBO_B && c.b.name === COMBO_A),
       )
       expect(combo).toBeDefined()
-      // synergy lift 12.83 percentage points + average(0.634, 0.5255) solo win rates
-      expect(combo!.comboWinrate).toBeCloseTo(12.83 / 100 + (0.634 + 0.5255) / 2, 6)
+      // synergy lift 14.49 percentage points + average(0.6488, 0.5294) solo win rates
+      expect(combo!.comboWinrate).toBeCloseTo(14.49 / 100 + (0.6488 + 0.5294) / 2, 6)
       expect(combo!.a.displayName.length).toBeGreaterThan(0)
 
       const scores = box.combos.map((c) => c.comboWinrate)
@@ -292,7 +293,7 @@ describe('top combos panel', () => {
       expect(open.name).toBe(COMBO_B)
       expect(open.heldBy).toBeNull()
       // same real win rate as when both were in the pool
-      expect(combo!.comboWinrate).toBeCloseTo(12.83 / 100 + (0.634 + 0.5255) / 2, 6)
+      expect(combo!.comboWinrate).toBeCloseTo(14.49 / 100 + (0.6488 + 0.5294) / 2, 6)
     } finally {
       poolHeroes = usable.slice(0, 12)
     }

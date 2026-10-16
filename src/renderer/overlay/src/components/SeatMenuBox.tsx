@@ -4,8 +4,8 @@ import { useIcon } from '../hooks/use-icon'
 
 // @DEV-GUIDE: Phase-1 placeholder menu — one per player on the chosen team, listing that
 // player's best remaining picks (abilities and hero models together, models tagged HERO,
-// each with a mini icon) by the simulator's pick score (lower = better). Sits in the
-// strip between the screen edge and the player's outer pick box (positioned by
+// each with a mini icon) in the simulator bot's order, with its shown score (higher =
+// better). Sits in the strip between the screen edge and the player's outer pick box (positioned by
 // core/resolution/seat-menu-box.ts). Same coordinate-driven positioning as the rest of
 // the overlay: layout pixels divided by scaleFactor. Replace the chrome in Phase 3.
 

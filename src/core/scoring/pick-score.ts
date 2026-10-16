@@ -1,14 +1,15 @@
-// @DEV-GUIDE: Port of the pick-scoring algorithm from ad-simulator's testing-branch
-// public/simulator.html (pickScore and the terms it sums: synergy with the seat's own
-// picks, pool synergy, enemy denial, ally avoidance). LOWER score = better pick.
-// Kept as a line-for-line port so the two stay comparable — tests/unit/core/scoring
-// checks it against golden values produced by the simulator's own code. If the
-// simulator's tuning constants change, update them here too.
+// @DEV-GUIDE: Draft-order helpers and the per-seat ranking the overlay shows. The
+// scoring itself is bot-engine.ts, a port of ad-simulator's botDecision (testing
+// branch, public/simulator.html), checked against the simulator's own numbers by
+// tests/unit/core/scoring/bot-engine.test.ts.
 //
 // The simulator scores the seat whose turn it is, at the current pick number. Here the
 // same state (everyone's held picks, what's still in the pool, the pick number) is
 // scored for ANY seat, i.e. "the ranking if this seat picked right now".
 // Pure logic, no Electron imports.
+
+import type { DraftScorer } from './bot-engine'
+import { categoryOf, shown } from './bot-engine'
 
 // Snake draft over seats 0-9 (0-4 one team, 5-9 the other): five rounds — the model
 // round plus the four ability rounds — as one continuous snake.
@@ -28,7 +29,7 @@ export interface ScoreItem {
   kind: 'ability' | 'model'
   isUlt: boolean
   winrateHigh: number | null
-  /** Models: already run through transformModelPickPosition. */
+  /** Raw windrun average pick position (models too, as the simulator uses it). */
   pickPositionHigh: number | null
 }
 
@@ -44,19 +45,6 @@ export interface ScoreState {
   picks: readonly (readonly ScoreItem[])[]
   /** Number of picks made so far in the draft, across both teams. */
   pickIndex: number
-}
-
-const SYNERGY_MULTIPLIER_BASE = 1.2
-const SYNERGY_MULTIPLIER_INCREMENT = 0.08
-const KNOWN_COMBO_BONUS_COEFFICIENT = 0.008
-const SYNERGY_ORDER_WEIGHTS = [1.4, 1, 0.8, 0.6]
-const POOL_SYNERGY_WEIGHTS_BY_PICKS_MADE = [0.5, 0.15, 0.1, 0.1, 0]
-
-/** Models already at 5 or below are untouched; above 5 follows x^2/25, floored at 5. */
-export function transformModelPickPosition(x: number | null): number | null {
-  if (x == null) return null
-  if (x <= 5) return x
-  return Math.max((x * x) / 25, 5)
 }
 
 export function enemiesOf(seat: number): number[] {
@@ -88,106 +76,23 @@ export function nextPickIndexFor(seat: number, afterIndex: number): number | nul
   return null
 }
 
-// Negative and neutral pairs are excluded entirely — only good pairings count.
-function sumPositiveSynergy(
-  itemName: string,
-  others: readonly ScoreItem[],
-  synergy: SynergyLookup,
-): number {
-  return others.reduce((sum, o) => {
-    const s = synergy.between(itemName, o.name)
-    return s > 0 ? sum + s : sum
-  }, 0)
-}
-
-function poolSynergyTerm(
-  item: ScoreItem,
-  seat: number,
-  state: ScoreState,
-  synergy: SynergyLookup,
-): number {
-  const weight = POOL_SYNERGY_WEIGHTS_BY_PICKS_MADE[state.picks[seat].length] ?? 0
-  const others = state.available.filter((o) => o !== item)
-  return sumPositiveSynergy(item.name, others, synergy) * weight
-}
-
-function enemySynergyTerm(
-  item: ScoreItem,
-  seat: number,
-  state: ScoreState,
-  synergy: SynergyLookup,
-): number {
-  let total = 0
-  for (const enemy of enemiesOf(seat)) {
-    if (pickBlockedFor(state.picks, enemy, item)) continue
-    const nextIdx = nextPickIndexFor(enemy, state.pickIndex)
-    if (nextIdx == null) continue
-    const picksBetween = nextIdx - state.pickIndex - 1
-    const weight = 10 / (4 + picksBetween)
-    total += weight * sumPositiveSynergy(item.name, state.picks[enemy], synergy)
-  }
-  return total
-}
-
-function allySynergyTerm(
-  item: ScoreItem,
-  seat: number,
-  state: ScoreState,
-  synergy: SynergyLookup,
-): number {
-  let total = 0
-  for (const ally of alliesOf(seat)) {
-    if (pickBlockedFor(state.picks, ally, item)) continue
-    total += sumPositiveSynergy(item.name, state.picks[ally], synergy)
-  }
-  return total * 2
-}
-
-export function pickScore(
-  item: ScoreItem,
-  seat: number,
-  state: ScoreState,
-  synergy: SynergyLookup,
-): number {
-  const base =
-    item.pickPositionHigh == null
-      ? Infinity
-      : item.pickPositionHigh - (item.winrateHigh ?? 0) * 100 + 60
-  const multiplier = SYNERGY_MULTIPLIER_BASE + state.pickIndex * SYNERGY_MULTIPLIER_INCREMENT
-  const bonus = state.pickIndex * state.pickIndex * KNOWN_COMBO_BONUS_COEFFICIENT
-  let adjustment = 0
-  state.picks[seat].forEach((held, i) => {
-    const orderWeight = SYNERGY_ORDER_WEIGHTS[i] ?? 0
-    adjustment += synergy.between(item.name, held.name) * multiplier * orderWeight
-    if (synergy.has(item.name, held.name)) adjustment += bonus * orderWeight
-  })
-  adjustment += poolSynergyTerm(item, seat, state, synergy)
-  adjustment += enemySynergyTerm(item, seat, state, synergy)
-  adjustment -= allySynergyTerm(item, seat, state, synergy)
-  return base - adjustment
-}
-
 export interface RankedPick {
   item: ScoreItem
+  /** The simulator's shown score: higher = better. */
   score: number
 }
 
 /**
- * Best (lowest-scoring) options for a seat: everything still available that the seat
- * can legally take, scored. Items with no pick-position data score Infinity and are
- * dropped rather than shown.
+ * Best options for a seat, in the order the simulator's bot would take them: its
+ * pick first, categories the bot defers (nothing an enemy can take before this seat
+ * picks again) after the rest. Items with no pick-position data are dropped.
  */
-export function rankPicksForSeat(
-  seat: number,
-  state: ScoreState,
-  synergy: SynergyLookup,
-  limit: number,
-  kind: ScoreItem['kind'] | null = null,
-): RankedPick[] {
-  return state.available
-    .filter((item) => (kind === null || item.kind === kind) && !pickBlockedFor(state.picks, seat, item))
-    .map((item) => ({ item, score: pickScore(item, seat, state, synergy) }))
-    .filter((r) => Number.isFinite(r.score))
-    .sort((a, b) => a.score - b.score)
+export function rankPicksForSeat(seat: number, scorer: DraftScorer, limit: number): RankedPick[] {
+  const d = scorer.decide(seat)
+  const deferred = (item: ScoreItem): number => (d.deferredCats.includes(categoryOf(item)) ? 1 : 0)
+  return d.rows
+    .filter((r) => Number.isFinite(r.total))
+    .sort((a, b) => deferred(a.item) - deferred(b.item) || a.total - b.total)
     .slice(0, limit)
+    .map((r) => ({ item: r.item, score: shown(r.total) }))
 }
