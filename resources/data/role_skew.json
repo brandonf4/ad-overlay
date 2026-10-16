@@ -2931,14 +2931,14 @@
   "leshrac_pulse_nova": {
    "ability": "Pulse Nova",
    "hero": "Leshrac",
-   "pos1": 1.726,
+   "pos1": 0.5,
    "mid": 2.161,
-   "offlane": -0.093,
+   "offlane": 0.5,
    "support": -1.115,
    "raw": {
-    "pos1": 0.319,
+    "pos1": 0.079,
     "mid": 4.92,
-    "offlane": 23.5,
+    "offlane": 31.7,
     "support": -0.194
    }
   },

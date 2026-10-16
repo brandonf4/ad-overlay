@@ -118,6 +118,10 @@ const ROLE_FIT_FLOOR = 1
 const OFFLANE_SUPPORT_DISCOUNT = 0.5
 const ROLE_KEEP_Z: Record<Role, number> = { pos1: 0, mid: 0, offlane: 1, support: 1 }
 const ROLE_KEEP_SPAN = 3
+// A seat that's currently a support takes off-role models with only this share of the cut.
+const SUPPORT_MODEL_ROLE_CUT = 0.25
+// Denying a carry model (its best tentative role is Carry) is worth this much more.
+const CARRY_MODEL_DENY_WEIGHT = 1.5
 const CATEGORIES: Category[] = ['model', 'ult', 'basic']
 
 /** Shown value (higher = better), like the simulator's bot panel. */
@@ -425,7 +429,13 @@ export class DraftScorer {
     if (rank !== 0) return 0
     const best = out.opts[0].p
     const next = out.opts.length > 1 ? out.opts[1].p : Infinity
-    return Math.min(Math.max(next - best, 0), SCARCITY_CAP) * SCARCITY_WEIGHT
+    const carry = this.isCarryModel(item) ? CARRY_MODEL_DENY_WEIGHT : 1
+    return Math.min(Math.max(next - best, 0), SCARCITY_CAP) * SCARCITY_WEIGHT * carry
+  }
+  private isCarryModel(item: ScoreItem): boolean {
+    if (item.kind !== 'model' || !this.roleData(item)) return false
+    const best = Math.max(...ROLES.map((r) => this.roleZ(item, r)))
+    return this.roleZ(item, 'pos1') >= best
   }
   private clearBestTaker(
     item: ScoreItem,
@@ -721,7 +731,11 @@ export class DraftScorer {
       : Infinity
     const keep = keepLost <= shiftLost
     const lost = keep ? keepLost : shiftLost
-    return { cost: full * lost, after: keep ? before : after }
+    const supportModel =
+      item.kind === 'model' && hasRole && before.roles[seat] === 'support'
+        ? SUPPORT_MODEL_ROLE_CUT
+        : 1
+    return { cost: full * lost * supportModel, after: keep ? before : after }
   }
   private teamOpposingPicksBefore(seat: number, cat: Category): number | null {
     let next: number | null = null
