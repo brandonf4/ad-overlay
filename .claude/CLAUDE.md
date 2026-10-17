@@ -6,8 +6,10 @@ capture, ONNX ability classifier, resolution/coordinate calibration, GSI phase d
 click-through overlay window) and replaces its scoring engine + UI with this project's own.
 
 **Read `docs/plan.md` first** — it has the full context: what was kept vs. replaced vs.
-dropped from upstream, why, and the phased roadmap. Currently on Phase 1 (scanning
-pipeline proven end-to-end with a placeholder overlay; no scoring or real UI yet).
+dropped from upstream, why, and the phased roadmap (written at Phase 1 — the plan's
+scoring and live-scan phases are now done; see `README.md` for what the app does today).
+The overlay scans live, tracks the draft, and shows per-player menus plus a top-combos
+panel scored by a port of the simulator's bot logic (`src/core/scoring/bot-engine.ts`).
 
 Do not trust any other doc in this repo (or comments referencing removed services like
 `database-service`, `scraper-service`, `stream-server-service`, role-mode scoring, etc.)

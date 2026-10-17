@@ -1,5 +1,12 @@
 # Dota 2 Ability Draft live overlay — new project, forked scanning core
 
+> **Status note (later update):** this is the original Phase 1 plan, kept for the
+> kept/replaced/dropped breakdown. Phases 1 and 2 are done, and the overlay now scans live,
+> tracks the draft and shows scored picks and combos — see `README.md` for the current
+> state. Details below about the data layer and the old scoring (`pickScore`, the
+> in-memory data files) describe the plan, not what shipped; the shipped scoring is
+> `src/core/scoring/bot-engine.ts`.
+
 ## Context
 
 `ad-simulator` already has a validated pick-scoring engine (`pickScore`, `poolSynergyTerm`, `enemySynergyTerm`, `allySynergyTerm`, held-item synergy, `transformModelPickPosition`) and fresh Windrun-sourced data (`heroes_abilities.json`, `ability_synergies.json`). The goal now is a **live desktop overlay** that scans an actual Dota 2 Ability Draft in progress and surfaces suggestions from that same scoring logic, instead of only simulating drafts in a browser.
