@@ -16,7 +16,9 @@
   "medusa_split_shot|nevermore": 3,
   "medusa_split_shot|rubick_arcane_supremacy": -7,
   "monkey_king_wukongs_command|nevermore": 8,
-  "invoker_tornado_ad|tinker_rearm": 10
+  "invoker_tornado_ad|tinker_rearm": 10,
+  "ember_spirit_sleight_of_fist|lion_finger_of_death": 3,
+  "grimstroke_soul_chain|largo": 10
  },
  "readable": [
   {
@@ -1227,6 +1229,16 @@
    "pair": "Tornado (Invoker) + Rearm (Tinker)",
    "value": 10,
    "windrun": null
+  },
+  {
+   "pair": "Sleight of Fist (Ember Spirit) + Finger of Death (Lion)",
+   "value": 3,
+   "windrun": null
+  },
+  {
+   "pair": "Largo (model) + Soulbind (Grimstroke)",
+   "value": 10,
+   "windrun": 6.77
   }
  ],
  "estimated": {
