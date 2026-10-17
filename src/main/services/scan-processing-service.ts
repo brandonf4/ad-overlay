@@ -28,7 +28,7 @@ import type { InitialScanResults, PickCandidates } from '@shared/types/ml'
 const logger = log.scope('scan-processing')
 
 const SUGGESTIONS_PER_SEAT = 5
-const TOP_COMBOS_COUNT = 8
+const TOP_COMBOS_COUNT = 15
 
 function displayNameOf(item: { name: string; kind: 'ability' | 'model' }, abilityData: AbilityDataService): string {
   return (

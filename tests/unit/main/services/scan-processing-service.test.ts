@@ -243,6 +243,20 @@ describe('hero models take part in the suggestions', () => {
 })
 
 describe('top combos panel', () => {
+  it('lists up to 15 combos, best first', () => {
+    poolHeroes = modelStrong
+    try {
+      const { run } = setup()
+      const combos = run(poolScan(new Set()), rowsScan({}), modelTiles()).topCombos!.combos
+      // a full pool of real heroes has far more than 15 pairs with synergy data
+      expect(combos).toHaveLength(15)
+      const rates = combos.map((c) => c.comboWinrate)
+      expect(rates).toEqual([...rates].sort((a, b) => b - a))
+    } finally {
+      poolHeroes = usable.slice(0, 12)
+    }
+  })
+
   it('reconstructs the real combo win rate for a known pair, positioned right of the ultimates', () => {
     poolHeroes = comboPool
     try {
