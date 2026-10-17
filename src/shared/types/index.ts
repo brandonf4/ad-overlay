@@ -206,6 +206,10 @@ export interface TopCombosPanelData {
   x: number
   y: number
   width: number
+  /** Top of the nearest board element below the panel, or null; see top-combos-box.ts. */
+  limitY: number | null
+  /** How far (layout px) the panel may move up from y to clear what is below it. */
+  maxGrowUp: number
 }
 
 export interface OverlayDataPayload {

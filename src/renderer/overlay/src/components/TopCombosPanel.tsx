@@ -1,5 +1,7 @@
+import { useLayoutEffect, useRef, useState } from 'react'
 import type { CSSProperties, JSX } from 'react'
 import type { ComboHalf, ComboSuggestion, TopCombosPanelData } from '@shared/types'
+import { placeTopCombos } from '@core/resolution/top-combos-box'
 import type { Side } from './ControlsPanel'
 import { useIcon } from '../hooks/use-icon'
 
@@ -101,12 +103,25 @@ function ComboRow({ combo, side }: ComboRowProps): JSX.Element {
 }
 
 export function TopCombosPanel({ data, scaleFactor, side }: TopCombosPanelProps): JSX.Element | null {
+  const panelRef = useRef<HTMLDivElement>(null)
+  const [height, setHeight] = useState(0)
+  const rowCount = data?.combos.length ?? 0
+
+  // The list's height depends on how many combos there are (and the font), so measure it
+  // once rendered rather than guess: it decides how far the panel climbs to clear the
+  // board below it.
+  useLayoutEffect(() => {
+    if (panelRef.current) setHeight(panelRef.current.offsetHeight)
+  }, [rowCount, scaleFactor])
+
   if (!data || data.combos.length === 0) return null
+
+  const topLayoutPx = height > 0 ? placeTopCombos(data, height * scaleFactor) : data.y
 
   const style: CSSProperties = {
     position: 'absolute',
     left: data.x / scaleFactor,
-    top: data.y / scaleFactor,
+    top: topLayoutPx / scaleFactor,
     width: data.width / scaleFactor,
     background: 'rgba(20,20,20,0.85)',
     color: '#fff',
@@ -119,7 +134,7 @@ export function TopCombosPanel({ data, scaleFactor, side }: TopCombosPanelProps)
     pointerEvents: 'none',
   }
   return (
-    <div style={style}>
+    <div ref={panelRef} style={style}>
       <div style={{ fontWeight: 'bold', marginBottom: 4, opacity: 0.8 }}>Top Combos</div>
       {data.combos.map((combo) => (
         <ComboRow key={`${combo.a.name}-${combo.b.name}`} combo={combo} side={side} />

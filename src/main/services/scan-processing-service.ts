@@ -148,7 +148,7 @@ export function createScanProcessingService(
           })
         }
         const state = buildScoreState(snapshot, abilityData.scoringData)
-        const screenWidth = Number(resolution.split('x')[0])
+        const [screenWidth, screenHeight] = resolution.split('x').map(Number)
 
         const scorer = new DraftScorer(abilityData.engineData, state)
         const seatMenus: SeatMenu[] = []
@@ -188,7 +188,7 @@ export function createScanProcessingService(
           const scoreItem = availableByName.get(item.name)
           return scoreItem !== undefined && !pickBlockedFor(state.picks, seat, scoreItem)
         }
-        const combosBox = topCombosBox(layout, screenWidth)
+        const combosBox = topCombosBox(layout, screenWidth, screenHeight)
         const topCombos: OverlayDataPayload['topCombos'] = combosBox
           ? {
               ...combosBox,
